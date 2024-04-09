@@ -27,7 +27,6 @@
   <ItemGroup>
     <ProjectReference Include="..\..\AppBackend.Data\AppBackend.Data.csproj" />
     <ProjectReference Include="..\..\AppBackend.Services\AppBackend.Application.csproj" />
-    <ProjectReference Include="..\AppBackend.FileManager\AppBackend.FileManager.csproj" />
   </ItemGroup>
 
 </Project>

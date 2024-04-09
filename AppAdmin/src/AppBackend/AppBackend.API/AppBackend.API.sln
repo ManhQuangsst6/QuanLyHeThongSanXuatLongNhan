@@ -3,13 +3,11 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.9.34723.18
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AppBackend.API", "AppBackend.API\AppBackend.API.csproj", "{A6115013-494B-495F-A15B-CEEFAD785475}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AppBackend.API", "AppBackend.API\AppBackend.API.csproj", "{A6115013-494B-495F-A15B-CEEFAD785475}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AppBackend.Data", "..\AppBackend.Data\AppBackend.Data.csproj", "{135B327E-6919-4774-AB92-21E159CAB5F0}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AppBackend.Data", "..\AppBackend.Data\AppBackend.Data.csproj", "{135B327E-6919-4774-AB92-21E159CAB5F0}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AppBackend.FileManager", "AppBackend.FileManager\AppBackend.FileManager.csproj", "{ED9C989C-8F39-4A83-9AE7-F83D2D65EECF}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AppBackend.Application", "..\AppBackend.Services\AppBackend.Application.csproj", "{9C141407-7BDA-435B-9822-541E841A13F6}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AppBackend.Application", "..\AppBackend.Services\AppBackend.Application.csproj", "{9C141407-7BDA-435B-9822-541E841A13F6}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -25,10 +23,6 @@ Global
 		{135B327E-6919-4774-AB92-21E159CAB5F0}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{135B327E-6919-4774-AB92-21E159CAB5F0}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{135B327E-6919-4774-AB92-21E159CAB5F0}.Release|Any CPU.Build.0 = Release|Any CPU
-		{ED9C989C-8F39-4A83-9AE7-F83D2D65EECF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{ED9C989C-8F39-4A83-9AE7-F83D2D65EECF}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{ED9C989C-8F39-4A83-9AE7-F83D2D65EECF}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{ED9C989C-8F39-4A83-9AE7-F83D2D65EECF}.Release|Any CPU.Build.0 = Release|Any CPU
 		{9C141407-7BDA-435B-9822-541E841A13F6}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{9C141407-7BDA-435B-9822-541E841A13F6}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{9C141407-7BDA-435B-9822-541E841A13F6}.Release|Any CPU.ActiveCfg = Release|Any CPU
