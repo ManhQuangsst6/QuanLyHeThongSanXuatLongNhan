@@ -9,6 +9,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AppBackend.Data", "..\AppBa
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AppBackend.Application", "..\AppBackend.Services\AppBackend.Application.csproj", "{9C141407-7BDA-435B-9822-541E841A13F6}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AppBackend.FileManager", "..\AppBackend.FileManager\AppBackend.FileManager.csproj", "{2A6394A2-1F52-4AB8-B003-9EC8C8FB7630}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -27,6 +29,10 @@ Global
 		{9C141407-7BDA-435B-9822-541E841A13F6}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{9C141407-7BDA-435B-9822-541E841A13F6}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{9C141407-7BDA-435B-9822-541E841A13F6}.Release|Any CPU.Build.0 = Release|Any CPU
+		{2A6394A2-1F52-4AB8-B003-9EC8C8FB7630}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{2A6394A2-1F52-4AB8-B003-9EC8C8FB7630}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{2A6394A2-1F52-4AB8-B003-9EC8C8FB7630}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{2A6394A2-1F52-4AB8-B003-9EC8C8FB7630}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
