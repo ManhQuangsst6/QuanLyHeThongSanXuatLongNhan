@@ -12,4 +12,8 @@
     <Folder Include="Servives\" />
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\AppBackend.API\AppBackend.API\AppBackend.API.csproj" />
+  </ItemGroup>
+
 </Project>

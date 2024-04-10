@@ -1,4 +1,4 @@
-﻿namespace AuthenTest.Models.Authentication.Email
+﻿namespace AppBackend.Data.Models.Email
 {
 	public class EmailConfiguration
 	{

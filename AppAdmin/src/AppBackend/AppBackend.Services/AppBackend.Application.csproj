@@ -8,13 +8,11 @@
 
   <ItemGroup>
     <PackageReference Include="AutoMapper" Version="13.0.1" />
+    <PackageReference Include="MailKit" Version="4.4.0" />
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Common\Interface\" />
-    <Folder Include="Common\Services\" />
-    <Folder Include="Interface\" />
-    <Folder Include="Services\" />
+    <ProjectReference Include="..\AppBackend.Data\AppBackend.Data.csproj" />
   </ItemGroup>
 
 </Project>

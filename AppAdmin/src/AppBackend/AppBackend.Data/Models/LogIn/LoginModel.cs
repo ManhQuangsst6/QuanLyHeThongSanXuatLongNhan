@@ -1,4 +1,4 @@
-﻿namespace AuthenTest.Models.Authentication.LogIn
+﻿namespace AppBackend.Data.Models.LogIn
 {
 	public class LoginModel
 	{
