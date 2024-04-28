@@ -1,4 +1,6 @@
-﻿namespace AppBackend.Application.Common.Response
+﻿using Microsoft.EntityFrameworkCore;
+
+namespace AppBackend.Application.Common.Response
 {
 	public class PaginatedList<T>
 	{
@@ -21,10 +23,11 @@
 
 		public bool HasNextPage => PageNumber < TotalPages;
 
-		public PaginatedList<T> Create(IQueryable<T> source, int pageNumber, int pageSize)
+		public static async Task<PaginatedList<T>> CreateAsync(IQueryable<T> source, int pageNumber, int pageSize)
 		{
-			var count = source.Count();
-			var items = source.Skip((pageNumber - 1) * pageSize).Take(pageSize).ToList();
+			var count = await source.CountAsync();
+			var items = await source.Skip((pageNumber - 1) * pageSize).Take(pageSize).ToListAsync();
+
 			return new PaginatedList<T>(items, count, pageNumber, pageSize);
 		}
 	}

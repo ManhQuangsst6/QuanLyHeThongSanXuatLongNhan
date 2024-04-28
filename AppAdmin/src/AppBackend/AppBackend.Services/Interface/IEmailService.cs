@@ -1,10 +1,10 @@
 ﻿using AppBackend.Application.Common.Response;
-using MimeKit;
+using AppBackend.Data.Models.Email;
 
 namespace AppBackend.Application.Interface
 {
 	public interface IEmailService
 	{
-		Task<Response<string>> SendEmail(MimeMessage message);
+		Task<Response<string>> SendEmail(Message message);
 	}
 }

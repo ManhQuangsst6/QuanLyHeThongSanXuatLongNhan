@@ -19,11 +19,7 @@
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
-  </ItemGroup>
-
-  <ItemGroup>
-    <Folder Include="ModelsDTO\" />
-    <Folder Include="Enums\" />
+    <PackageReference Include="MimeKit" Version="4.4.0" />
   </ItemGroup>
 
 </Project>
