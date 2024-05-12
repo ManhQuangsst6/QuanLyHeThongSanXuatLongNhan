@@ -49,7 +49,7 @@ namespace AppBackend.Application.Services
 			{
 				purchaseOrderDTO.Id = Guid.NewGuid().ToString();
 				var purchaseOrder = _mapper.Map<PurchaseOrder>(purchaseOrderDTO);
-				purchaseOrder.OrderDate = purchaseOrder.OrderDate.AddDays(1);
+				purchaseOrder.OrderDate = purchaseOrder.OrderDate;
 				purchaseOrder.IsDelete = (int)EnumData.StatusIsDelete.Doing;
 				await _dataContext.PurchaseOrders.AddAsync(purchaseOrder);
 				await _dataContext.SaveChangesAsync();
@@ -69,7 +69,7 @@ namespace AppBackend.Application.Services
 				var purchaseOrder = await _dataContext.PurchaseOrders.FirstOrDefaultAsync(x => x.Id == purchaseOrderDTO.Id);
 				if (purchaseOrder == null) return new Response<string> { IsSuccess = false, Status = 404, Value = "Not found purchaseOrder!" };
 				purchaseOrder.EmployeeID = purchaseOrderDTO.EmployeeID;
-				purchaseOrder.OrderDate = purchaseOrderDTO.OrderDate.AddDays(1);
+				purchaseOrder.OrderDate = purchaseOrderDTO.OrderDate;
 				purchaseOrder.Amount = purchaseOrderDTO.Amount;
 				purchaseOrder.Note = purchaseOrderDTO.Note;
 				purchaseOrder.Price = ((decimal)purchaseOrderDTO.Price);

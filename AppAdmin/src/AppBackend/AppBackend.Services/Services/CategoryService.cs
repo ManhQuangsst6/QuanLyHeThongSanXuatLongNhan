@@ -95,5 +95,6 @@ namespace AppBackend.Application.Services
 				return new Response<string> { IsSuccess = false, Status = 404, Message = ex.Message };
 			}
 		}
+
 	}
 }

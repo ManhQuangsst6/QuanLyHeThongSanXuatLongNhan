@@ -14,6 +14,7 @@ import dayjs from 'dayjs';
 import ConvertDate from '../../Common/Convert/ConvertDate';
 const { Column, ColumnGroup } = Table;
 const { Search } = Input;
+const {Option}=Select
 
 
 
@@ -24,6 +25,15 @@ const { confirm } = Modal;
 
 
 const PurchaseOrderComponent = () => {
+    const rules={
+        employeeID:[{required: true ,message:'Tên loại không bỏ trống'} ],
+        ingredientID:[{required: true ,message:'Giá sỉ không bỏ trống'} ],
+        orderDate:[{required: true ,message:'Giá bán lẻ không bỏ trống'} ],
+        amount:[{required: true ,message:'Giá bán lẻ không bỏ trống'} ],
+        price:[{required: true ,message:'Giá bán lẻ không bỏ trống'} ],
+        note:[{required: true ,message:'Giá bán lẻ không bỏ trống'} ]
+         }
+         const [form] = Form.useForm();
     const [nameSearch, SetNameSearch] = useState("")
     const columns = [
         {
@@ -105,20 +115,24 @@ const PurchaseOrderComponent = () => {
             })
         }
     }, [resetData])
+
     const onSelectChange = (newSelectedRowKeys) => {
         console.log('selectedRowKeys changed: ', newSelectedRowKeys);
         setSelectedRowKeys(newSelectedRowKeys);
-    };
+    }
+
     const rowSelection = {
         selectedRowKeys,
         onChange: onSelectChange,
     };
+
     const hasSelected = selectedRowKeys.length > 0;
     useEffect(() => {
         if (isRender === true)
             fetchRecords(1, 10, nameSearch)
         SetIsRender(false)
     }, [isRender])
+
     const fetchRecords = (pageNum, pageSize, nameSearch) => {
         setLoading(true);
         GetListPurchaseOrdersByPage({ pageNum, pageSize, nameSearch })
@@ -173,7 +187,6 @@ const PurchaseOrderComponent = () => {
         ingredientID: ""
     })
     const [selectedItems, setSelectedItems] = useState([]);
-    //const filteredOptions = OPTIONS.filter((o) => !selectedItems.includes(o));
     const [isModalOpen, setIsModalOpen] = useState(false);
 
     const notify = (message) => {
@@ -188,6 +201,7 @@ const PurchaseOrderComponent = () => {
             theme: "colored",
         });
     }
+
     const notifyError = (message) => {
         toast.error(message + '!', {
             position: "top-right",
@@ -206,23 +220,23 @@ const PurchaseOrderComponent = () => {
         SetState(state)
         console.log(dataEdit)
         if (state == "ADD") {
-            SetTextTilte("Thêm mới lô hàng")
+            SetTextTilte("Thêm mới nguyên liệu")
             ClearForm()
         }
-        else if (state == "EDIT") SetTextTilte("Cập nhật lô hàng")
+        else if (state == "EDIT") SetTextTilte("Cập nhật nguyên liệu")
         if (dataEdit) {
             GetByID(dataEdit.key).then(res => {
-
                 SetDataPush({
                     ...dataPush,
                     ...res.data.value,
                     orderDate: dayjs(res.data.value.orderDate)
                 })
-                // SetDataPush({
-                //     ...dataPush,
-                //     orderDate: dayjs(res.data.value.orderDate)
-                // })
-                console.log(dataPush)
+                form.setFieldValue("employeeID",res.data.value.employeeID)
+                form.setFieldValue("orderDate",dayjs(res.data.value.orderDate))
+                form.setFieldValue("amount",res.data.value.amount)
+                form.setFieldValue("note",res.data.value.note)
+                form.setFieldValue("price",res.data.value.price)
+                form.setFieldValue("ingredientID",res.data.value.ingredientID)
             })
 
         }
@@ -239,14 +253,7 @@ const PurchaseOrderComponent = () => {
             ingredientID: ""
         })
     }
-    const UpdateCompleteProject = (id) => {
-        // UpdateComplete(id).then(res => {
-        //     SetIsRender(true)
-        //     notify("Dự án đã kết thúc")
-        // }).catch(e => {
-        //     console.log(e)
-        // })
-    }
+
     const handleOk = () => {
         setIsModalOpen(false);
         if (state === "ADD") {
@@ -255,6 +262,7 @@ const PurchaseOrderComponent = () => {
                 if (res.data.isSuccess === true) {
                     SetIsRender(true);
                     notify("Thêm ")
+                    form.resetFields()
                 } else notifyError(res.data.message)
 
             }).catch(e => {
@@ -265,6 +273,7 @@ const PurchaseOrderComponent = () => {
                 if (res.data.isSuccess === true) {
                     SetIsRender(true);
                     notify("Cập nhật ")
+                    form.resetFields()
                 } else notifyError(res.data.message)
             }).catch(e => {
                 notifyError(e)
@@ -274,6 +283,7 @@ const PurchaseOrderComponent = () => {
     };
     const handleCancel = () => {
         setIsModalOpen(false); ClearForm()
+        form.resetFields()
     };
 
     const handleChange = (e) => {
@@ -288,14 +298,7 @@ const PurchaseOrderComponent = () => {
         SetNameSearch(value);
         SetIsRender(true)
     }
-    const handleChangeSelectModal = (value) => {
-        console.log(value)
-        SetDataPush({
-            ...dataPush,
-            role: value
-        })
-
-    };
+    
     const handleChangeEmployee = (value) => {
         SetDataPush({
             ...dataPush,
@@ -314,43 +317,47 @@ const PurchaseOrderComponent = () => {
             orderDate: date
         })
     };
+    const [listIngredient,SetListIngredient]=useState()
+   
     return (
-
         <div style={{ padding: 10 }}>
             <div style={{ display: 'flex', alignItems: 'center', border: '1px solid #eee', padding: 12 }}>
-                {/* <b style={{ marginRight: 6 }}></b> */}
-                <Search
-                    placeholder="Mã lô hàng"
-                    allowClear
-                    onSearch={onSearch}
-                    style={{
+            <Select style={{
                         width: 400,
                     }}
-                />
+                    allowClear
+             showSearch
+                optionFilterProp="children"
+                 onSearch={onSearch}
+                 filterOption={(input, option) =>  
+                     option.props.children.toLowerCase().indexOf(input.toLowerCase()) >= 0 
+                     || option.props.value.toLowerCase().indexOf(input.toLowerCase()) >= 0
+                 } >
+            {listIngredientID.map(p => <Option value={p.value}>{p.label}</Option>)}
+          </Select>
+               
             </div>
 
             <ToastContainer />
             <div style={{ marginTop: "16px", }}>
 
                 <div style={{ display: 'flex', justifyContent: 'space-between' }}>
-                    <h3>Danh sách lô hàng </h3>
+                    <h3>Danh sách nhập liệu</h3>
                     <div style={{ display: 'flex', alignItems: 'center' }} >
 
                         <Button type="primary" ghost onClick={() => showModal("ADD")} style={{ marginRight: 16 }}>
                             Thêm
                         </Button>
-                        <Modal title={textTitle} width={800} open={isModalOpen} onOk={handleOk} onCancel={handleCancel} >
+                        <Modal title={textTitle} width={800} open={isModalOpen} onOk={form.submit} onCancel={handleCancel} >
                             <Form
                                 layout="horizontal"
                                 style={
                                     { maxWidth: 800 }
-                                }
+                                } form={form} onFinish={handleOk}
                             >
-
-
                                 <Row>
                                     <Col span={12}>
-                                        <Form.Item label="Nhân viên:">
+                                        <Form.Item name="employeeID" label="Nhân viên:" rules={rules.employeeID}>
                                             <Select
                                                 value={dataPush.employeeID}
                                                 onChange={handleChangeEmployee}
@@ -360,7 +367,7 @@ const PurchaseOrderComponent = () => {
                                     </Col>
                                     <Col span={1}></Col>
                                     <Col span={11}>
-                                        <Form.Item label="Nguyên liệu nhập:">
+                                        <Form.Item name="ingredientID" label="Nguyên liệu nhập:" rules={rules.ingredientID}>
                                             <Select
                                                 value={dataPush.ingredientID}
                                                 onChange={handleChangeingredient}
@@ -371,28 +378,28 @@ const PurchaseOrderComponent = () => {
                                 </Row>
                                 <Row>
                                     <Col span={12}>
-                                        <Form.Item label="Ngày nhập:">
+                                        <Form.Item name="orderDate" label="Ngày nhập:" rules={rules.orderDate}>
                                             <DatePicker value={dataPush.orderDate} style={{ width: '100%' }} onChange={onChangeDatePicker}></DatePicker>
                                         </Form.Item>
                                     </Col>
                                 </Row>
                                 <Row>
                                     <Col span={12}>
-                                        <Form.Item label="Số lượng:">
+                                        <Form.Item name="amount" label="Số lượng:" rules={rules.amount}>
                                             <Input name="amount" rows={4} value={dataPush.amount} onChange={handleChange}></Input>
                                         </Form.Item>
                                     </Col>
                                     <Col span={1}>
                                     </Col>
                                     <Col span={11}>
-                                        <Form.Item label="Đơn giá:">
+                                        <Form.Item  name="price" label="Đơn giá:" rules={rules.price}>
                                             <Input name="price" rows={4} value={dataPush.price} onChange={handleChange}></Input>
                                         </Form.Item>
                                     </Col>
                                 </Row>
                                 <Row>
                                     <Col span={24}>
-                                        <Form.Item label="ghi chú:">
+                                        <Form.Item  name="note" label="ghi chú:" rules={rules.note}>
                                             <TextArea name="note" rows={4} value={dataPush.note} onChange={handleChange} />
                                         </Form.Item>
                                     </Col>
@@ -436,12 +443,9 @@ const PurchaseOrderComponent = () => {
                         }
                     }}
                 >
-
-
                 </Table>
             </div>
         </div>
-
     )
 }
 

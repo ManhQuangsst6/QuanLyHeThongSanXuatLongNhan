@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Space, Button, Table, Input, Form, Row, Col, DatePicker, Flex } from 'antd';
-import { EditOutlined, DeleteOutlined, CaretRightOutlined, EyeOutlined, CheckOutlined } from '@ant-design/icons';
+import { EditOutlined, DeleteOutlined, ExclamationCircleFilled, EyeOutlined, PlusOutlined } from '@ant-design/icons';
 import { useNavigate } from 'react-router-dom';
 import { GetListAll, } from '../../API/Ingredient/ingredient';
 import { GetAllUserPage, GetListEmployeePage, Post, GetByID, Remove } from '../../API/Employee/EmployeeAPI';
@@ -17,7 +17,7 @@ const { Search } = Input;
 
 const { RangePicker } = DatePicker;
 const { TextArea } = Input;
-
+const { confirm } = Modal;
 
 const EmployeeeComponent = () => {
     const [nameSearch, SetNameSearch] = useState("")
@@ -50,17 +50,21 @@ const EmployeeeComponent = () => {
         {
             title: 'Tùy chọn',
             dataIndex: 'action',
-            width: '20%',
+            width: '5%',
             render: (_, record) => (
                 <Space size="middle">
                     <a  ><EyeOutlined /></a>
-                    <a onClick={() => DeleteAProject(record.key)}><DeleteOutlined /></a>
+                    <a onClick={() => DeleteAProject(record.key,record.name)}><DeleteOutlined /></a>
                 </Space>
             ),
         },
 
     ];
-
+    const rules={
+        fullName:[{required: true ,message:'Tên người dùng không bỏ trống'} ],
+        userName:[{required: true ,message:'Tên tài khoản không bỏ trống'} ],
+         }
+         const [form] = Form.useForm();
     const navigate = useNavigate();
     const [data, SetData] = useState([]);
     const [isRender, SetIsRender] = useState(true);
@@ -93,25 +97,34 @@ const EmployeeeComponent = () => {
                 SetData(dataShow)
             });
     };
-    const DeleteAProject = (id) => {
-        Remove(id).then(res => {
-            if (res.data.isSuccess === true) {
-                SetIsRender(true);
-                notify("Xóa user ")
-            } else notifyError(res.data.message)
-        }).catch(e => {
-            notifyError(e);
-        })
+    const DeleteAProject = (id,name) => {
+        confirm({
+            title: 'Bạn muốn xóa  ' + name + " ?",
+            icon: <ExclamationCircleFilled />,
+            okText: 'Có',
+            okType: 'danger',
+            cancelText: 'Quay lại',
+            onOk() {
+                Remove(id).then(res => {
+                    if (res.data.isSuccess === true) {
+                        SetIsRender(true);
+                        notify("Xóa user ")
+                    } else notifyError(res.data.message)
+                }).catch(e => {
+                    notifyError(e);
+                })
+            },
+            onCancel() {
+
+            },
+        });
     }
-
-
-    ////
 
     const [textTitle, SetTextTilte] = useState("")
     const [state, SetState] = useState("ADD")
     const [dataPush, SetDataPush] = useState({ ID: "", Name: '', Measure: '', Description: '' })
     const [selectedItems, setSelectedItems] = useState([]);
-    //const filteredOptions = OPTIONS.filter((o) => !selectedItems.includes(o));
+
     const [isModalOpen, setIsModalOpen] = useState(false);
 
     const notify = (message) => {
@@ -158,6 +171,8 @@ const EmployeeeComponent = () => {
             RegisterUser(dataPush).then(res => {
                 if (res.data.isSuccess === true) {
                     SetIsRender(true);
+                    ClearForm()
+                     form.resetFields()
                     notify("Thêm nhân viên thành công, mã nhân viên bạn là " + res.data.message)
                 } else notifyError(res.data.message)
 
@@ -165,10 +180,11 @@ const EmployeeeComponent = () => {
                 notifyError(e)
             })
         }
-        ClearForm()
+        
     }
     const handleCancel = () => {
         setIsModalOpen(false); ClearForm()
+        form.resetFields()
     };
 
     const handleChange = (e) => {
@@ -198,27 +214,29 @@ const EmployeeeComponent = () => {
             <div style={{ marginTop: "16px", }}>
                 <div style={{ display: 'flex', justifyContent: 'space-between' }}>
                     <h3>Danh sách nhân viên </h3>
+
                     <div style={{ display: 'flex', alignItems: 'center' }} >
-                        <Button type="primary" ghost onClick={() => showModal("ADD")} style={{ marginRight: 16 }}>
+                        <Button type="primary"  onClick={() => showModal("ADD")} style={{ marginRight: 16 }}
+                         icon={<PlusOutlined />}>
                             Thêm
                         </Button>
-                        <Modal title={textTitle} open={isModalOpen} onOk={handleOk} onCancel={handleCancel} >
+                        <Modal title={textTitle} open={isModalOpen} onOk={form.submit} onCancel={handleCancel} >
                             <Form
                                 layout="horizontal"
                                 style={
                                     { maxWidth: 800 }
-                                }
+                                } form={form} onFinish={handleOk}
                             >
                                 <Row>
                                     <Col span={24}>
-                                        <Form.Item label="Họ và tên:">
+                                        <Form.Item name="fullName" label="Họ và tên:" rules={rules.fullName}>
                                             <Input name="fullName" value={dataPush.fullName} onChange={handleChange} />
                                         </Form.Item>
                                     </Col>
                                 </Row>
                                 <Row>
                                     <Col span={24}>
-                                        <Form.Item label="Tên tài khoản:">
+                                        <Form.Item name="userName" label="Tên tài khoản:" rules={rules.userName}>
                                             <Input name="userName" value={dataPush.userName} onChange={handleChange} />
                                         </Form.Item>
                                     </Col>
@@ -228,7 +246,7 @@ const EmployeeeComponent = () => {
                                         <Form.Item label="Quyền ">
                                             <Select
                                                 defaultValue="Employee"
-                                                style={{ width: 120 }}
+                                                style={{ width: '100%' }}
                                                 onChange={handleChangeSelectModal}
                                                 options={[
                                                     { value: 'User', label: 'User' },
@@ -241,13 +259,13 @@ const EmployeeeComponent = () => {
                                 <Row>
                                     <Col span={24}>
                                         <Form.Item label="Email">
-                                            <TextArea name="email" rows={4} value={dataPush.email} onChange={handleChange} />
+                                            <Input name="email" rows={4} value={dataPush.email} onChange={handleChange} />
                                         </Form.Item>
                                     </Col>
                                 </Row>
                             </Form>
                         </Modal>
-                        <Button danger>Xóa </Button>
+                        <Button >Xóa </Button>
                     </div>
                 </div>
 
@@ -261,8 +279,6 @@ const EmployeeeComponent = () => {
                 </div>
                 <Table rowSelection={rowSelection} columns={columns} dataSource={data}
                 >
-
-
                 </Table>
             </div>
         </div>

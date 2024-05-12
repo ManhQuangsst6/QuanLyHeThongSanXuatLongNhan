@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
-import { Space, Button, Table, Input, Form, Row, Col, DatePicker } from 'antd';
-import { EditOutlined, DeleteOutlined, CaretRightOutlined, EyeOutlined, ExclamationCircleFilled } from '@ant-design/icons';
+import { Space, Button, Table, Input, Form, Row, Col, DatePicker, InputNumber  } from 'antd';
+import { EditOutlined, DeleteOutlined, CaretRightOutlined, EyeOutlined, ExclamationCircleFilled,PlusOutlined } from '@ant-design/icons';
 import { useNavigate } from 'react-router-dom';
 import { GetListAll, Post, Update, Remove } from '../../API/Category/categoryAPI';
 import { Modal } from 'antd';
@@ -18,6 +18,7 @@ const { TextArea } = Input;
 
 
 const CategoryComponent = () => {
+    const [formErrors, setFormErrors] = useState({});
     const columns = [
         {
             title: 'Tên',
@@ -133,7 +134,7 @@ const CategoryComponent = () => {
     }
 
     const showModal = (state, dataEdit) => {
-        setIsModalOpen(true);
+        
         SetState(state)
         console.log(dataEdit)
         if (state == "ADD") {
@@ -149,19 +150,27 @@ const CategoryComponent = () => {
                 wholesalePrice: dataEdit.wholesalePrice,
                 retailPrice: dataEdit.retailPrice
             })
+            form.setFieldValue("name",dataEdit.name)
+        form.setFieldValue("description",dataEdit.description)
+        form.setFieldValue("wholesalePrice",dataEdit.wholesalePrice)
+        form.setFieldValue("retailPrice",dataEdit.retailPrice)
         }
+        
+        console.log(dataPush)
+        setIsModalOpen(true);
     };
     const ClearForm = () => {
         SetDataPush({
             id: "",
             name: "",
             description: "",
-            wholesalePrice: 0,
-            retailPrice: 0
+            wholesalePrice: null,
+            retailPrice: null
         })
     }
 
     const handleOk = () => {
+        console.log(dataPush)
         setIsModalOpen(false);
         if (state === "ADD") {
             console.log(dataPush)
@@ -169,6 +178,8 @@ const CategoryComponent = () => {
                 if (res.data.isSuccess === true) {
                     SetIsRender(true);
                     notify("Thêm loại long nhãn")
+                    form.resetFields()
+                    ClearForm()
                 } else notifyError(res.data.message)
 
             }).catch(e => {
@@ -179,6 +190,8 @@ const CategoryComponent = () => {
                 if (res.data.isSuccess === true) {
                     SetIsRender(true);
                     notify("Cập nhật loại long nhãn ")
+                    form.resetFields()
+                    ClearForm()
                 } else notifyError(res.data.message)
             }).catch(e => {
                 notifyError(e)
@@ -188,6 +201,7 @@ const CategoryComponent = () => {
     };
     const handleCancel = () => {
         setIsModalOpen(false); ClearForm()
+        form.resetFields()
     };
 
     const handleChange = (e) => {
@@ -196,7 +210,25 @@ const CategoryComponent = () => {
             [e.target.name]: e.target.value,
         }));
     };
-
+    const handleChangeRetailPrice=(e)=>{
+        SetDataPush((dataPush) => ({
+            ...dataPush,
+            retailPrice: e,
+        }));
+    }
+    const handleChangeWholesalePrice=(e)=>{
+        SetDataPush((dataPush) => ({
+            ...dataPush,
+            wholesalePrice: e,
+        }));
+        form.setFieldValue("")
+    }
+    const rules={
+        name:[{required: true ,message:'Tên loại không bỏ trống'} ],
+        wholesalePrice:[{required: true ,message:'Giá sỉ không bỏ trống'} ],
+        retailPrice:[{required: true ,message:'Giá bán lẻ không bỏ trống'} ]
+         }
+         const [form] = Form.useForm();
     return (
         <div style={{ padding: 10 }}>
             <ToastContainer />
@@ -204,36 +236,39 @@ const CategoryComponent = () => {
                 <div style={{ display: 'flex', justifyContent: 'space-between' }}>
                     <h3>Danh sách loại nhãn</h3>
                     <div style={{ display: 'flex', alignItems: 'center' }} >
-                        <Button type="primary" ghost onClick={() => showModal("ADD")} style={{ marginRight: 16 }}>
+                        <Button type="primary"  onClick={() => showModal("ADD")} style={{ marginRight: 16 }}
+                        icon={<PlusOutlined />}>
                             Thêm
                         </Button>
-                        <Modal title={textTitle} open={isModalOpen} onOk={handleOk} onCancel={handleCancel} >
-                            <Form layout="horizontal"  >
+                        <Modal title={textTitle} open={isModalOpen} onOk={form.submit } onCancel={handleCancel} 
+                         >
+                            <Form layout="horizontal" form={form}   onFinish={handleOk} >
                                 <Row>
+                                    
                                     <Col span={24}>
-                                        <Form.Item label="Tên loại:">
+                                        <Form.Item name="name" label="Tên loại:" rules={rules.name}>
                                             <Input name="name" value={dataPush.name} onChange={handleChange} />
                                         </Form.Item>
                                     </Col>
                                 </Row>
                                 <Row>
                                     <Col span={24}>
-                                        <Form.Item label="Giá bán lẻ: ">
-                                            <Input name="wholesalePrice" value={dataPush.wholesalePrice} onChange={handleChange} />
+                                        <Form.Item name="wholesalePrice" label="Giá bán lẻ: " rules={rules.wholesalePrice}>
+                                            <InputNumber name="wholesalePrice" style={{width:'100%'}}  value={dataPush.wholesalePrice} onChange={handleChangeWholesalePrice} />
                                         </Form.Item>
                                     </Col>
                                 </Row>
                                 <Row>
                                     <Col span={24}>
-                                        <Form.Item label="Giá bán buôn: ">
-                                            <Input name="retailPrice" value={dataPush.retailPrice} onChange={handleChange} />
+                                        <Form.Item name="retailPrice" label="Giá bán buôn: " rules={rules.retailPrice}>
+                                            <InputNumber  name="retailPrice" style={{width:'100%'}} value={dataPush.retailPrice} onChange={handleChangeRetailPrice} />
                                         </Form.Item>
                                     </Col>
                                 </Row>
                                 <Row>
                                     <Col span={24}>
-                                        <Form.Item label="Mô tả:">
-                                            <TextArea name="description" rows={4} value={dataPush.description} onChange={handleChange} />
+                                        <Form.Item label="Mô tả:" name="description">
+                                            <TextArea name="description"  rows={4} value={dataPush.description} onChange={handleChange} />
                                         </Form.Item>
                                     </Col>
                                 </Row>

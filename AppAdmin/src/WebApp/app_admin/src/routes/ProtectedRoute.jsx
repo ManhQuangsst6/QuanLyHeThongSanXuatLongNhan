@@ -5,14 +5,14 @@ import React, { useState } from "react";
 import {
     MenuFoldOutlined,
     MenuUnfoldOutlined,
-    UploadOutlined,
+    ReadOutlined,
     UserOutlined,
-    VideoCameraOutlined,
+    CarOutlined,
     SettingOutlined,
     GiftOutlined, HomeOutlined,
-    AppstoreOutlined
+    AppstoreOutlined,BellOutlined 
 } from '@ant-design/icons';
-import { Layout, Menu, Button, theme, Avatar, Popover } from 'antd';
+import { Layout, Menu, Button, theme, Avatar, Popover,Badge } from 'antd';
 const { Header, Sider, Content } = Layout;
 const { SubMenu } = Menu;
 function getItem(label, key, icon, children, type) {
@@ -30,9 +30,11 @@ const items = [
         getItem(<NavLink to='/employee/employee'>Nhân viên</NavLink>, '2'),
         getItem(<NavLink to='/employee/user'>Thợ thủ công</NavLink>, '3'),
     ]),
-    getItem(<NavLink to='/shipment'>Quản lý lô hàng</NavLink>, '4', <AppstoreOutlined />),
-    getItem(<NavLink to='/PurchaseOrder'> Nhập nguyên liệu</NavLink>, '5', <AppstoreOutlined />),
-    getItem(<NavLink to='/event'>Sự kiện</NavLink>, '6', <GiftOutlined />),
+    getItem(<NavLink to='/attendance'>Chấm công</NavLink>, '4', <ReadOutlined />),
+    getItem(<NavLink to='/register-day-longan'>Đặt nhãn </NavLink>, '8', <CarOutlined />),
+    getItem(<NavLink to='/shipment'>Quản lý lô hàng</NavLink>, '5', <AppstoreOutlined />),
+    getItem(<NavLink to='/PurchaseOrder'> Nhập nguyên liệu</NavLink>, '6', <AppstoreOutlined />),
+    getItem(<NavLink to='/event'>Sự kiện</NavLink>, '7', <GiftOutlined />),
     getItem('Cài đặt', 'sub2', <SettingOutlined />, [
         getItem(<NavLink to='/setting/ingredient'>Nguyên liệu</NavLink>, '9'),
         getItem(<NavLink to='/setting/category'>Loại nhãn</NavLink>, '10'),
@@ -103,16 +105,23 @@ export const ProtectedRoute = () => {
                                 }}
                             ></Button><span className='text-header'>{textHeader}Trang chủ</span>
                         </div>
-                        <Popover
+                       <div style={{display:'flex',alignItems:'center'}}>
+                       <Badge count={5} >
+                                 <BellOutlined style={{fontSize:30}}  />
+                            </Badge>
+                            <Popover
                             content={content}
                             trigger="click"
                             open={open}
                             onOpenChange={handleOpenChange}
                             style={{ background: '#eee' }}
                         >
-                            <Avatar style={{ margin: 'auto 0', marginRight: 12 }}
+                             
+                            <Avatar style={{ margin: 'auto 0', marginRight: 12 ,marginLeft:32}}
                                 src="https://d1hjkbq40fs2x4.cloudfront.net/2016-01-31/files/1045-2.jpg" size="large" icon={<UserOutlined />} />
                         </Popover>
+                       </div>
+                        
                     </Header>
                     <Content
                         style={{

@@ -18,6 +18,12 @@ namespace AppBackend.Data.Context
 		public DbSet<Shipment> Shipments { set; get; }
 		public DbSet<Event> Events { set; get; }
 		public DbSet<Order_Shipment> Order_Shipments { set; get; }
+		public DbSet<Order> Orders { set; get; }
+		public DbSet<WorkAttendance> WorkAttendances { set; get; }
+		public DbSet<Salary> Salaries { set; get; }
+		public DbSet<RegisterDayLongan> RegisterDayLongans { set; get; }
+		public DbSet<RegisterRemainningLongan> RegisterRemainningLongans { set; get; }
+		public DbSet<ComfirmLongan> ComfirmLongans { set; get; }
 		protected override void OnModelCreating(ModelBuilder builder)
 		{
 

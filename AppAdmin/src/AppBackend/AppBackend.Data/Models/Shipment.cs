@@ -6,14 +6,15 @@ namespace AppBackend.Data.Models
 	{
 		public string Id { get; set; }
 		public string ShipmentCode { get; set; }
-		public DateTime? DateFrom { get; set; }
-		public DateTime? DateTo { get; set; }
-		public DateTime? DateUp { get; set; }
+		public DateTimeOffset? DateFrom { get; set; }
+		public DateTimeOffset? DateTo { get; set; }
+		public DateTimeOffset? DateUp { get; set; }
 		public string EmployeeID { get; set; }
 		public int Status { get; set; }
 		public string CategoryID { get; set; }
 
 		public double? Amount { get; set; }
+		public double? Remainning { get; set; }
 		public int? IsDelete { get; set; }
 		public Employee Employee { get; set; }
 		public Category Category { get; set; }

@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Space, Button, Table, Input, Form, Row, Col, DatePicker, Flex } from 'antd';
-import { EditOutlined, DeleteOutlined, CaretRightOutlined, EyeOutlined, CheckOutlined } from '@ant-design/icons';
+import { EditOutlined, DeleteOutlined, ExclamationCircleFilled, EyeOutlined, PlusOutlined } from '@ant-design/icons';
 import { useNavigate } from 'react-router-dom';
 import { GetListAll, } from '../../API/Ingredient/ingredient';
 import { GetAllUserPage, GetListEmployeePage, Post, GetByID, Remove } from '../../API/Employee/EmployeeAPI';
@@ -11,7 +11,7 @@ import 'react-toastify/dist/ReactToastify.css';
 import { render } from '@testing-library/react';
 const { Column, ColumnGroup } = Table;
 const { Search } = Input;
-
+const { confirm } = Modal;
 
 
 
@@ -54,12 +54,17 @@ const UserComponent = () => {
             render: (_, record) => (
                 <Space size="middle">
                     <a  ><EyeOutlined /></a>
-                    <a onClick={() => DeleteAProject(record.key)}><DeleteOutlined /></a>
+                    <a onClick={() => DeleteAProject(record.key,record.EmployeeCode)}><DeleteOutlined /></a>
                 </Space>
             ),
         },
 
     ];
+    const [form] = Form.useForm();
+    const rules={
+        fullName:[{required: true ,message:'Tên người dùng không bỏ trống'} ],
+        userName:[{required: true ,message:'Tên tài khoản không bỏ trống'} ],
+         }
     const [totalPassengers, setTotalPassengers] = useState(1);
     const [loading, setLoading] = useState(false);
     const navigate = useNavigate();
@@ -97,15 +102,28 @@ const UserComponent = () => {
                 setLoading(false);
             });
     };
-    const DeleteAProject = (id) => {
-        Remove(id).then(res => {
-            if (res.data.isSuccess === true) {
-                SetIsRender(true);
-                notify("Xóa user ")
-            } else notifyError(res.data.message)
-        }).catch(e => {
-            notifyError(e);
-        })
+    const DeleteAProject = (id,name) => {
+        confirm({
+            title: 'Bạn muốn xóa  ' + name + " ?",
+            icon: <ExclamationCircleFilled />,
+            okText: 'Có',
+            okType: 'danger',
+            cancelText: 'Quay lại',
+            onOk() {
+                Remove(id).then(res => {
+                    if (res.data.isSuccess === true) {
+                        SetIsRender(true);
+                        notify("Xóa user ")
+                    } else notifyError(res.data.message)
+                }).catch(e => {
+                    notifyError(e);
+                })
+            },
+            onCancel() {
+
+            },
+        });
+        
     }
 
     const [textTitle, SetTextTilte] = useState("")
@@ -159,6 +177,8 @@ const UserComponent = () => {
                 if (res.data.isSuccess === true) {
                     SetIsRender(true);
                     notify("Thêm user thành công, mã nhân viên bạn là " + res.data.message)
+                    ClearForm()
+                     form.resetFields()
                 } else notifyError(res.data.message)
 
             }).catch(e => {
@@ -168,7 +188,9 @@ const UserComponent = () => {
         ClearForm()
     }
     const handleCancel = () => {
-        setIsModalOpen(false); ClearForm()
+        setIsModalOpen(false); 
+        ClearForm()
+         form.resetFields()
     };
 
     const handleChange = (e) => {
@@ -194,46 +216,45 @@ const UserComponent = () => {
     return (
 
         <div style={{ padding: 10 }}>
-            <div style={{ display: 'flex', alignItems: 'center', border: '1px solid #eee', padding: 12 }}>
-                <b style={{ marginRight: 6 }}>Mã nhân viên</b>
-                <Search
-                    placeholder=""
-                    allowClear
-                    onSearch={onSearch}
-                    style={{
-                        width: 400,
-                    }}
-                />
-            </div>
-
             <ToastContainer />
             <div style={{ marginTop: "16px", }}>
 
                 <div style={{ display: 'flex', justifyContent: 'space-between' }}>
-                    <h3>Danh sách thợ </h3>
+                   <div style={{display:'flex'}}> 
+                    <h3 style={{marginRight:20}}>Danh sách thợ </h3>
+                    <Search
+                    placeholder="Nhập mã nhân viên"
+                    allowClear
+                    onSearch={onSearch}
+                    style={{
+                        width:400,
+                       display:'flex',alignItems:'center'
+                    }}
+                />
+                </div>
                     <div style={{ display: 'flex', alignItems: 'center' }} >
-
-                        <Button type="primary" ghost onClick={() => showModal("ADD")} style={{ marginRight: 16 }}>
+                        <Button type="primary" onClick={() => showModal("ADD")} style={{ marginRight: 16 }}
+                         icon={<PlusOutlined />}>
                             Thêm
                         </Button>
-                        <Modal title={textTitle} open={isModalOpen} onOk={handleOk} onCancel={handleCancel} >
+                        <Modal title={textTitle} open={isModalOpen} onOk={form.submit} onCancel={handleCancel} >
                             <Form
                                 layout="horizontal"
                                 style={
                                     { maxWidth: 800 }
                                 }
+                                form={form} onFinish={handleOk}
                             >
-
                                 <Row>
                                     <Col span={24}>
-                                        <Form.Item label="Họ và tên:">
+                                        <Form.Item name="fullName" label="Họ và tên:" rules={rules.fullName}>
                                             <Input name="fullName" value={dataPush.fullName} onChange={handleChange} />
                                         </Form.Item>
                                     </Col>
                                 </Row>
                                 <Row>
                                     <Col span={24}>
-                                        <Form.Item label="Tên tài khoản:">
+                                        <Form.Item name="userName" label="Tên tài khoản:" rules={rules.userName}>
                                             <Input name="userName" value={dataPush.userName} onChange={handleChange} />
                                         </Form.Item>
                                     </Col>
@@ -243,7 +264,7 @@ const UserComponent = () => {
                                         <Form.Item label="Quyền ">
                                             <Select
                                                 defaultValue="User"
-                                                style={{ width: 120 }}
+                                                style={{ width: '100%' }}
                                                 onChange={handleChangeSelectModal}
                                                 options={[
                                                     { value: 'User', label: 'User' },
@@ -256,7 +277,7 @@ const UserComponent = () => {
                                 <Row>
                                     <Col span={24}>
                                         <Form.Item label="Email">
-                                            <TextArea name="email" rows={4} value={dataPush.email} onChange={handleChange} />
+                                            <Input name="email" rows={4} value={dataPush.email} onChange={handleChange} />
                                         </Form.Item>
                                     </Col>
                                 </Row>

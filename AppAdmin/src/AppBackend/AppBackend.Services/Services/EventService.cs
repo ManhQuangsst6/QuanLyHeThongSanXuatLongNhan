@@ -31,7 +31,6 @@ namespace AppBackend.Application.Services
 		public async Task<Response<PaginatedList<EventDTO>>> GetAllPage(int pageSize, int pageNum, string? searchName)
 		{
 			var query = _dataContext.Events.AsNoTracking().Where(x => x.Title.Contains(searchName) || searchName.IsNullOrEmpty());
-
 			var objs = await query.ProjectTo<EventDTO>(_mapper.ConfigurationProvider).PaginatedListAsync(pageNum, pageSize);
 			return new Response<PaginatedList<EventDTO>> { IsSuccess = true, Status = 200, Value = objs };
 		}

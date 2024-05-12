@@ -7,11 +7,12 @@ namespace AppBackend.Data.Models
 	{
 		public string Id { get; set; }
 		public string EmployeeID { get; set; }
-		public DateTime DateFrom { get; set; }
-		public DateTime DateTo { get; set; }
-		public DateTime DateUp { get; set; }
+		public string? Note { get; set; }
+		public int? QuarterYear { get; set; }
+		public int? Year { get; set; }
 		[Column(TypeName = "decimal(18,3)")]
 		public decimal SalaryMoney { get; set; }
+		public int Status { get; set; } = 0;
 		public Employee Employee { get; set; }
 	}
 }

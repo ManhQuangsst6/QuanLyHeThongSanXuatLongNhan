@@ -14,5 +14,5 @@ export const GetAllUserPage = (paging) => {
     return apiService.get(query)
 }
 export const Remove = (id) => {
-    return apiService.get(`${name}/Remove?id=?${id}`)
+    return apiService.delete(`${name}/Remove?id=${id}`)
 }

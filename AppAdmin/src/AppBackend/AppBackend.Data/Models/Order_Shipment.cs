@@ -10,7 +10,9 @@ namespace AppBackend.Data.Models
 		public decimal Price { get; set; }
 		[Column(TypeName = "decimal(18,3)")]
 		public decimal Money { get; set; }
-		public Order Order { get; set; }
-		public Shipment Shipment { get; set; }
+		public double NumAmount { get; set; }
+
+		public Order? Order { get; set; }
+		public Shipment? Shipment { get; set; }
 	}
 }

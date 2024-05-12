@@ -1,11 +1,13 @@
 ﻿using AppBackend.Application.Interface;
 using AppBackend.Application.ModelsDTO;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace AppBackend.API.Controllers
 {
 	[Route("api/[controller]/[action]")]
 	[ApiController]
+	[Authorize]
 	public class CategoryController : ControllerBase
 	{
 		private readonly ICategoryService _categoryService;
@@ -27,7 +29,7 @@ namespace AppBackend.API.Controllers
 			}
 
 		}
-		[HttpGet()]
+		[HttpGet, Authorize(Roles = "User")]
 		public async Task<IActionResult> GetListAll()
 		{
 			try

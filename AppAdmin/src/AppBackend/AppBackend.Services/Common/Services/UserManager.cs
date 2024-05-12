@@ -130,7 +130,8 @@ namespace AppBackend.Application.Common.Services
 				}
 				var authClaim = new List<Claim>() {
 						new Claim(ClaimTypes.Name,userlogin.UserName),
-						new Claim(JwtRegisteredClaimNames.Jti,Guid.NewGuid().ToString())
+						new Claim(JwtRegisteredClaimNames.Jti,Guid.NewGuid().ToString()),
+						new Claim(ClaimTypes.NameIdentifier,user.Id)
 					};
 				var userRole = await _userManager.GetRolesAsync(user);
 				foreach (var role in userRole)
@@ -152,14 +153,23 @@ namespace AppBackend.Application.Common.Services
 		}
 		private JwtSecurityToken GetToken(List<Claim> claims)
 		{
-			SymmetricSecurityKey authSignInKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration["Jwt:Secret"]));
+			var authSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration["JWT:Secret"]));
+
 			var token = new JwtSecurityToken(
-				issuer: _configuration["Jwt:ValidIssuer"],
-				audience: _configuration["Jwt:ValidAudience"],
-				expires: DateTime.Now.AddHours(1),
+				issuer: _configuration["JWT:ValidIssuer"],
+				audience: _configuration["JWT:ValidAudience"],
+				expires: DateTime.Now.AddHours(3),
 				claims: claims,
-				signingCredentials: new SigningCredentials(authSignInKey, SecurityAlgorithms.HmacSha256)
+				signingCredentials: new SigningCredentials(authSigningKey, SecurityAlgorithms.HmacSha256)
 				);
+			//SymmetricSecurityKey authSignInKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration["Jwt:Secret"]));
+			//var token = new JwtSecurityToken(
+			//	issuer: _configuration["Jwt:ValidIssuer"],
+			//	audience: _configuration["Jwt:ValidAudience"],
+			//	expires: DateTime.Now.AddHours(1),
+			//	claims: claims,
+			//	signingCredentials: new SigningCredentials(authSignInKey, SecurityAlgorithms.HmacSha256)
+			//	);
 			return token;
 		}
 

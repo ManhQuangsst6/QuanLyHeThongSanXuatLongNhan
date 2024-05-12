@@ -36,7 +36,7 @@ namespace AppBackend.Application.Services
 			var query = from e in employees
 						join ur in userRole on e.Id equals ur.UserId
 						join r in role on ur.RoleId equals r.Id
-						where r.Name == "Employee"
+						where r.Name == "Employee" && e.IsDeleted == 0
 						select e;
 			var result = await query.ProjectToListAsync<EmployeeDTO>(_mapper.ConfigurationProvider);
 			return new Response<List<EmployeeDTO>>() { IsSuccess = true, Status = 200, Value = result };
@@ -44,7 +44,7 @@ namespace AppBackend.Application.Services
 
 		public async Task<Response<PaginatedList<EmployeeDTO>>> GetAllPage(int pageSize = 10, int pageNum = 1)
 		{
-			var query = _dataContext.Employees.AsNoTracking();
+			var query = _dataContext.Employees.AsNoTracking().Where(x => x.IsDeleted == 0);
 			var objs = await query.ProjectTo<EmployeeDTO>(_mapper.ConfigurationProvider).PaginatedListAsync(pageNum, pageSize);
 			return new Response<PaginatedList<EmployeeDTO>> { IsSuccess = true, Status = 200, Value = objs };
 		}
@@ -57,7 +57,7 @@ namespace AppBackend.Application.Services
 			var query = from e in employees
 						join ur in userRole on e.Id equals ur.UserId
 						join r in role on ur.RoleId equals r.Id
-						where r.Name == "User" && ((e.EmployeeCode.Contains(nameSearch) || nameSearch.IsNullOrEmpty()))
+						where r.Name == "User" && ((e.EmployeeCode.Contains(nameSearch) || nameSearch.IsNullOrEmpty())) && e.IsDeleted == 0
 						select e;
 
 

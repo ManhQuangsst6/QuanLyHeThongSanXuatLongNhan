@@ -11,9 +11,9 @@ namespace AppBackend.Application.ModelsDTO
 		public string? EmployeeCode { get; set; }
 		public string? Categoryname { get; set; }
 		public string ShipmentCode { get; set; }
-		public DateTime? DateFrom { get; set; }
-		public DateTime? DateTo { get; set; }
-		public DateTime? DateUp { get; set; }
+		public DateTimeOffset? DateFrom { get; set; }
+		public DateTimeOffset? DateTo { get; set; }
+		public DateTimeOffset? DateUp { get; set; }
 		public string? EmployeeID { get; set; }
 		public int? Status { get; set; }
 		public string? StatusString { get; set; }

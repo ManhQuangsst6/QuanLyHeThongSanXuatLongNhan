@@ -11,6 +11,8 @@ import ShipmentComponent from "../Components/shipment/shipmentComponnent";
 import CategoryComponent from "../Components/setting/CategoryComponent";
 import PurchaseOrderComponent from "../Components/PurchaseOrder/PurchaseOrdersComponent";
 import EventComponent from "../Components/Event/EventComponent";
+import AttendanceComponent from "../Components/Atttendance/AtttendanceComponent"
+import RegisterDayLonganComponent from "../Components/RegisterDayLongan/RegisterDayLonganComponent";
 const Routes = () => {
     const { token } = useAuth();
 
@@ -43,6 +45,14 @@ const Routes = () => {
                 {
                     path: "/Event",
                     element: <EventComponent></EventComponent>,
+                },
+                {
+                    path: "/attendance",
+                    element: <AttendanceComponent></AttendanceComponent>,
+                },
+                {
+                    path: "/register-day-longan",
+                    element: <RegisterDayLonganComponent></RegisterDayLonganComponent>,
                 },
                 {
                     path: "/setting/ingredient",

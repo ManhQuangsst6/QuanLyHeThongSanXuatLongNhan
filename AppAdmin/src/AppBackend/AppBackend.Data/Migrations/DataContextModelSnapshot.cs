@@ -27,8 +27,8 @@ namespace AppBackend.Data.Migrations
                     b.Property<string>("Id")
                         .HasColumnType("nvarchar(450)");
 
-                    b.Property<DateTime?>("Created")
-                        .HasColumnType("datetime2");
+                    b.Property<DateTimeOffset?>("Created")
+                        .HasColumnType("datetimeoffset");
 
                     b.Property<string>("CreatedBy")
                         .HasColumnType("nvarchar(max)");
@@ -36,8 +36,8 @@ namespace AppBackend.Data.Migrations
                     b.Property<string>("Description")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<DateTime?>("LastModified")
-                        .HasColumnType("datetime2");
+                    b.Property<DateTimeOffset?>("LastModified")
+                        .HasColumnType("datetimeoffset");
 
                     b.Property<string>("LastModifiedBy")
                         .HasColumnType("nvarchar(max)");
@@ -57,13 +57,50 @@ namespace AppBackend.Data.Migrations
                     b.ToTable("Categories");
                 });
 
+            modelBuilder.Entity("AppBackend.Data.Models.ComfirmLongan", b =>
+                {
+                    b.Property<string>("Id")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<double>("Amount")
+                        .HasColumnType("float");
+
+                    b.Property<DateTimeOffset?>("Created")
+                        .HasColumnType("datetimeoffset");
+
+                    b.Property<string>("CreatedBy")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("EmployeeID")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<int?>("IsComfirm")
+                        .HasColumnType("int");
+
+                    b.Property<DateTimeOffset?>("LastModified")
+                        .HasColumnType("datetimeoffset");
+
+                    b.Property<string>("LastModifiedBy")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Note")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("EmployeeID");
+
+                    b.ToTable("ComfirmLongans");
+                });
+
             modelBuilder.Entity("AppBackend.Data.Models.Employee", b =>
                 {
                     b.Property<string>("Id")
                         .HasColumnType("nvarchar(450)");
 
-                    b.Property<DateTime?>("Created")
-                        .HasColumnType("datetime2");
+                    b.Property<DateTimeOffset?>("Created")
+                        .HasColumnType("datetimeoffset");
 
                     b.Property<string>("CreatedBy")
                         .HasColumnType("nvarchar(max)");
@@ -81,8 +118,8 @@ namespace AppBackend.Data.Migrations
                     b.Property<int?>("IsDeleted")
                         .HasColumnType("int");
 
-                    b.Property<DateTime?>("LastModified")
-                        .HasColumnType("datetime2");
+                    b.Property<DateTimeOffset?>("LastModified")
+                        .HasColumnType("datetimeoffset");
 
                     b.Property<string>("LastModifiedBy")
                         .HasColumnType("nvarchar(max)");
@@ -100,14 +137,14 @@ namespace AppBackend.Data.Migrations
                     b.Property<string>("Id")
                         .HasColumnType("nvarchar(450)");
 
-                    b.Property<DateTime?>("Created")
-                        .HasColumnType("datetime2");
+                    b.Property<DateTimeOffset?>("Created")
+                        .HasColumnType("datetimeoffset");
 
                     b.Property<string>("CreatedBy")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<DateTime>("DateStart")
-                        .HasColumnType("datetime2");
+                    b.Property<DateTimeOffset>("DateStart")
+                        .HasColumnType("datetimeoffset");
 
                     b.Property<string>("Description")
                         .IsRequired()
@@ -120,8 +157,8 @@ namespace AppBackend.Data.Migrations
                     b.Property<decimal>("Expense")
                         .HasColumnType("decimal(18,3)");
 
-                    b.Property<DateTime?>("LastModified")
-                        .HasColumnType("datetime2");
+                    b.Property<DateTimeOffset?>("LastModified")
+                        .HasColumnType("datetimeoffset");
 
                     b.Property<string>("LastModifiedBy")
                         .HasColumnType("nvarchar(max)");
@@ -142,8 +179,8 @@ namespace AppBackend.Data.Migrations
                     b.Property<string>("Id")
                         .HasColumnType("nvarchar(450)");
 
-                    b.Property<DateTime?>("Created")
-                        .HasColumnType("datetime2");
+                    b.Property<DateTimeOffset?>("Created")
+                        .HasColumnType("datetimeoffset");
 
                     b.Property<string>("CreatedBy")
                         .HasColumnType("nvarchar(max)");
@@ -151,8 +188,8 @@ namespace AppBackend.Data.Migrations
                     b.Property<string>("Description")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<DateTime?>("LastModified")
-                        .HasColumnType("datetime2");
+                    b.Property<DateTimeOffset?>("LastModified")
+                        .HasColumnType("datetimeoffset");
 
                     b.Property<string>("LastModifiedBy")
                         .HasColumnType("nvarchar(max)");
@@ -182,8 +219,8 @@ namespace AppBackend.Data.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<DateTime?>("Created")
-                        .HasColumnType("datetime2");
+                    b.Property<DateTimeOffset?>("Created")
+                        .HasColumnType("datetimeoffset");
 
                     b.Property<string>("CreatedBy")
                         .HasColumnType("nvarchar(max)");
@@ -196,8 +233,11 @@ namespace AppBackend.Data.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(450)");
 
-                    b.Property<DateTime?>("LastModified")
-                        .HasColumnType("datetime2");
+                    b.Property<int?>("IsDeleted")
+                        .HasColumnType("int");
+
+                    b.Property<DateTimeOffset?>("LastModified")
+                        .HasColumnType("datetimeoffset");
 
                     b.Property<string>("LastModifiedBy")
                         .HasColumnType("nvarchar(max)");
@@ -206,9 +246,6 @@ namespace AppBackend.Data.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<DateTime>("OrderDate")
-                        .HasColumnType("datetime2");
-
                     b.Property<decimal>("Price")
                         .HasColumnType("decimal(18,3)");
 
@@ -216,7 +253,7 @@ namespace AppBackend.Data.Migrations
 
                     b.HasIndex("EmployeeID");
 
-                    b.ToTable("Order");
+                    b.ToTable("Orders");
                 });
 
             modelBuilder.Entity("AppBackend.Data.Models.Order_Shipment", b =>
@@ -229,6 +266,9 @@ namespace AppBackend.Data.Migrations
 
                     b.Property<decimal>("Money")
                         .HasColumnType("decimal(18,3)");
+
+                    b.Property<double>("NumAmount")
+                        .HasColumnType("float");
 
                     b.Property<decimal>("Price")
                         .HasColumnType("decimal(18,3)");
@@ -248,8 +288,8 @@ namespace AppBackend.Data.Migrations
                     b.Property<int>("Amount")
                         .HasColumnType("int");
 
-                    b.Property<DateTime?>("Created")
-                        .HasColumnType("datetime2");
+                    b.Property<DateTimeOffset?>("Created")
+                        .HasColumnType("datetimeoffset");
 
                     b.Property<string>("CreatedBy")
                         .HasColumnType("nvarchar(max)");
@@ -265,8 +305,8 @@ namespace AppBackend.Data.Migrations
                     b.Property<int?>("IsDelete")
                         .HasColumnType("int");
 
-                    b.Property<DateTime?>("LastModified")
-                        .HasColumnType("datetime2");
+                    b.Property<DateTimeOffset?>("LastModified")
+                        .HasColumnType("datetimeoffset");
 
                     b.Property<string>("LastModifiedBy")
                         .HasColumnType("nvarchar(max)");
@@ -274,8 +314,8 @@ namespace AppBackend.Data.Migrations
                     b.Property<string>("Note")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<DateTime>("OrderDate")
-                        .HasColumnType("datetime2");
+                    b.Property<DateTimeOffset>("OrderDate")
+                        .HasColumnType("datetimeoffset");
 
                     b.Property<decimal>("Price")
                         .HasColumnType("decimal(18,3)");
@@ -287,6 +327,120 @@ namespace AppBackend.Data.Migrations
                     b.HasIndex("IngredientID");
 
                     b.ToTable("PurchaseOrders");
+                });
+
+            modelBuilder.Entity("AppBackend.Data.Models.RegisterDayLongan", b =>
+                {
+                    b.Property<string>("Id")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<int>("Amount")
+                        .HasColumnType("int");
+
+                    b.Property<DateTimeOffset?>("Created")
+                        .HasColumnType("datetimeoffset");
+
+                    b.Property<string>("CreatedBy")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("EmployeeID")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<int>("Ischeck")
+                        .HasColumnType("int");
+
+                    b.Property<int>("Isread")
+                        .HasColumnType("int");
+
+                    b.Property<DateTimeOffset?>("LastModified")
+                        .HasColumnType("datetimeoffset");
+
+                    b.Property<string>("LastModifiedBy")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("EmployeeID");
+
+                    b.ToTable("RegisterDayLongans");
+                });
+
+            modelBuilder.Entity("AppBackend.Data.Models.RegisterRemainningLongan", b =>
+                {
+                    b.Property<string>("Id")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<int>("Amount")
+                        .HasColumnType("int");
+
+                    b.Property<DateTimeOffset?>("Created")
+                        .HasColumnType("datetimeoffset");
+
+                    b.Property<string>("CreatedBy")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("EmployeeID")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<int>("Ischeck")
+                        .HasColumnType("int");
+
+                    b.Property<DateTimeOffset?>("LastModified")
+                        .HasColumnType("datetimeoffset");
+
+                    b.Property<string>("LastModifiedBy")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("EmployeeID");
+
+                    b.ToTable("RegisterRemainningLongans");
+                });
+
+            modelBuilder.Entity("AppBackend.Data.Models.Salary", b =>
+                {
+                    b.Property<string>("Id")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<DateTimeOffset?>("Created")
+                        .HasColumnType("datetimeoffset");
+
+                    b.Property<string>("CreatedBy")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("EmployeeID")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<DateTimeOffset?>("LastModified")
+                        .HasColumnType("datetimeoffset");
+
+                    b.Property<string>("LastModifiedBy")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Note")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int?>("QuarterYear")
+                        .HasColumnType("int");
+
+                    b.Property<decimal>("SalaryMoney")
+                        .HasColumnType("decimal(18,3)");
+
+                    b.Property<int>("Status")
+                        .HasColumnType("int");
+
+                    b.Property<int?>("Year")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("EmployeeID");
+
+                    b.ToTable("Salaries");
                 });
 
             modelBuilder.Entity("AppBackend.Data.Models.Shipment", b =>
@@ -301,20 +455,20 @@ namespace AppBackend.Data.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(450)");
 
-                    b.Property<DateTime?>("Created")
-                        .HasColumnType("datetime2");
+                    b.Property<DateTimeOffset?>("Created")
+                        .HasColumnType("datetimeoffset");
 
                     b.Property<string>("CreatedBy")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<DateTime?>("DateFrom")
-                        .HasColumnType("datetime2");
+                    b.Property<DateTimeOffset?>("DateFrom")
+                        .HasColumnType("datetimeoffset");
 
-                    b.Property<DateTime?>("DateTo")
-                        .HasColumnType("datetime2");
+                    b.Property<DateTimeOffset?>("DateTo")
+                        .HasColumnType("datetimeoffset");
 
-                    b.Property<DateTime?>("DateUp")
-                        .HasColumnType("datetime2");
+                    b.Property<DateTimeOffset?>("DateUp")
+                        .HasColumnType("datetimeoffset");
 
                     b.Property<string>("EmployeeID")
                         .IsRequired()
@@ -323,11 +477,14 @@ namespace AppBackend.Data.Migrations
                     b.Property<int?>("IsDelete")
                         .HasColumnType("int");
 
-                    b.Property<DateTime?>("LastModified")
-                        .HasColumnType("datetime2");
+                    b.Property<DateTimeOffset?>("LastModified")
+                        .HasColumnType("datetimeoffset");
 
                     b.Property<string>("LastModifiedBy")
                         .HasColumnType("nvarchar(max)");
+
+                    b.Property<double?>("Remainning")
+                        .HasColumnType("float");
 
                     b.Property<string>("ShipmentCode")
                         .IsRequired()
@@ -343,6 +500,49 @@ namespace AppBackend.Data.Migrations
                     b.HasIndex("EmployeeID");
 
                     b.ToTable("Shipments");
+                });
+
+            modelBuilder.Entity("AppBackend.Data.Models.WorkAttendance", b =>
+                {
+                    b.Property<string>("Id")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<int?>("ComfirmAmount")
+                        .HasColumnType("int");
+
+                    b.Property<DateTimeOffset?>("Created")
+                        .HasColumnType("datetimeoffset");
+
+                    b.Property<string>("CreatedBy")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("EmployeeID")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<int?>("IsSalary")
+                        .HasColumnType("int");
+
+                    b.Property<DateTimeOffset?>("LastModified")
+                        .HasColumnType("datetimeoffset");
+
+                    b.Property<string>("LastModifiedBy")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("ListAmount")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Note")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int?>("SumAmount")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("EmployeeID");
+
+                    b.ToTable("WorkAttendances");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRole", b =>
@@ -374,21 +574,21 @@ namespace AppBackend.Data.Migrations
                     b.HasData(
                         new
                         {
-                            Id = "7f16eef8-85f7-498c-aeb9-3f2453ce3265",
+                            Id = "35c2ce90-ec4a-4910-b5cf-e05458198884",
                             ConcurrencyStamp = "1",
                             Name = "User",
                             NormalizedName = "User"
                         },
                         new
                         {
-                            Id = "db7c36c9-c29a-4073-8829-9bf05e7a9a16",
+                            Id = "a6dfb1a7-aed5-425c-914e-907ee1b78ba1",
                             ConcurrencyStamp = "2",
                             Name = "Employee",
                             NormalizedName = "Employee"
                         },
                         new
                         {
-                            Id = "f092c3f9-394c-4228-80f9-226ce2c396d2",
+                            Id = "56baf446-d045-48aa-9df7-7f7da465a3fa",
                             ConcurrencyStamp = "3",
                             Name = "Manager",
                             NormalizedName = "Manager"
@@ -566,6 +766,17 @@ namespace AppBackend.Data.Migrations
                     b.ToTable("AspNetUserTokens", (string)null);
                 });
 
+            modelBuilder.Entity("AppBackend.Data.Models.ComfirmLongan", b =>
+                {
+                    b.HasOne("AppBackend.Data.Models.Employee", "Employee")
+                        .WithMany()
+                        .HasForeignKey("EmployeeID")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Employee");
+                });
+
             modelBuilder.Entity("AppBackend.Data.Models.Event", b =>
                 {
                     b.HasOne("AppBackend.Data.Models.Employee", "Employee")
@@ -624,6 +835,39 @@ namespace AppBackend.Data.Migrations
                     b.Navigation("Ingredient");
                 });
 
+            modelBuilder.Entity("AppBackend.Data.Models.RegisterDayLongan", b =>
+                {
+                    b.HasOne("AppBackend.Data.Models.Employee", "Employee")
+                        .WithMany()
+                        .HasForeignKey("EmployeeID")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Employee");
+                });
+
+            modelBuilder.Entity("AppBackend.Data.Models.RegisterRemainningLongan", b =>
+                {
+                    b.HasOne("AppBackend.Data.Models.Employee", "Employee")
+                        .WithMany()
+                        .HasForeignKey("EmployeeID")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Employee");
+                });
+
+            modelBuilder.Entity("AppBackend.Data.Models.Salary", b =>
+                {
+                    b.HasOne("AppBackend.Data.Models.Employee", "Employee")
+                        .WithMany()
+                        .HasForeignKey("EmployeeID")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Employee");
+                });
+
             modelBuilder.Entity("AppBackend.Data.Models.Shipment", b =>
                 {
                     b.HasOne("AppBackend.Data.Models.Category", "Category")
@@ -639,6 +883,17 @@ namespace AppBackend.Data.Migrations
                         .IsRequired();
 
                     b.Navigation("Category");
+
+                    b.Navigation("Employee");
+                });
+
+            modelBuilder.Entity("AppBackend.Data.Models.WorkAttendance", b =>
+                {
+                    b.HasOne("AppBackend.Data.Models.Employee", "Employee")
+                        .WithMany()
+                        .HasForeignKey("EmployeeID")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.Navigation("Employee");
                 });

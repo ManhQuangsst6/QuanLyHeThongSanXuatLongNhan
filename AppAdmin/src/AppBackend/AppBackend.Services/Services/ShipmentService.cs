@@ -24,7 +24,7 @@ namespace AppBackend.Application.Services
 		public async Task<Response<ShipmentDTO>> Get(string id)
 		{
 			var result = await _dataContext.Shipments.FirstOrDefaultAsync(x => x.Id == id);
-			if (result == null) return new Response<ShipmentDTO>() { IsSuccess = false, Status = 404, Message = "Not Found Categories!" };
+			if (result == null) return new Response<ShipmentDTO>() { IsSuccess = false, Status = 404, Message = "Not Found Shipment!" };
 			return new Response<ShipmentDTO>() { IsSuccess = true, Status = 200, Value = _mapper.Map<ShipmentDTO>(result) };
 		}
 
@@ -73,8 +73,8 @@ namespace AppBackend.Application.Services
 			{
 				var shipment = await _dataContext.Shipments.FirstOrDefaultAsync(x => x.Id == shipmentDTO.Id);
 				if (shipment == null) return new Response<string> { IsSuccess = false, Status = 404, Value = "Not found Shipment!" };
-				shipment.DateFrom = shipmentDTO.DateFrom.Value.AddDays(1);
-				shipment.DateTo = shipmentDTO.DateTo.Value.AddDays(1);
+				shipment.DateFrom = shipmentDTO.DateFrom;
+				shipment.DateTo = shipmentDTO.DateTo;
 				shipment.Amount = shipmentDTO.Amount;
 				shipment.CategoryID = shipment.CategoryID;
 				shipment.EmployeeID = shipment.EmployeeID;

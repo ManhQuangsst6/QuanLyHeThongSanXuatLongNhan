@@ -9,5 +9,13 @@
 			if (stutus == 2) return "Đã bán";
 			return "Ngoại lệ";
 		}
+		public static string ConvertStatusRegisterLongan(int? stutus)
+		{
+			if (stutus == 2) return "Đã nhận";
+			if (stutus == 1) return "Đang giang giao";
+			if (stutus == 0) return "Đợi kiểm tra";
+			if (stutus == 3) return "Hủy bỏ";
+			return "Ngoại lệ";
+		}
 	}
 }

@@ -9,7 +9,7 @@ namespace AppBackend.Application.ModelsDTO
 		public string Id { get; set; }
 		public string EmployeeID { get; set; }
 		public string? EmployeeCode { get; set; }
-		public DateTime OrderDate { get; set; }
+		public DateTimeOffset OrderDate { get; set; }
 		public int Amount { get; set; }
 		public string? Note { get; set; }
 		public double Price { get; set; }
