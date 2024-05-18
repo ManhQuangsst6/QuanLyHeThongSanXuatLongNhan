@@ -1,4 +1,5 @@
-﻿using AppBackend.Application.Common.Mappings;
+﻿using AppBackend.Application.Common.ConvertData;
+using AppBackend.Application.Common.Mappings;
 using AppBackend.Data.Models;
 using AutoMapper;
 using System.ComponentModel.DataAnnotations.Schema;
@@ -16,10 +17,15 @@ namespace AppBackend.Application.ModelsDTO
 		public int? Year { get; set; }
 		[Column(TypeName = "decimal(18,3)")]
 		public decimal SalaryMoney { get; set; }
-
+		public int SumAmount { get; set; }
+		public int? Status { get; set; }
+		public string? StatusString { get; set; }
 		public void Mapping(Profile profile)
 		{
-			profile.CreateMap<Salary, SalaryDTO>();
+			profile.CreateMap<Salary, SalaryDTO>()
+			.ForMember(d => d.EmployeeCode, otp => otp.MapFrom(s => s.Employee.EmployeeCode))
+			.ForMember(d => d.EmployeeName, otp => otp.MapFrom(s => s.Employee.FullName))
+			.ForMember(d => d.StatusString, otp => otp.MapFrom(s => ConvertData.ConvertStatusSalary(s.Status)));
 			profile.CreateMap<SalaryDTO, Salary>();
 		}
 	}

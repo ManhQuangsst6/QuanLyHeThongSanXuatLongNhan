@@ -1,4 +1,5 @@
-﻿using AppBackend.Application.Common.Mappings;
+﻿using AppBackend.Application.Common.ConvertData;
+using AppBackend.Application.Common.Mappings;
 using AppBackend.Application.Common.Response;
 using AppBackend.Application.Interface;
 using AppBackend.Application.ModelsDTO;
@@ -28,14 +29,15 @@ namespace AppBackend.Application.Services
 			return new Response<RegisterRemainningLonganDTO>() { IsSuccess = true, Status = 200, Value = _mapper.Map<RegisterRemainningLonganDTO>(result) };
 		}
 
-		public async Task<Response<PaginatedList<RegisterRemainningLonganDTO>>> GetAllPage(int pageSize, int pageNum, string? searchName, DateTimeOffset currentDate)
+		public async Task<Response<PaginatedList<RegisterRemainningLonganDTO>>> GetAllPage(int pageSize, int pageNum, string? searchName, DateTimeOffset? currentDate)
 		{
+			if (currentDate == null) currentDate = DateTimeOffset.Now.AddHours(7);
 			var employees = _dataContext.Employees.AsNoTracking();
 			var registerDayLongans = _dataContext.RegisterRemainningLongans.AsNoTracking();
 			var query = from e in employees
 						join r in registerDayLongans on e.Id equals r.EmployeeID
-						where (r.Created.Value.Year == currentDate.Year && r.Created.Value.Month == currentDate.Month &&
-						 r.Created.Value.Day == currentDate.Day && e.IsDeleted == 0 && e.Status == (int)StatusEmployee.Active)
+						where (r.Created.Value.Year == currentDate.Value.Year && r.Created.Value.Month == currentDate.Value.Month &&
+						 r.Created.Value.Day == currentDate.Value.Day && e.IsDeleted == 0 && e.Status == (int)StatusEmployee.Active)
 						 && (e.EmployeeCode.Contains(searchName) || searchName.IsNullOrEmpty())
 						orderby r.Created, e.EmployeeCode
 						select new RegisterRemainningLonganDTO
@@ -47,6 +49,7 @@ namespace AppBackend.Application.Services
 							Amount = r.Amount,
 							Ischeck = r.Ischeck,
 							Created = r.Created,
+							Status = ConvertData.ConvertStatusRegisterLongan(r.Ischeck)
 						};
 
 			var result = await query.PaginatedListAsync(pageNum, pageSize);
@@ -77,7 +80,6 @@ namespace AppBackend.Application.Services
 			{
 				var registerRemainningLongan = await _dataContext.RegisterRemainningLongans.FirstOrDefaultAsync(x => x.Id == registerRemainningLonganDTO.Id);
 				if (registerRemainningLongan == null) return new Response<string> { IsSuccess = false, Status = 404, Value = "Not found registerDayLongan!" };
-				registerRemainningLongan.Amount = registerRemainningLonganDTO.Amount;
 				registerRemainningLongan.Ischeck = registerRemainningLonganDTO.Ischeck;
 				_dataContext.RegisterRemainningLongans.Update(registerRemainningLongan);
 				await _dataContext.SaveChangesAsync();

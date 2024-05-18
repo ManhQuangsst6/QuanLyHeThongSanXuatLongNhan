@@ -350,9 +350,6 @@ namespace AppBackend.Data.Migrations
                     b.Property<int>("Ischeck")
                         .HasColumnType("int");
 
-                    b.Property<int>("Isread")
-                        .HasColumnType("int");
-
                     b.Property<DateTimeOffset?>("LastModified")
                         .HasColumnType("datetimeoffset");
 
@@ -431,6 +428,9 @@ namespace AppBackend.Data.Migrations
                         .HasColumnType("decimal(18,3)");
 
                     b.Property<int>("Status")
+                        .HasColumnType("int");
+
+                    b.Property<int>("SumAmount")
                         .HasColumnType("int");
 
                     b.Property<int?>("Year")
@@ -574,21 +574,21 @@ namespace AppBackend.Data.Migrations
                     b.HasData(
                         new
                         {
-                            Id = "35c2ce90-ec4a-4910-b5cf-e05458198884",
+                            Id = "0b0f43a8-82e3-40be-87e8-011148b99929",
                             ConcurrencyStamp = "1",
                             Name = "User",
                             NormalizedName = "User"
                         },
                         new
                         {
-                            Id = "a6dfb1a7-aed5-425c-914e-907ee1b78ba1",
+                            Id = "207fa111-2112-4ecd-9285-f4d8b7a68cfc",
                             ConcurrencyStamp = "2",
                             Name = "Employee",
                             NormalizedName = "Employee"
                         },
                         new
                         {
-                            Id = "56baf446-d045-48aa-9df7-7f7da465a3fa",
+                            Id = "d702e3cb-80f7-4a5c-8d3a-76af396419b6",
                             ConcurrencyStamp = "3",
                             Name = "Manager",
                             NormalizedName = "Manager"

@@ -142,7 +142,8 @@ namespace AppBackend.Application.Common.Services
 				var result = new UserLogin
 				{
 					Token = new JwtSecurityTokenHandler().WriteToken(jwtToken),
-					Expiretion = jwtToken.ValidTo
+					Expiretion = jwtToken.ValidTo,
+					Role = userRole[0]
 				};
 				return new Response<UserLogin>() { Status = 200, IsSuccess = true, Value = result };
 			}

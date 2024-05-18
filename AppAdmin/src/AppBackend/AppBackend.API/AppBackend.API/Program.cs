@@ -5,6 +5,7 @@ using AppBackend.Application.Interface;
 using AppBackend.Application.Services;
 using AppBackend.Data.Context;
 using AppBackend.Data.Models.Email;
+using Hangfire;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
@@ -62,10 +63,10 @@ builder.Services.AddIdentityApiEndpoints<IdentityUser>().AddRoles<IdentityRole>(
 	AddEntityFrameworkStores<DataContext>().AddDefaultTokenProviders();
 builder.Services.AddSingleton(emailConfig);
 
-//builder.Services.AddHangfire(config =>
-//{
-//	config.UseSqlServerStorage(builder.Configuration.GetConnectionString("DefaultConnection"));
-//});
+builder.Services.AddHangfire(config =>
+{
+	config.UseSqlServerStorage(builder.Configuration.GetConnectionString("DefaultConnection"));
+});
 
 builder.Services.AddScoped<IUserManager, UserManager>();
 builder.Services.AddScoped<IEmailService, EmailService>();
@@ -90,11 +91,13 @@ if (app.Environment.IsDevelopment())
 	app.UseSwaggerUI();
 }
 app.UseCors(option => option.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader());
-//app.UseHangfireServer();
-//app.UseHangfireDashboard();
-
-//app.MapGet("/", () => "Hangfire is running!");
-
+app.UseHangfireServer();
+app.UseHangfireDashboard();
+app.MapGet("/", () => "Hangfire is running!");
+#pragma warning disable CS0618 // Type or member is obsolete
+RecurringJob.AddOrUpdate<WorkAttendanceService>(x => x.Post(), "0 4 * * *", TimeZoneInfo.Local);
+RecurringJob.AddOrUpdate<WorkAttendanceService>(x => x.Remove(), "0 23 * * *", TimeZoneInfo.Local);
+#pragma warning restore CS0618 // Type or member is obsolete
 
 app.MapIdentityApi<IdentityUser>();
 app.UseHttpsRedirection();

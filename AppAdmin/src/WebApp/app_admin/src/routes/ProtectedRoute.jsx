@@ -8,9 +8,9 @@ import {
     ReadOutlined,
     UserOutlined,
     CarOutlined,
-    SettingOutlined,
+    SettingOutlined,MoneyCollectOutlined,
     GiftOutlined, HomeOutlined,
-    AppstoreOutlined,BellOutlined 
+    AppstoreOutlined,BellOutlined ,SafetyCertificateOutlined
 } from '@ant-design/icons';
 import { Layout, Menu, Button, theme, Avatar, Popover,Badge } from 'antd';
 const { Header, Sider, Content } = Layout;
@@ -32,9 +32,11 @@ const items = [
     ]),
     getItem(<NavLink to='/attendance'>Chấm công</NavLink>, '4', <ReadOutlined />),
     getItem(<NavLink to='/register-day-longan'>Đặt nhãn </NavLink>, '8', <CarOutlined />),
+    getItem(<NavLink to='/register-remainning-longan'>Thu hồi</NavLink>, '15', <SafetyCertificateOutlined />),
     getItem(<NavLink to='/shipment'>Quản lý lô hàng</NavLink>, '5', <AppstoreOutlined />),
     getItem(<NavLink to='/PurchaseOrder'> Nhập nguyên liệu</NavLink>, '6', <AppstoreOutlined />),
     getItem(<NavLink to='/event'>Sự kiện</NavLink>, '7', <GiftOutlined />),
+    getItem(<NavLink to='/salary'>Trả lương</NavLink>, '16', <MoneyCollectOutlined />),
     getItem('Cài đặt', 'sub2', <SettingOutlined />, [
         getItem(<NavLink to='/setting/ingredient'>Nguyên liệu</NavLink>, '9'),
         getItem(<NavLink to='/setting/category'>Loại nhãn</NavLink>, '10'),

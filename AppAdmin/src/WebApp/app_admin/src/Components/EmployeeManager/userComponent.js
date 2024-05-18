@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Space, Button, Table, Input, Form, Row, Col, DatePicker, Flex } from 'antd';
-import { EditOutlined, DeleteOutlined, ExclamationCircleFilled, EyeOutlined, PlusOutlined } from '@ant-design/icons';
+import { FormOutlined, DeleteOutlined, ExclamationCircleFilled, EyeOutlined, PlusOutlined } from '@ant-design/icons';
 import { useNavigate } from 'react-router-dom';
 import { GetListAll, } from '../../API/Ingredient/ingredient';
 import { GetAllUserPage, GetListEmployeePage, Post, GetByID, Remove } from '../../API/Employee/EmployeeAPI';
@@ -221,7 +221,7 @@ const UserComponent = () => {
 
                 <div style={{ display: 'flex', justifyContent: 'space-between' }}>
                    <div style={{display:'flex'}}> 
-                    <h3 style={{marginRight:20}}>Danh sách thợ </h3>
+                    <h3 style={{marginRight:20}}><FormOutlined style={{ strokeWidth: "30",color:'blue',stroke:'blue',fontSize:20,fontWeight:800, marginRight:8}}></FormOutlined>Danh sách thợ </h3>
                     <Search
                     placeholder="Nhập mã nhân viên"
                     allowClear

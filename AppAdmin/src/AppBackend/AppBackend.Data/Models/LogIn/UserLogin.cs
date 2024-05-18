@@ -4,5 +4,6 @@
 	{
 		public string Token { get; set; }
 		public DateTime Expiretion { get; set; }
+		public string Role { get; set; }
 	}
 }

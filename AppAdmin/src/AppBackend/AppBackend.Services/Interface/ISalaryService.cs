@@ -13,5 +13,6 @@ namespace AppBackend.Application.Interface
 		Task<Response<PaginatedList<SalaryDTO>>> GetAllByEmployee(int pageSize, int pageNum, string? employeeCode);
 		Task CreateTableSalary(int quarterYear, int year, int price);
 		Task<Response<PaginatedList<SalaryDTO>>> GetTableSalary(int pageSize, int pageNum, int? quarterYear, int? year);
+		Task<Response<List<SalaryDTO>>> GetAllExportExcel(int? quarterYear, int? year);
 	}
 }

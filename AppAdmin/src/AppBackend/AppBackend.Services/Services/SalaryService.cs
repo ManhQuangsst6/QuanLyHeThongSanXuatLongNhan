@@ -35,11 +35,15 @@ namespace AppBackend.Application.Services
 							 Id = Guid.NewGuid().ToString(),
 							 EmployeeID = g.Key,
 							 SalaryMoney = g.Sum(w => (decimal)w.SumAmount) * price,
+							 SumAmount = g.Sum(w => (int)w.SumAmount),
 							 QuarterYear = quarterYear,
 							 Year = year,
 							 Status = 0,
 							 Created = DateTime.Now,
 						 };
+			var old = _dataContext.Salaries.Where(x => x.QuarterYear == quarterYear && x.Year == year && x.Status == 0);
+			if (await old.AnyAsync())
+				_dataContext.Salaries.RemoveRange(old);
 			await _dataContext.Salaries.AddRangeAsync(result);
 			await _dataContext.SaveChangesAsync();
 		}
@@ -58,7 +62,7 @@ namespace AppBackend.Application.Services
 			var query = from e in employee
 						join s in salary on e.Id equals s.EmployeeID
 						where e.EmployeeCode == employeeCode || employeeCode.IsNullOrEmpty()
-						orderby s.Year, s.QuarterYear
+						orderby s.Year descending, s.QuarterYear descending
 						select s;
 
 			var objs = await query.ProjectTo<SalaryDTO>(_mapper.ConfigurationProvider).PaginatedListAsync(pageNum, pageSize);
@@ -73,11 +77,25 @@ namespace AppBackend.Application.Services
 						join s in salary on e.Id equals s.EmployeeID
 						where (e.EmployeeCode == searchName || searchName.IsNullOrEmpty())
 						&& (s.Year == year || year == null) && (s.QuarterYear == quarterYear || quarterYear == null)
-						orderby s.Year, s.QuarterYear
+						orderby s.Year descending, s.QuarterYear descending
 						select s;
 
 			var objs = await query.ProjectTo<SalaryDTO>(_mapper.ConfigurationProvider).PaginatedListAsync(pageNum, pageSize);
 			return new Response<PaginatedList<SalaryDTO>> { IsSuccess = true, Status = 200, Value = objs };
+		}
+
+		public async Task<Response<List<SalaryDTO>>> GetAllExportExcel(int? quarterYear, int? year)
+		{
+			var employee = _dataContext.Employees.AsNoTracking();
+			var salary = _dataContext.Salaries.AsNoTracking();
+			var query = from e in employee
+						join s in salary on e.Id equals s.EmployeeID
+						where
+						 (s.Year == year || year == null) && (s.QuarterYear == quarterYear || quarterYear == null)
+						select s;
+			//	var objs = await query.ToListAsync();
+			var value = query.ProjectTo<SalaryDTO>(_mapper.ConfigurationProvider);
+			return new Response<List<SalaryDTO>> { IsSuccess = true, Status = 200, Value = await value.ToListAsync() };
 		}
 
 		public async Task<Response<PaginatedList<SalaryDTO>>> GetTableSalary(int pageSize, int pageNum, int? quarterYear, int? year)
@@ -87,7 +105,7 @@ namespace AppBackend.Application.Services
 			var query = from e in employee
 						join s in salary on e.Id equals s.EmployeeID
 						where s.QuarterYear == quarterYear && s.Year == year
-						orderby s.Year, s.QuarterYear
+						orderby s.Year descending, s.QuarterYear descending
 						select s;
 
 			var objs = await query.ProjectTo<SalaryDTO>(_mapper.ConfigurationProvider).PaginatedListAsync(pageNum, pageSize);

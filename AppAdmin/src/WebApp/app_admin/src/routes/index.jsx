@@ -13,6 +13,9 @@ import PurchaseOrderComponent from "../Components/PurchaseOrder/PurchaseOrdersCo
 import EventComponent from "../Components/Event/EventComponent";
 import AttendanceComponent from "../Components/Atttendance/AtttendanceComponent"
 import RegisterDayLonganComponent from "../Components/RegisterDayLongan/RegisterDayLonganComponent";
+import RegisterRemainningLonganComponent from "../Components/RegisterRemainningLongan/RegisterRemainningLonganComponent";
+import SalaryComponent from "../Components/Salary/SalaryComponent";
+import Home from "../Components/Home/home";
 const Routes = () => {
     const { token } = useAuth();
 
@@ -24,7 +27,7 @@ const Routes = () => {
             children: [
                 {
                     path: "/",
-                    element: <div>User Home Page</div>,
+                    element: <Home></Home>,
                 },
                 {
                     path: "/employee/employee",
@@ -53,6 +56,14 @@ const Routes = () => {
                 {
                     path: "/register-day-longan",
                     element: <RegisterDayLonganComponent></RegisterDayLonganComponent>,
+                },
+                {
+                    path: "/register-remainning-longan",
+                    element: <RegisterRemainningLonganComponent></RegisterRemainningLonganComponent>,
+                },
+                {
+                    path: "/salary",
+                    element: <SalaryComponent></SalaryComponent>,
                 },
                 {
                     path: "/setting/ingredient",

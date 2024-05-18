@@ -33,15 +33,16 @@ namespace AppBackend.Application.Services
 			return new Response<RegisterDayLonganDTO>() { IsSuccess = true, Status = 200, Value = _mapper.Map<RegisterDayLonganDTO>(result) };
 		}
 
-		public async Task<Response<PaginatedList<RegisterDayLonganDTO>>> GetAllPage(int pageSize, int pageNum, string? searchName, DateTimeOffset currentDate)
+		public async Task<Response<PaginatedList<RegisterDayLonganDTO>>> GetAllPage(int pageSize, int pageNum, string? searchName, DateTimeOffset? currentDate)
 		{
 			var employees = _dataContext.Employees.AsNoTracking();
-			currentDate = currentDate.AddHours(7);
+			if (currentDate == null) currentDate = DateTimeOffset.Now;
+			currentDate = currentDate.Value.AddHours(7);
 			var registerDayLongans = _dataContext.RegisterDayLongans.AsNoTracking();
 			var query = from e in employees
 						join r in registerDayLongans on e.Id equals r.EmployeeID
-						where (r.Created.Value.Year == currentDate.Year && r.Created.Value.Month == currentDate.Month &&
-						 r.Created.Value.Day == currentDate.Day && e.IsDeleted == 0 && e.Status == (int)StatusEmployee.Active)
+						where (r.Created.Value.Year == currentDate.Value.Year && r.Created.Value.Month == currentDate.Value.Month &&
+						 r.Created.Value.Day == currentDate.Value.Day && e.IsDeleted == 0 && e.Status == (int)StatusEmployee.Active)
 						 && (e.EmployeeCode.Contains(searchName) || searchName.IsNullOrEmpty())
 						orderby e.EmployeeCode
 						select new RegisterDayLonganDTO
@@ -85,7 +86,6 @@ namespace AppBackend.Application.Services
 			{
 				var registerDayLongan = await _dataContext.RegisterDayLongans.FirstOrDefaultAsync(x => x.Id == registerDayLonganDTO.Id);
 				if (registerDayLongan == null) return new Response<string> { IsSuccess = false, Status = 404, Value = "Not found registerDayLongan!" };
-				registerDayLongan.Amount = registerDayLonganDTO.Amount;
 				registerDayLongan.Ischeck = (int)registerDayLonganDTO.Ischeck;
 				_dataContext.RegisterDayLongans.Update(registerDayLongan);
 				await _dataContext.SaveChangesAsync();

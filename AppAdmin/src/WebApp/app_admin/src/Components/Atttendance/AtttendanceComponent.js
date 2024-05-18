@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Space, Button, Table, Input,  DatePicker, InputNumber } from 'antd';
-import {  PlusCircleOutlined, PlusOutlined } from '@ant-design/icons';
+import { FormOutlined, PlusCircleOutlined, PlusOutlined } from '@ant-design/icons';
 import { } from '../../API/Ingredient/ingredient';
 import { GetListByPage,Update } from '../../API/Attendance/AttendanceAPI';
 import { Modal } from 'antd';
@@ -211,7 +211,7 @@ const AttendanceComponent = () => {
             <div style={{ marginTop: "16px", }}>
                 <div style={{ display: 'flex', justifyContent: 'space-between' }}>
                    <div style={{display:'flex'}}> 
-                    <h3 style={{marginRight:20,lineHeight:"55px"}}>Danh sách nhân viên </h3>
+                    <h3 style={{marginRight:20,lineHeight:"55px"}}><FormOutlined style={{ strokeWidth: "30",color:'blue',stroke:'blue',fontSize:20,fontWeight:800, marginRight:8}}/>Danh sách nhân viên </h3>
                     <Search
                     placeholder="Nhập mã nhân viên"
                     allowClear

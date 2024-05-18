@@ -70,25 +70,37 @@ namespace AppBackend.API.Controllers
 
 		}
 		[HttpDelete]
-		public async Task<IActionResult> Remove(string id)
+		public async Task<IActionResult> Remove()
 		{
 			try
 			{
-				var result = await _workAttendanceService.Remove(id);
+				var result = await _workAttendanceService.Remove();
 				return Ok(result);
 			}
 			catch (Exception ex)
 			{
 				throw new Exception(ex.Message);
 			}
-
 		}
 		[HttpGet]
-		public async Task<IActionResult> ComfirmByEmployee(string id, string employeeID)
+		public async Task<IActionResult> ComfirmByEmployee(string id)
 		{
 			try
 			{
-				var result = await _workAttendanceService.ComfirmByEmployee(id, employeeID);
+				var result = await _workAttendanceService.ComfirmByEmployee(id);
+				return Ok(result);
+			}
+			catch (Exception ex)
+			{
+				throw new Exception(ex.Message);
+			}
+		}
+		[HttpGet]
+		public async Task<IActionResult> GetAllByEmployee(int pageNum, int pageSize, DateTimeOffset? dateTime)
+		{
+			try
+			{
+				var result = await _workAttendanceService.GetAllByEmployee(pageSize, pageNum, dateTime);
 				return Ok(result);
 			}
 			catch (Exception ex)

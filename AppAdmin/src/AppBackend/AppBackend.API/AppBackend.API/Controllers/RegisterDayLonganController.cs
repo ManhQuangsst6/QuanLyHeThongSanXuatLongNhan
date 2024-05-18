@@ -30,7 +30,7 @@ namespace AppBackend.API.Controllers
 		}
 
 		[HttpGet]
-		public async Task<IActionResult> GetListByPage(int pageNum, int pageSize, string? searchName, DateTimeOffset dateTime)
+		public async Task<IActionResult> GetListByPage(int pageNum, int pageSize, string? searchName, DateTimeOffset? dateTime)
 		{
 			try
 			{

@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Space, Button, Table, Input, Form, Row, Col, DatePicker, Flex } from 'antd';
-import { EditOutlined, DeleteOutlined, ExclamationCircleFilled, EyeOutlined, PlusOutlined } from '@ant-design/icons';
+import { FormOutlined, DeleteOutlined, ExclamationCircleFilled, EyeOutlined, PlusOutlined } from '@ant-design/icons';
 import { useNavigate } from 'react-router-dom';
 import { GetListAll, } from '../../API/Ingredient/ingredient';
 import { GetAllUserPage, GetListEmployeePage, Post, GetByID, Remove } from '../../API/Employee/EmployeeAPI';
@@ -213,7 +213,7 @@ const EmployeeeComponent = () => {
             <ToastContainer />
             <div style={{ marginTop: "16px", }}>
                 <div style={{ display: 'flex', justifyContent: 'space-between' }}>
-                    <h3>Danh sách nhân viên </h3>
+                    <h3><FormOutlined style={{ strokeWidth: "30",color:'blue',stroke:'blue',fontSize:20,fontWeight:800, marginRight:8}} />Danh sách nhân viên </h3>
 
                     <div style={{ display: 'flex', alignItems: 'center' }} >
                         <Button type="primary"  onClick={() => showModal("ADD")} style={{ marginRight: 16 }}

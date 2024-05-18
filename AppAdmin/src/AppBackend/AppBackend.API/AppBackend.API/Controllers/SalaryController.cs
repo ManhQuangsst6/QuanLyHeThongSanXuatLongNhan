@@ -55,6 +55,19 @@ namespace AppBackend.API.Controllers
 				throw new Exception(ex.Message);
 			}
 		}
+		[HttpGet]
+		public async Task<IActionResult> GetAllExportExcel(int? quarterYear, int? year)
+		{
+			try
+			{
+				var result = await _salaryService.GetAllExportExcel(quarterYear, year);
+				return Ok(result);
+			}
+			catch (Exception ex)
+			{
+				throw new Exception(ex.Message);
+			}
+		}
 
 		[HttpGet]
 		public async Task<IActionResult> GetTableSalary(int pageNum = 1, int pageSize = 10, int? quarterYear = 1, int? year = 1)

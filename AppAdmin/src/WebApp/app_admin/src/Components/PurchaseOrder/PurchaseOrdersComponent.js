@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Space, Button, Table, Input, Form, Row, Col, DatePicker, Flex } from 'antd';
-import { EditOutlined, DeleteOutlined, ExclamationCircleFilled, EyeOutlined, CheckOutlined } from '@ant-design/icons';
+import { EditOutlined, DeleteOutlined, ExclamationCircleFilled, EyeOutlined, FormOutlined } from '@ant-design/icons';
 import { useNavigate } from 'react-router-dom';
 import { GetListAll } from '../../API/Ingredient/ingredient';
 import { GetListEmployeePage } from '../../API/Employee/EmployeeAPI';
@@ -326,6 +326,7 @@ const PurchaseOrderComponent = () => {
                         width: 400,
                     }}
                     allowClear
+                    placeholder="Chọn nguyên liệu"
              showSearch
                 optionFilterProp="children"
                  onSearch={onSearch}
@@ -342,7 +343,7 @@ const PurchaseOrderComponent = () => {
             <div style={{ marginTop: "16px", }}>
 
                 <div style={{ display: 'flex', justifyContent: 'space-between' }}>
-                    <h3>Danh sách nhập liệu</h3>
+                    <h3>Danh sách nhập liệu <FormOutlined style={{ strokeWidth: "30",color:'blue',stroke:'blue',fontSize:20,fontWeight:800, marginRight:8}}/></h3>
                     <div style={{ display: 'flex', alignItems: 'center' }} >
 
                         <Button type="primary" ghost onClick={() => showModal("ADD")} style={{ marginRight: 16 }}>

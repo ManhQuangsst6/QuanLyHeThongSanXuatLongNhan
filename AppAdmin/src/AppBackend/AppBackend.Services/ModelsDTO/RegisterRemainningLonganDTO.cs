@@ -12,6 +12,7 @@ namespace AppBackend.Application.ModelsDTO
 		public string? EmployeeName { get; set; }
 		public int Amount { get; set; }
 		public int Ischeck { get; set; } = 0;
+		public string? Status { get; set; }
 		public DateTimeOffset? Created { get; set; }
 		public void Mapping(Profile profile)
 		{

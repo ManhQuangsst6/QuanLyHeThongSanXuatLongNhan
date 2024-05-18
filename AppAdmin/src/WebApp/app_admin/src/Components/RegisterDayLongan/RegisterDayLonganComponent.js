@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import { Space, Button, Table, Input, Form, Row, Col, DatePicker, Flex } from 'antd';
-import { EditOutlined, DeleteOutlined, ExclamationCircleFilled, EyeOutlined, PlusOutlined } from '@ant-design/icons';
+import { LikeOutlined, DeleteOutlined, ExclamationCircleFilled, FormOutlined, PlusOutlined } from '@ant-design/icons';
 import { useNavigate } from 'react-router-dom';
 import { GetListEmployeePage } from '../../API/Employee/EmployeeAPI';
-import { GetListByPage,Remove,Post } from '../../API/RegisterDayLongan/RegisterDayLonganAPI';
+import { GetListByPage,Remove,Post, Update } from '../../API/RegisterDayLongan/RegisterDayLonganAPI';
 import { Modal, Image, Select } from 'antd';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
@@ -14,6 +14,7 @@ const { Search } = Input;
 const { RangePicker } = DatePicker;
 const { TextArea } = Input;
 const { confirm } = Modal;
+const {Option}=Select
 
 
 const RegisterDayLonganComponent = () => {
@@ -36,7 +37,7 @@ const RegisterDayLonganComponent = () => {
             width: '20%',
         },
         {
-            title: 'Số lượng',
+            title: 'Số cân',
             dataIndex: 'amount',
             width: '20%',
         },
@@ -51,14 +52,20 @@ const RegisterDayLonganComponent = () => {
             width: '5%',
             render: (_, record) => (
                 <Space size="middle" >
-                    <a  ><EyeOutlined /></a>
-                    <a onClick={() => showModal("EDIT", record)}><EditOutlined /></a>
-                    <a onClick={() => DeletePurcharse(record.key)}><DeleteOutlined /></a>
+                    <a onClick={() => Update({id:record.key,employeeID:record.employeeID,isCheck:1}).then(res=>{
+                         SetIsRender(true);
+                         notify("Xác nhận")
+                    })}><LikeOutlined  /></a>
+                    <a onClick={() => Update({id:record.key,employeeID:record.employeeID,isCheck:3}).then(res=>{
+                         SetIsRender(true);
+                         notify("Hủy")
+                    })}><DeleteOutlined /></a>
                 </Space>
             ),
         },
 
     ];
+    
     const [form] = Form.useForm();
     const rules={
         title:[{required: true ,message:'Tiêu đề không bỏ trống'} ],
@@ -73,20 +80,7 @@ const RegisterDayLonganComponent = () => {
     const [selectedRowKeys, setSelectedRowKeys] = useState([]);
     const [listEmployee, SetListEmployee] = useState([])
     const [resetData, SetResetData] = useState(true)
-    useEffect(() => {
-        if (resetData) {
-            GetListEmployeePage().then(res => {
-                let data = res.data.value.map(item => {
-                    return {
-                        value: item.id,
-                        label: item.employeeCode
-                    }
-                })
-                SetListEmployee(data);
-            })
-
-        }
-    }, [resetData])
+    
     const onSelectChange = (newSelectedRowKeys) => {
         console.log('selectedRowKeys changed: ', newSelectedRowKeys);
         setSelectedRowKeys(newSelectedRowKeys);
@@ -105,7 +99,6 @@ const RegisterDayLonganComponent = () => {
         setLoading(true);
         GetListByPage({ pageNum, pageSize, nameSearch,dateSearch })
             .then((res) => {
-                
                 let dataShow = res.data.value.items.map(item => {
                     return {
                         key: item.id,
@@ -113,6 +106,7 @@ const RegisterDayLonganComponent = () => {
                         employeeCode: item.employeeCode,
                         employeeName:item.employeeName,
                         amount:item.amount,
+                        isCheck:item.isCheck,
                         created: ConvertDate(item.created),
                         status: item.status,
                     }
@@ -123,27 +117,7 @@ const RegisterDayLonganComponent = () => {
                 setLoading(false);
             });
     };
-    const DeletePurcharse = (id) => {
-        confirm({
-            title: 'Bạn có muốn xóa nhập hàng ?',
-            icon: <ExclamationCircleFilled />,
-            okText: 'Có',
-            okType: 'danger',
-            cancelText: 'Quay lại',
-            onOk() {
-                Remove(id).then(res => {
-                    if (res.data.isSuccess === true) {
-                        SetIsRender(true);
-                        notify("Xóa đơn nhập")
-                    } else notifyError(res.data.message)
-                }).catch(e => {
-                    notifyError(e);
-                })
-            },
-            onCancel() {
-            },
-        });
-    }
+   
 
     const [textTitle, SetTextTilte] = useState("")
     const [state, SetState] = useState("ADD")
@@ -228,7 +202,6 @@ const RegisterDayLonganComponent = () => {
             ...dataPush,
             [e.target.name]: e.target.value,
         }));
-
     };
 
     const onSearch = (value, _e, info) => {
@@ -243,20 +216,16 @@ const RegisterDayLonganComponent = () => {
         })
     }
 
-    const onChangeDatePicker = (date, dateString) => {
-        console.log(date)
-        SetDataPush({
-            ...dataPush,
-            startDate: date
-        })
-    };
+    
     const [dateSearch,SetDateSearch]=useState(null)
     const onChangeDateSearch = (date, dateString) => {
-        debugger
         console.log(date, dateString);
         SetDateSearch(date)
         fetchRecords(1, 10, nameSearch,date);
       };
+    const dataStatus=[{label:"Đợi kiểm tra", value:0}, {label:"Đang giao", value:1},
+    {label:"Đã nhận", value:2}, {label:"Hủy bỏ", value:3}
+    ]
     return (
 
         <div style={{ padding: 10 }}>
@@ -265,16 +234,16 @@ const RegisterDayLonganComponent = () => {
 
                 <div style={{ display: 'flex', justifyContent: 'space-between' }}>
                 <div style={{display:'flex'}}> 
-                    <h3 style={{marginRight:20, lineHeight:"55px"}}>Danh sách sự kiện </h3>
-                    <Search
-                    placeholder="Nhập tên sự kiện"
-                    allowClear
-                    onSearch={onSearch}
-                    style={{
-                        width:400,
-                       display:'flex',alignItems:'center'
+                    <h3 style={{marginRight:20, lineHeight:"55px"}}><FormOutlined style={{ strokeWidth: "30",color:'blue',stroke:'blue',fontSize:20,fontWeight:800, marginRight:8}}/>Danh sách đăng ký </h3>
+                    <Select style={{
+                        width: 400,margin:27
                     }}
-                />
+                    allowClear
+                    placeholder="Trạng thái"
+              >
+            {dataStatus.map(p => <Option value={p.value}>{p.label}</Option>)}
+          </Select>
+                
                 </div>
                 <DatePicker placeholder='Chọn ngày' style={{height:34,margin:27}} onChange={onChangeDateSearch} />
                     <div style={{ display: 'flex', alignItems: 'center' }} >

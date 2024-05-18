@@ -6,8 +6,10 @@ using AppBackend.Data.Context;
 using AppBackend.Data.Models;
 using AutoMapper;
 using AutoMapper.QueryableExtensions;
+using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
+using System.Security.Claims;
 using static AppBackend.Data.Enums.EnumData;
 
 namespace AppBackend.Application.Services
@@ -16,14 +18,16 @@ namespace AppBackend.Application.Services
 	{
 		private readonly DataContext _dataContext;
 		private readonly IMapper _mapper;
-		public WorkAttendanceService(DataContext dataContext, IMapper mapper)
+		private readonly IHttpContextAccessor _httpContextAccessor;
+		public WorkAttendanceService(DataContext dataContext, IMapper mapper, IHttpContextAccessor httpContextAccessor)
 		{
 			_dataContext = dataContext;
 			_mapper = mapper;
+			_httpContextAccessor = httpContextAccessor;
 		}
 
 
-		public async Task<Response<string>> ComfirmByEmployee(string id, string employeeID)
+		public async Task<Response<string>> ComfirmByEmployee(string id)
 		{
 			try
 			{
@@ -47,6 +51,25 @@ namespace AppBackend.Application.Services
 			return new Response<WorkAttendanceDTO>() { IsSuccess = true, Status = 200, Value = _mapper.Map<WorkAttendanceDTO>(result) };
 		}
 
+		public async Task<Response<PaginatedList<WorkAttendanceDTO>>> GetAllByEmployee(int pageSize, int pageNum, DateTimeOffset? dateTime)
+		{
+			var httpContext = _httpContextAccessor.HttpContext;
+			var userId = httpContext.User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+			var employees = _dataContext.Employees.AsNoTracking();
+			var workAttendances = _dataContext.WorkAttendances.AsNoTracking();
+			var currentDate = dateTime.HasValue ? dateTime.Value.AddHours(7) : DateTimeOffset.Now;
+			var query = from e in employees
+						join w in workAttendances on e.Id equals w.EmployeeID
+						where (w.Created.Value.Year == currentDate.Year && w.Created.Value.Month == currentDate.Month &&
+						 w.Created.Value.Day == currentDate.Day && e.IsDeleted == 0 && e.Status == (int)StatusEmployee.Active)
+						 && (e.Id == userId)
+						orderby w.Created
+						select w;
+
+			var result = await query.ProjectTo<WorkAttendanceDTO>(_mapper.ConfigurationProvider).PaginatedListAsync(pageNum, pageSize);
+			return new Response<PaginatedList<WorkAttendanceDTO>> { IsSuccess = true, Status = 200, Value = result };
+		}
+
 		public async Task<Response<PaginatedList<WorkAttendanceDTO>>> GetAllPage(int pageSize, int pageNum, string? nameSearch, DateTimeOffset? dateTime)
 		{
 			var employees = _dataContext.Employees.AsNoTracking();
@@ -68,6 +91,10 @@ namespace AppBackend.Application.Services
 		{
 			try
 			{
+				var date = DateTimeOffset.Now;
+				var check = await _dataContext.WorkAttendances.Where(x => x.Created.Value.Day == date.Day &&
+				x.Created.Value.Month == date.Month && x.Created.Value.Year == date.Year).AnyAsync();
+				if (check) throw new Exception("Đã tạo rồi nhé");
 				var list = new List<WorkAttendance>();
 				var employee = await _dataContext.Employees.Where(x => x.Status == (int)StatusEmployee.Active)
 					.Select(x => new WorkAttendanceDTO { Id = Guid.NewGuid().ToString(), EmployeeID = x.Id, Created = DateTimeOffset.Now })
@@ -105,16 +132,16 @@ namespace AppBackend.Application.Services
 			}
 		}
 
-		public async Task<Response<string>> Remove(string id)
+		public async Task<Response<string>> Remove()
 		{
 			try
 			{
-				var workAttendance = await _dataContext.WorkAttendances.FirstOrDefaultAsync(x => x.Id == id);
-				if (workAttendance == null)
+				var workAttendance = _dataContext.WorkAttendances.Where(x => x.SumAmount == 0);
+				if (await workAttendance.AnyAsync())
 					return new Response<string> { IsSuccess = false, Status = 404, Value = "Not found workAttendance " };
-				_dataContext.WorkAttendances.Remove(workAttendance);
+				_dataContext.WorkAttendances.RemoveRange(workAttendance);
 				await _dataContext.SaveChangesAsync();
-				return new Response<string> { IsSuccess = true, Status = 200, Value = id };
+				return new Response<string> { IsSuccess = true, Status = 200, Value = "OK" };
 			}
 			catch (Exception ex)
 			{

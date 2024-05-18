@@ -29,7 +29,7 @@ namespace AppBackend.API.Controllers
 			}
 
 		}
-		[HttpGet, Authorize(Roles = "User")]
+		[HttpGet, Authorize(Roles = "Employee")]
 		public async Task<IActionResult> GetListAll()
 		{
 			try
