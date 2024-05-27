@@ -19,7 +19,7 @@ namespace AppBackend.Application.Services
 		}
 		public async Task<Response<CategoryDTO>> Get(string id)
 		{
-			var result = await _dataContext.Categories.FirstOrDefaultAsync(x => x.Id == id);
+			var result = await _dataContext.No.FirstOrDefaultAsync(x => x.Id == id);
 			if (result == null) return new Response<CategoryDTO>() { IsSuccess = false, Status = 404, Message = "Not Found Categories!" };
 			return new Response<CategoryDTO>() { IsSuccess = true, Status = 200, Value = _mapper.Map<CategoryDTO>(result) };
 		}
@@ -28,7 +28,7 @@ namespace AppBackend.Application.Services
 		{
 			try
 			{
-				var ListData = await _dataContext.Categories.ToListAsync();
+				var ListData = await _dataContext.No.ToListAsync();
 				List<CategoryDTO> result = new List<CategoryDTO>();
 				foreach (var item in ListData)
 				{
@@ -49,7 +49,7 @@ namespace AppBackend.Application.Services
 			{
 				categoryDTO.Id = Guid.NewGuid().ToString();
 				var category = _mapper.Map<Category>(categoryDTO);
-				await _dataContext.Categories.AddAsync(category);
+				await _dataContext.No.AddAsync(category);
 				await _dataContext.SaveChangesAsync();
 				return new Response<string> { IsSuccess = true, Status = 200, Value = categoryDTO.Id };
 			}
@@ -63,13 +63,13 @@ namespace AppBackend.Application.Services
 		{
 			try
 			{
-				var category = await _dataContext.Categories.FirstOrDefaultAsync(x => x.Id == categoryDTO.Id);
+				var category = await _dataContext.No.FirstOrDefaultAsync(x => x.Id == categoryDTO.Id);
 				if (category == null) return new Response<string> { IsSuccess = false, Status = 404, Value = "Not found Ingredient!" };
 				category.Name = categoryDTO.Name;
 				category.WholesalePrice = categoryDTO.WholesalePrice;
 				category.RetailPrice = categoryDTO.RetailPrice;
 				category.Description = categoryDTO.Description;
-				_dataContext.Categories.Update(category);
+				_dataContext.No.Update(category);
 				await _dataContext.SaveChangesAsync();
 				return new Response<string> { IsSuccess = true, Status = 200, Value = categoryDTO.Id };
 			}
@@ -83,10 +83,10 @@ namespace AppBackend.Application.Services
 		{
 			try
 			{
-				var category = await _dataContext.Categories.FirstOrDefaultAsync(x => x.Id == id);
+				var category = await _dataContext.No.FirstOrDefaultAsync(x => x.Id == id);
 				if (category == null)
 					return new Response<string> { IsSuccess = false, Status = 404, Value = "Not found Categories " };
-				_dataContext.Categories.Remove(category);
+				_dataContext.No.Remove(category);
 				await _dataContext.SaveChangesAsync();
 				return new Response<string> { IsSuccess = true, Status = 200, Value = id };
 			}

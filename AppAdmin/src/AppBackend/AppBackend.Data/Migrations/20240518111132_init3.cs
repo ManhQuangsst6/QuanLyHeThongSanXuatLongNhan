@@ -8,7 +8,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace AppBackend.Data.Migrations
 {
     /// <inheritdoc />
-    public partial class init : Migration
+    public partial class init3 : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -53,25 +53,6 @@ namespace AppBackend.Data.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "Categories",
-                columns: table => new
-                {
-                    Id = table.Column<string>(type: "nvarchar(450)", nullable: false),
-                    Name = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    Description = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    WholesalePrice = table.Column<decimal>(type: "decimal(18,3)", nullable: false),
-                    RetailPrice = table.Column<decimal>(type: "decimal(18,3)", nullable: false),
-                    Created = table.Column<DateTime>(type: "datetime2", nullable: true),
-                    CreatedBy = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    LastModified = table.Column<DateTime>(type: "datetime2", nullable: true),
-                    LastModifiedBy = table.Column<string>(type: "nvarchar(max)", nullable: true)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Categories", x => x.Id);
-                });
-
-            migrationBuilder.CreateTable(
                 name: "Employees",
                 columns: table => new
                 {
@@ -81,9 +62,9 @@ namespace AppBackend.Data.Migrations
                     ImageLink = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     Status = table.Column<int>(type: "int", nullable: false),
                     IsDeleted = table.Column<int>(type: "int", nullable: true),
-                    Created = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    Created = table.Column<DateTimeOffset>(type: "datetimeoffset", nullable: true),
                     CreatedBy = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    LastModified = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    LastModified = table.Column<DateTimeOffset>(type: "datetimeoffset", nullable: true),
                     LastModifiedBy = table.Column<string>(type: "nvarchar(max)", nullable: true)
                 },
                 constraints: table =>
@@ -99,14 +80,33 @@ namespace AppBackend.Data.Migrations
                     Name = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Description = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     Measure = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    Created = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    Created = table.Column<DateTimeOffset>(type: "datetimeoffset", nullable: true),
                     CreatedBy = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    LastModified = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    LastModified = table.Column<DateTimeOffset>(type: "datetimeoffset", nullable: true),
                     LastModifiedBy = table.Column<string>(type: "nvarchar(max)", nullable: true)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Ingredients", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "No",
+                columns: table => new
+                {
+                    Id = table.Column<string>(type: "nvarchar(450)", nullable: false),
+                    Name = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Description = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    WholesalePrice = table.Column<decimal>(type: "decimal(18,3)", nullable: false),
+                    RetailPrice = table.Column<decimal>(type: "decimal(18,3)", nullable: false),
+                    Created = table.Column<DateTimeOffset>(type: "datetimeoffset", nullable: true),
+                    CreatedBy = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    LastModified = table.Column<DateTimeOffset>(type: "datetimeoffset", nullable: true),
+                    LastModifiedBy = table.Column<string>(type: "nvarchar(max)", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_No", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
@@ -216,6 +216,31 @@ namespace AppBackend.Data.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "ComfirmLongans",
+                columns: table => new
+                {
+                    Id = table.Column<string>(type: "nvarchar(450)", nullable: false),
+                    EmployeeID = table.Column<string>(type: "nvarchar(450)", nullable: false),
+                    Amount = table.Column<double>(type: "float", nullable: false),
+                    Note = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    IsComfirm = table.Column<int>(type: "int", nullable: true),
+                    Created = table.Column<DateTimeOffset>(type: "datetimeoffset", nullable: true),
+                    CreatedBy = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    LastModified = table.Column<DateTimeOffset>(type: "datetimeoffset", nullable: true),
+                    LastModifiedBy = table.Column<string>(type: "nvarchar(max)", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_ComfirmLongans", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_ComfirmLongans_Employees_EmployeeID",
+                        column: x => x.EmployeeID,
+                        principalTable: "Employees",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "Events",
                 columns: table => new
                 {
@@ -223,11 +248,11 @@ namespace AppBackend.Data.Migrations
                     Title = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Description = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     EmployeeID = table.Column<string>(type: "nvarchar(450)", nullable: false),
-                    DateStart = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    DateStart = table.Column<DateTimeOffset>(type: "datetimeoffset", nullable: false),
                     Expense = table.Column<decimal>(type: "decimal(18,3)", nullable: false),
-                    Created = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    Created = table.Column<DateTimeOffset>(type: "datetimeoffset", nullable: true),
                     CreatedBy = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    LastModified = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    LastModified = table.Column<DateTimeOffset>(type: "datetimeoffset", nullable: true),
                     LastModifiedBy = table.Column<string>(type: "nvarchar(max)", nullable: true)
                 },
                 constraints: table =>
@@ -242,27 +267,54 @@ namespace AppBackend.Data.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "Order",
+                name: "Notifications",
+                columns: table => new
+                {
+                    Id = table.Column<string>(type: "nvarchar(450)", nullable: false),
+                    EmployeeReceive = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    EmployeeRole = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    Content = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    link = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    isRead = table.Column<int>(type: "int", nullable: true),
+                    EmployeeId = table.Column<string>(type: "nvarchar(450)", nullable: false),
+                    Created = table.Column<DateTimeOffset>(type: "datetimeoffset", nullable: true),
+                    CreatedBy = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    LastModified = table.Column<DateTimeOffset>(type: "datetimeoffset", nullable: true),
+                    LastModifiedBy = table.Column<string>(type: "nvarchar(max)", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Notifications", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Notifications_Employees_EmployeeId",
+                        column: x => x.EmployeeId,
+                        principalTable: "Employees",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Orders",
                 columns: table => new
                 {
                     Id = table.Column<string>(type: "nvarchar(450)", nullable: false),
                     EmployeeID = table.Column<string>(type: "nvarchar(450)", nullable: false),
-                    OrderDate = table.Column<DateTime>(type: "datetime2", nullable: false),
                     Note = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Amount = table.Column<int>(type: "int", nullable: false),
                     Price = table.Column<decimal>(type: "decimal(18,3)", nullable: false),
                     CategoryLongan = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Customer = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    Created = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    IsDeleted = table.Column<int>(type: "int", nullable: true),
+                    Created = table.Column<DateTimeOffset>(type: "datetimeoffset", nullable: true),
                     CreatedBy = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    LastModified = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    LastModified = table.Column<DateTimeOffset>(type: "datetimeoffset", nullable: true),
                     LastModifiedBy = table.Column<string>(type: "nvarchar(max)", nullable: true)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Order", x => x.Id);
+                    table.PrimaryKey("PK_Orders", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_Order_Employees_EmployeeID",
+                        name: "FK_Orders_Employees_EmployeeID",
                         column: x => x.EmployeeID,
                         principalTable: "Employees",
                         principalColumn: "Id",
@@ -270,35 +322,102 @@ namespace AppBackend.Data.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "Shipments",
+                name: "RegisterDayLongans",
                 columns: table => new
                 {
                     Id = table.Column<string>(type: "nvarchar(450)", nullable: false),
-                    ShipmentCode = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    DateFrom = table.Column<DateTime>(type: "datetime2", nullable: true),
-                    DateTo = table.Column<DateTime>(type: "datetime2", nullable: true),
-                    DateUp = table.Column<DateTime>(type: "datetime2", nullable: true),
                     EmployeeID = table.Column<string>(type: "nvarchar(450)", nullable: false),
-                    Status = table.Column<int>(type: "int", nullable: false),
-                    CategoryID = table.Column<string>(type: "nvarchar(450)", nullable: false),
-                    Amount = table.Column<double>(type: "float", nullable: true),
-                    IsDelete = table.Column<int>(type: "int", nullable: true),
-                    Created = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    Amount = table.Column<int>(type: "int", nullable: false),
+                    Ischeck = table.Column<int>(type: "int", nullable: false),
+                    Created = table.Column<DateTimeOffset>(type: "datetimeoffset", nullable: true),
                     CreatedBy = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    LastModified = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    LastModified = table.Column<DateTimeOffset>(type: "datetimeoffset", nullable: true),
                     LastModifiedBy = table.Column<string>(type: "nvarchar(max)", nullable: true)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Shipments", x => x.Id);
+                    table.PrimaryKey("PK_RegisterDayLongans", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_Shipments_Categories_CategoryID",
-                        column: x => x.CategoryID,
-                        principalTable: "Categories",
+                        name: "FK_RegisterDayLongans_Employees_EmployeeID",
+                        column: x => x.EmployeeID,
+                        principalTable: "Employees",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "RegisterRemainningLongans",
+                columns: table => new
+                {
+                    Id = table.Column<string>(type: "nvarchar(450)", nullable: false),
+                    EmployeeID = table.Column<string>(type: "nvarchar(450)", nullable: false),
+                    Amount = table.Column<int>(type: "int", nullable: false),
+                    Ischeck = table.Column<int>(type: "int", nullable: false),
+                    Created = table.Column<DateTimeOffset>(type: "datetimeoffset", nullable: true),
+                    CreatedBy = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    LastModified = table.Column<DateTimeOffset>(type: "datetimeoffset", nullable: true),
+                    LastModifiedBy = table.Column<string>(type: "nvarchar(max)", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_RegisterRemainningLongans", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_Shipments_Employees_EmployeeID",
+                        name: "FK_RegisterRemainningLongans_Employees_EmployeeID",
+                        column: x => x.EmployeeID,
+                        principalTable: "Employees",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Salaries",
+                columns: table => new
+                {
+                    Id = table.Column<string>(type: "nvarchar(450)", nullable: false),
+                    EmployeeID = table.Column<string>(type: "nvarchar(450)", nullable: false),
+                    Note = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    QuarterYear = table.Column<int>(type: "int", nullable: true),
+                    Year = table.Column<int>(type: "int", nullable: true),
+                    SalaryMoney = table.Column<decimal>(type: "decimal(18,3)", nullable: false),
+                    SumAmount = table.Column<int>(type: "int", nullable: false),
+                    Status = table.Column<int>(type: "int", nullable: false),
+                    Created = table.Column<DateTimeOffset>(type: "datetimeoffset", nullable: true),
+                    CreatedBy = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    LastModified = table.Column<DateTimeOffset>(type: "datetimeoffset", nullable: true),
+                    LastModifiedBy = table.Column<string>(type: "nvarchar(max)", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Salaries", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Salaries_Employees_EmployeeID",
+                        column: x => x.EmployeeID,
+                        principalTable: "Employees",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "WorkAttendances",
+                columns: table => new
+                {
+                    Id = table.Column<string>(type: "nvarchar(450)", nullable: false),
+                    EmployeeID = table.Column<string>(type: "nvarchar(450)", nullable: false),
+                    ListAmount = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    Note = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    SumAmount = table.Column<int>(type: "int", nullable: true),
+                    ComfirmAmount = table.Column<int>(type: "int", nullable: true),
+                    IsSalary = table.Column<int>(type: "int", nullable: true),
+                    Created = table.Column<DateTimeOffset>(type: "datetimeoffset", nullable: true),
+                    CreatedBy = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    LastModified = table.Column<DateTimeOffset>(type: "datetimeoffset", nullable: true),
+                    LastModifiedBy = table.Column<string>(type: "nvarchar(max)", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_WorkAttendances", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_WorkAttendances_Employees_EmployeeID",
                         column: x => x.EmployeeID,
                         principalTable: "Employees",
                         principalColumn: "Id",
@@ -311,15 +430,15 @@ namespace AppBackend.Data.Migrations
                 {
                     Id = table.Column<string>(type: "nvarchar(450)", nullable: false),
                     EmployeeID = table.Column<string>(type: "nvarchar(450)", nullable: false),
-                    OrderDate = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    OrderDate = table.Column<DateTimeOffset>(type: "datetimeoffset", nullable: false),
                     Amount = table.Column<int>(type: "int", nullable: false),
                     Note = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     Price = table.Column<decimal>(type: "decimal(18,3)", nullable: false),
                     IngredientID = table.Column<string>(type: "nvarchar(450)", nullable: false),
                     IsDelete = table.Column<int>(type: "int", nullable: true),
-                    Created = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    Created = table.Column<DateTimeOffset>(type: "datetimeoffset", nullable: true),
                     CreatedBy = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    LastModified = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    LastModified = table.Column<DateTimeOffset>(type: "datetimeoffset", nullable: true),
                     LastModifiedBy = table.Column<string>(type: "nvarchar(max)", nullable: true)
                 },
                 constraints: table =>
@@ -340,21 +459,59 @@ namespace AppBackend.Data.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "Shipments",
+                columns: table => new
+                {
+                    Id = table.Column<string>(type: "nvarchar(450)", nullable: false),
+                    ShipmentCode = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    DateFrom = table.Column<DateTimeOffset>(type: "datetimeoffset", nullable: true),
+                    DateTo = table.Column<DateTimeOffset>(type: "datetimeoffset", nullable: true),
+                    DateUp = table.Column<DateTimeOffset>(type: "datetimeoffset", nullable: true),
+                    EmployeeID = table.Column<string>(type: "nvarchar(450)", nullable: false),
+                    Status = table.Column<int>(type: "int", nullable: false),
+                    CategoryID = table.Column<string>(type: "nvarchar(450)", nullable: false),
+                    Amount = table.Column<double>(type: "float", nullable: true),
+                    Remainning = table.Column<double>(type: "float", nullable: true),
+                    IsDelete = table.Column<int>(type: "int", nullable: true),
+                    Created = table.Column<DateTimeOffset>(type: "datetimeoffset", nullable: true),
+                    CreatedBy = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    LastModified = table.Column<DateTimeOffset>(type: "datetimeoffset", nullable: true),
+                    LastModifiedBy = table.Column<string>(type: "nvarchar(max)", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Shipments", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Shipments_Employees_EmployeeID",
+                        column: x => x.EmployeeID,
+                        principalTable: "Employees",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_Shipments_No_CategoryID",
+                        column: x => x.CategoryID,
+                        principalTable: "No",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "Order_Shipments",
                 columns: table => new
                 {
                     OrderID = table.Column<string>(type: "nvarchar(450)", nullable: false),
                     ShipmentID = table.Column<string>(type: "nvarchar(450)", nullable: false),
                     Price = table.Column<decimal>(type: "decimal(18,3)", nullable: false),
-                    Money = table.Column<decimal>(type: "decimal(18,3)", nullable: false)
+                    Money = table.Column<decimal>(type: "decimal(18,3)", nullable: false),
+                    NumAmount = table.Column<double>(type: "float", nullable: false)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Order_Shipments", x => new { x.OrderID, x.ShipmentID });
                     table.ForeignKey(
-                        name: "FK_Order_Shipments_Order_OrderID",
+                        name: "FK_Order_Shipments_Orders_OrderID",
                         column: x => x.OrderID,
-                        principalTable: "Order",
+                        principalTable: "Orders",
                         principalColumn: "Id");
                     table.ForeignKey(
                         name: "FK_Order_Shipments_Shipments_ShipmentID",
@@ -368,9 +525,9 @@ namespace AppBackend.Data.Migrations
                 columns: new[] { "Id", "ConcurrencyStamp", "Name", "NormalizedName" },
                 values: new object[,]
                 {
-                    { "935ffa23-6c2a-4b95-92e7-6dd98cc65f43", "1", "User", "User" },
-                    { "ca34e4a8-6cbc-4815-831a-b4573559b5f1", "2", "Employee", "Employee" },
-                    { "e4f8af17-dbaa-4fea-987a-e7a548aaba1f", "3", "Manager", "Manager" }
+                    { "31205e0e-cc78-4f21-979e-02afd81ee401", "2", "Employee", "Employee" },
+                    { "46459509-3dbf-454b-90ec-274e4afcc1a9", "1", "User", "User" },
+                    { "6e75fe0c-81f3-48f9-aaf7-ad57ca3d4bdc", "3", "Manager", "Manager" }
                 });
 
             migrationBuilder.CreateIndex(
@@ -413,19 +570,29 @@ namespace AppBackend.Data.Migrations
                 filter: "[NormalizedUserName] IS NOT NULL");
 
             migrationBuilder.CreateIndex(
+                name: "IX_ComfirmLongans_EmployeeID",
+                table: "ComfirmLongans",
+                column: "EmployeeID");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_Events_EmployeeID",
                 table: "Events",
                 column: "EmployeeID");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Order_EmployeeID",
-                table: "Order",
-                column: "EmployeeID");
+                name: "IX_Notifications_EmployeeId",
+                table: "Notifications",
+                column: "EmployeeId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Order_Shipments_ShipmentID",
                 table: "Order_Shipments",
                 column: "ShipmentID");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Orders_EmployeeID",
+                table: "Orders",
+                column: "EmployeeID");
 
             migrationBuilder.CreateIndex(
                 name: "IX_PurchaseOrders_EmployeeID",
@@ -438,6 +605,21 @@ namespace AppBackend.Data.Migrations
                 column: "IngredientID");
 
             migrationBuilder.CreateIndex(
+                name: "IX_RegisterDayLongans_EmployeeID",
+                table: "RegisterDayLongans",
+                column: "EmployeeID");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_RegisterRemainningLongans_EmployeeID",
+                table: "RegisterRemainningLongans",
+                column: "EmployeeID");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Salaries_EmployeeID",
+                table: "Salaries",
+                column: "EmployeeID");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_Shipments_CategoryID",
                 table: "Shipments",
                 column: "CategoryID");
@@ -445,6 +627,11 @@ namespace AppBackend.Data.Migrations
             migrationBuilder.CreateIndex(
                 name: "IX_Shipments_EmployeeID",
                 table: "Shipments",
+                column: "EmployeeID");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_WorkAttendances_EmployeeID",
+                table: "WorkAttendances",
                 column: "EmployeeID");
         }
 
@@ -467,7 +654,13 @@ namespace AppBackend.Data.Migrations
                 name: "AspNetUserTokens");
 
             migrationBuilder.DropTable(
+                name: "ComfirmLongans");
+
+            migrationBuilder.DropTable(
                 name: "Events");
+
+            migrationBuilder.DropTable(
+                name: "Notifications");
 
             migrationBuilder.DropTable(
                 name: "Order_Shipments");
@@ -476,13 +669,25 @@ namespace AppBackend.Data.Migrations
                 name: "PurchaseOrders");
 
             migrationBuilder.DropTable(
+                name: "RegisterDayLongans");
+
+            migrationBuilder.DropTable(
+                name: "RegisterRemainningLongans");
+
+            migrationBuilder.DropTable(
+                name: "Salaries");
+
+            migrationBuilder.DropTable(
+                name: "WorkAttendances");
+
+            migrationBuilder.DropTable(
                 name: "AspNetRoles");
 
             migrationBuilder.DropTable(
                 name: "AspNetUsers");
 
             migrationBuilder.DropTable(
-                name: "Order");
+                name: "Orders");
 
             migrationBuilder.DropTable(
                 name: "Shipments");
@@ -491,10 +696,10 @@ namespace AppBackend.Data.Migrations
                 name: "Ingredients");
 
             migrationBuilder.DropTable(
-                name: "Categories");
+                name: "Employees");
 
             migrationBuilder.DropTable(
-                name: "Employees");
+                name: "No");
         }
     }
 }

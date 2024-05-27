@@ -54,7 +54,7 @@ namespace AppBackend.Data.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Categories");
+                    b.ToTable("No");
                 });
 
             modelBuilder.Entity("AppBackend.Data.Models.ComfirmLongan", b =>
@@ -205,6 +205,44 @@ namespace AppBackend.Data.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Ingredients");
+                });
+
+            modelBuilder.Entity("AppBackend.Data.Models.Notification", b =>
+                {
+                    b.Property<string>("Id")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<string>("Content")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTimeOffset?>("Created")
+                        .HasColumnType("datetimeoffset");
+
+                    b.Property<string>("CreatedBy")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("EmployeeReceive")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("EmployeeRole")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTimeOffset?>("LastModified")
+                        .HasColumnType("datetimeoffset");
+
+                    b.Property<string>("LastModifiedBy")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int?>("isRead")
+                        .HasColumnType("int");
+
+                    b.Property<string>("link")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Notifications");
                 });
 
             modelBuilder.Entity("AppBackend.Data.Models.Order", b =>
@@ -574,21 +612,21 @@ namespace AppBackend.Data.Migrations
                     b.HasData(
                         new
                         {
-                            Id = "0b0f43a8-82e3-40be-87e8-011148b99929",
+                            Id = "658b7e52-433f-4242-acb6-5d7517347ff7",
                             ConcurrencyStamp = "1",
                             Name = "User",
                             NormalizedName = "User"
                         },
                         new
                         {
-                            Id = "207fa111-2112-4ecd-9285-f4d8b7a68cfc",
+                            Id = "94a0710a-8ec6-4ade-bb42-24a7744cf403",
                             ConcurrencyStamp = "2",
                             Name = "Employee",
                             NormalizedName = "Employee"
                         },
                         new
                         {
-                            Id = "d702e3cb-80f7-4a5c-8d3a-76af396419b6",
+                            Id = "ee797ae4-9de5-41b3-b154-37e08e343a15",
                             ConcurrencyStamp = "3",
                             Name = "Manager",
                             NormalizedName = "Manager"

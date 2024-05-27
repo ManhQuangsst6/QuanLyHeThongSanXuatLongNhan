@@ -12,9 +12,10 @@ namespace AppBackend.Data.Context
 		}
 		public DbSet<Ingredient> Ingredients { set; get; }
 		public DbSet<PurchaseOrder> PurchaseOrders { set; get; }
+		public DbSet<Notification> Notifications { set; get; }
 		//public DbSet<Position> Positions { set; get; }
 		public DbSet<Employee> Employees { set; get; }
-		public DbSet<Category> Categories { set; get; }
+		public DbSet<Category> No { set; get; }
 		public DbSet<Shipment> Shipments { set; get; }
 		public DbSet<Event> Events { set; get; }
 		public DbSet<Order_Shipment> Order_Shipments { set; get; }

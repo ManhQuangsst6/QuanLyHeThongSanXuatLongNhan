@@ -67,6 +67,7 @@ builder.Services.AddHangfire(config =>
 {
 	config.UseSqlServerStorage(builder.Configuration.GetConnectionString("DefaultConnection"));
 });
+builder.Services.AddSignalR();
 
 builder.Services.AddScoped<IUserManager, UserManager>();
 builder.Services.AddScoped<IEmailService, EmailService>();
@@ -81,7 +82,19 @@ builder.Services.AddScoped<ISalaryService, SalaryService>();
 builder.Services.AddScoped<IRegisterDayLonganService, RegisterDayLonganService>();
 builder.Services.AddScoped<IRegisterRemainningLonganService, RegisterRemainningLonganService>();
 builder.Services.AddScoped<IOrderService, OrderService>();
+builder.Services.AddScoped<INotificationService, NotificationService>();
 
+builder.Services.AddCors(options =>
+{
+	options.AddPolicy("AllowAllLocalhost", builder =>
+	{
+		builder
+			.SetIsOriginAllowed(_ => true) // Allow all origins
+			.AllowAnyMethod()              // Allow all HTTP methods
+			.AllowAnyHeader()              // Allow all headers
+			.AllowCredentials();           // Allow credentials (cookies, authorization headers, etc.)
+	});
+});
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
@@ -90,7 +103,8 @@ if (app.Environment.IsDevelopment())
 	app.UseSwagger();
 	app.UseSwaggerUI();
 }
-app.UseCors(option => option.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader());
+//app.UseCors(option => option.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader());
+
 app.UseHangfireServer();
 app.UseHangfireDashboard();
 app.MapGet("/", () => "Hangfire is running!");
@@ -101,9 +115,17 @@ RecurringJob.AddOrUpdate<WorkAttendanceService>(x => x.Remove(), "0 23 * * *", T
 
 app.MapIdentityApi<IdentityUser>();
 app.UseHttpsRedirection();
-
+app.UseRouting();
+app.UseCors("AllowAllLocalhost");
+app.MapHub<NotificationHub>("/notificationHub").RequireCors("AllowAllLocalhost");
 app.UseAuthorization();
+app.UseEndpoints(endpoints =>
+{
 
+	//endpoints.MapHub<NotificationHub>("/notificationHub");
+
+});
 app.MapControllers();
+
 
 app.Run();

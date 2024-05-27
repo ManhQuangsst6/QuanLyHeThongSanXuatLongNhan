@@ -37,7 +37,7 @@ namespace AppBackend.Application.Services
 		{
 			var employees = _dataContext.Employees.AsNoTracking();
 			var shipments = _dataContext.Shipments.AsNoTracking();
-			var categories = _dataContext.Categories.AsNoTracking();
+			var categories = _dataContext.No.AsNoTracking();
 			var query = from e in employees
 						join s in shipments on e.Id equals s.EmployeeID
 						join c in categories on s.CategoryID equals c.Id

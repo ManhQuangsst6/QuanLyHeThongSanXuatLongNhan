@@ -8,63 +8,73 @@ import {
     ReadOutlined,
     UserOutlined,
     CarOutlined,
-    SettingOutlined,MoneyCollectOutlined,
+    SettingOutlined, MoneyCollectOutlined,
     GiftOutlined, HomeOutlined,
-    AppstoreOutlined,BellOutlined ,SafetyCertificateOutlined
+    AppstoreOutlined, BellOutlined, SafetyCertificateOutlined
 } from '@ant-design/icons';
-import { Layout, Menu, Button, theme, Avatar, Popover,Badge } from 'antd';
+import { Layout, Menu, Button, theme, Avatar, Popover, Badge } from 'antd';
+
 const { Header, Sider, Content } = Layout;
-const { SubMenu } = Menu;
-function getItem(label, key, icon, children, type) {
+
+function getItem(label, key, icon, onClick,children) {
     return {
         key,
         icon,
-        children,
         label,
-        type,
+        onClick,
+        children
     };
 }
-const items = [
-    getItem(<NavLink to='/'>Home</NavLink>, '1', <HomeOutlined />),
-    getItem('Nhân viên', 'sub1', <UserOutlined />, [
-        getItem(<NavLink to='/employee/employee'>Nhân viên</NavLink>, '2'),
-        getItem(<NavLink to='/employee/user'>Thợ thủ công</NavLink>, '3'),
-    ]),
-    getItem(<NavLink to='/attendance'>Chấm công</NavLink>, '4', <ReadOutlined />),
-    getItem(<NavLink to='/register-day-longan'>Đặt nhãn </NavLink>, '8', <CarOutlined />),
-    getItem(<NavLink to='/register-remainning-longan'>Thu hồi</NavLink>, '15', <SafetyCertificateOutlined />),
-    getItem(<NavLink to='/shipment'>Quản lý lô hàng</NavLink>, '5', <AppstoreOutlined />),
-    getItem(<NavLink to='/PurchaseOrder'> Nhập nguyên liệu</NavLink>, '6', <AppstoreOutlined />),
-    getItem(<NavLink to='/event'>Sự kiện</NavLink>, '7', <GiftOutlined />),
-    getItem(<NavLink to='/salary'>Trả lương</NavLink>, '16', <MoneyCollectOutlined />),
-    getItem('Cài đặt', 'sub2', <SettingOutlined />, [
-        getItem(<NavLink to='/setting/ingredient'>Nguyên liệu</NavLink>, '9'),
-        getItem(<NavLink to='/setting/category'>Loại nhãn</NavLink>, '10'),
-        getItem('Submenu', 'sub3', null, [getItem('Option 11', '11'), getItem('Option 12', '12')]),
-    ]),
-];
+
 export const ProtectedRoute = () => {
     const { token } = useAuth();
     const [open, setOpen] = useState(false);
-    const [textHeader, SetTextHeader] = useState('')
+    const [textHeader, SetTextHeader] = useState('');
     const [collapsed, setCollapsed] = useState(false);
     const { setToken } = useAuth();
     const navigate = useNavigate();
     const {
         token: { colorBgContainer, borderRadiusLG },
     } = theme.useToken();
+
     // Check if the user is authenticated
     if (!token) {
         // If not authenticated, redirect to the login page
         return <Navigate to="/login" />;
     }
+
     const handleLogout = () => {
         setToken();
         navigate("/", { replace: true });
     };
+
     const handleOpenChange = (newOpen) => {
         setOpen(newOpen);
     };
+
+    const updateHeader = (text) => {
+        SetTextHeader(text);
+    };
+
+    const items = [
+        getItem(<NavLink to='/'>Home</NavLink>, '1', <HomeOutlined />, () => updateHeader('Trang chủ')),
+        getItem('Nhân viên', 'sub1', <UserOutlined />, null, [
+            getItem(<NavLink to='/employee/employee'>Nhân viên</NavLink>, '2', null, () => updateHeader('Nhân viên')),
+            getItem(<NavLink to='/employee/user'>Thợ thủ công</NavLink>, '3', null, () => updateHeader('Thợ thủ công')),
+        ]),
+        getItem(<NavLink to='/attendance'>Chấm công</NavLink>, '4', <ReadOutlined />, () => updateHeader('Chấm công')),
+        getItem(<NavLink to='/register-day-longan'>Đặt nhãn </NavLink>, '8', <CarOutlined />, () => updateHeader('Đặt nhãn')),
+        getItem(<NavLink to='/register-remainning-longan'>Thu hồi</NavLink>, '15', <SafetyCertificateOutlined />, () => updateHeader('Thu hồi')),
+        getItem(<NavLink to='/shipment'>Quản lý lô hàng</NavLink>, '5', <AppstoreOutlined />, () => updateHeader('Quản lý lô hàng')),
+        getItem(<NavLink to='/PurchaseOrder'> Nhập nguyên liệu</NavLink>, '6', <AppstoreOutlined />, () => updateHeader('Nhập nguyên liệu')),
+        getItem(<NavLink to='/event'>Sự kiện</NavLink>, '7', <GiftOutlined />, () => updateHeader('Sự kiện')),
+        getItem(<NavLink to='/salary'>Trả lương</NavLink>, '16', <MoneyCollectOutlined />, () => updateHeader('Trả lương')),
+        getItem('Cài đặt', 'sub2', <SettingOutlined />, null, [
+            getItem(<NavLink to='/setting/ingredient'>Nguyên liệu</NavLink>, '9', null, () => updateHeader('Nguyên liệu')),
+            getItem(<NavLink to='/setting/category'>Loại nhãn</NavLink>, '10', null, () => updateHeader('Loại nhãn')),
+        ]),
+    ];
+
     const content = (
         <div>
             <p onClick={() => handleLogout()}>Đăng xuất</p>
@@ -74,7 +84,7 @@ export const ProtectedRoute = () => {
 
     // If authenticated, render the child routes
     return (
-        <div >
+        <div>
             <Layout style={{ height: '100vh' }}>
                 <Sider trigger={null} collapsible collapsed={collapsed}>
                     <div className="demo-logo-vertical" />
@@ -105,25 +115,23 @@ export const ProtectedRoute = () => {
                                     width: 64,
                                     height: 64,
                                 }}
-                            ></Button><span className='text-header'>{textHeader}Trang chủ</span>
+                            ></Button><span className='text-header'>{textHeader}</span>
                         </div>
-                       <div style={{display:'flex',alignItems:'center'}}>
-                       <Badge count={5} >
-                                 <BellOutlined style={{fontSize:30}}  />
+                        <div style={{ display: 'flex', alignItems: 'center' }}>
+                            <Badge count={5} >
+                                <BellOutlined style={{ fontSize: 30 }} />
                             </Badge>
                             <Popover
-                            content={content}
-                            trigger="click"
-                            open={open}
-                            onOpenChange={handleOpenChange}
-                            style={{ background: '#eee' }}
-                        >
-                             
-                            <Avatar style={{ margin: 'auto 0', marginRight: 12 ,marginLeft:32}}
-                                src="https://d1hjkbq40fs2x4.cloudfront.net/2016-01-31/files/1045-2.jpg" size="large" icon={<UserOutlined />} />
-                        </Popover>
-                       </div>
-                        
+                                content={content}
+                                trigger="click"
+                                open={open}
+                                onOpenChange={handleOpenChange}
+                                style={{ background: '#eee' }}
+                            >
+                                <Avatar style={{ margin: 'auto 0', marginRight: 12, marginLeft: 32 }}
+                                    src="https://d1hjkbq40fs2x4.cloudfront.net/2016-01-31/files/1045-2.jpg" size="large" icon={<UserOutlined />} />
+                            </Popover>
+                        </div>
                     </Header>
                     <Content
                         style={{
@@ -138,9 +146,6 @@ export const ProtectedRoute = () => {
                     </Content>
                 </Layout>
             </Layout>
-
-
         </div>
-
     );
 };

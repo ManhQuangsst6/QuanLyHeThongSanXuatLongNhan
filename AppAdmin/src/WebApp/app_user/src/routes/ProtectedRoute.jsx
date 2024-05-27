@@ -2,6 +2,7 @@ import './style.scss'
 import { Navigate, Outlet, NavLink, useNavigate } from "react-router-dom";
 import { useAuth } from "../provider/authProvider";
 import React, { useState } from "react";
+import NotificationComponent from '../Components/Notification/NotificationComponent';
 import {
     MenuFoldOutlined,
     MenuUnfoldOutlined,
@@ -95,9 +96,8 @@ export const ProtectedRoute = () => {
                             ></Button><span className='text-header'>{textHeader}Trang chủ</span>
                         </div>
                        <div style={{display:'flex',alignItems:'center'}}>
-                       <Badge count={5} >
-                                 <BellOutlined style={{fontSize:30}}  />
-                            </Badge>
+                       <NotificationComponent />
+
                             <Popover
                             content={content}
                             trigger="click"

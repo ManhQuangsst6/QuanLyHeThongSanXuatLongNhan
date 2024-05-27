@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace AppBackend.Data.Migrations
 {
     [DbContext(typeof(DataContext))]
-    [Migration("20240511100737_Update_table_Attendance2")]
-    partial class Update_table_Attendance2
+    [Migration("20240518112426_data")]
+    partial class data
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -57,7 +57,7 @@ namespace AppBackend.Data.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Categories");
+                    b.ToTable("No");
                 });
 
             modelBuilder.Entity("AppBackend.Data.Models.ComfirmLongan", b =>
@@ -210,6 +210,44 @@ namespace AppBackend.Data.Migrations
                     b.ToTable("Ingredients");
                 });
 
+            modelBuilder.Entity("AppBackend.Data.Models.Notification", b =>
+                {
+                    b.Property<string>("Id")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<string>("Content")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTimeOffset?>("Created")
+                        .HasColumnType("datetimeoffset");
+
+                    b.Property<string>("CreatedBy")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("EmployeeReceive")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("EmployeeRole")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTimeOffset?>("LastModified")
+                        .HasColumnType("datetimeoffset");
+
+                    b.Property<string>("LastModifiedBy")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int?>("isRead")
+                        .HasColumnType("int");
+
+                    b.Property<string>("link")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Notifications");
+                });
+
             modelBuilder.Entity("AppBackend.Data.Models.Order", b =>
                 {
                     b.Property<string>("Id")
@@ -353,9 +391,6 @@ namespace AppBackend.Data.Migrations
                     b.Property<int>("Ischeck")
                         .HasColumnType("int");
 
-                    b.Property<int>("Isread")
-                        .HasColumnType("int");
-
                     b.Property<DateTimeOffset?>("LastModified")
                         .HasColumnType("datetimeoffset");
 
@@ -434,6 +469,9 @@ namespace AppBackend.Data.Migrations
                         .HasColumnType("decimal(18,3)");
 
                     b.Property<int>("Status")
+                        .HasColumnType("int");
+
+                    b.Property<int>("SumAmount")
                         .HasColumnType("int");
 
                     b.Property<int?>("Year")
@@ -577,21 +615,21 @@ namespace AppBackend.Data.Migrations
                     b.HasData(
                         new
                         {
-                            Id = "35c2ce90-ec4a-4910-b5cf-e05458198884",
+                            Id = "658b7e52-433f-4242-acb6-5d7517347ff7",
                             ConcurrencyStamp = "1",
                             Name = "User",
                             NormalizedName = "User"
                         },
                         new
                         {
-                            Id = "a6dfb1a7-aed5-425c-914e-907ee1b78ba1",
+                            Id = "94a0710a-8ec6-4ade-bb42-24a7744cf403",
                             ConcurrencyStamp = "2",
                             Name = "Employee",
                             NormalizedName = "Employee"
                         },
                         new
                         {
-                            Id = "56baf446-d045-48aa-9df7-7f7da465a3fa",
+                            Id = "ee797ae4-9de5-41b3-b154-37e08e343a15",
                             ConcurrencyStamp = "3",
                             Name = "Manager",
                             NormalizedName = "Manager"

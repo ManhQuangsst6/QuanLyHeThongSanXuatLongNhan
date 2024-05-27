@@ -10,9 +10,12 @@ namespace AppBackend.API.Controllers
 	public class RegisterDayLonganController : ControllerBase
 	{
 		private readonly IRegisterDayLonganService _registerDayLonganService;
-		public RegisterDayLonganController(IRegisterDayLonganService registerDayLonganService)
+		private readonly INotificationService _notificationService;
+
+		public RegisterDayLonganController(IRegisterDayLonganService registerDayLonganService, INotificationService notificationService)
 		{
 			_registerDayLonganService = registerDayLonganService;
+			_notificationService = notificationService;
 		}
 		[HttpGet]
 		public async Task<IActionResult> GetByID(string id)
@@ -48,7 +51,9 @@ namespace AppBackend.API.Controllers
 		{
 			try
 			{
+				var notification = new NotificationDTO() { Content = " đã đăng kí lấy nhãn ", EmployeeRole = "User" };
 				var result = await _registerDayLonganService.Post(registerDayLonganDTO);
+				await _notificationService.Post(notification);
 				return Ok(result);
 			}
 			catch (Exception ex)
