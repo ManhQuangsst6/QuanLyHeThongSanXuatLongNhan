@@ -1,7 +1,7 @@
 import './style.scss'
-import { Navigate, Outlet, NavLink, useNavigate } from "react-router-dom";
+import { Navigate, Outlet, NavLink, useNavigate,useLocation  } from "react-router-dom";
 import { useAuth } from "../provider/authProvider";
-import React, { useState } from "react";
+import React, { useState ,useEffect} from "react";
 import NotificationComponent from '../Components/Notification/NotificationComponent';
 import {
     MenuFoldOutlined,
@@ -32,12 +32,38 @@ const items = [
     getItem(<NavLink to='/salary'>Trả lương</NavLink>, '16', <MoneyCollectOutlined />),
 ];
 export const ProtectedRoute = () => {
+    const [selectedKeys, setSelectedKeys] = useState(['1']);
     const { token } = useAuth();
     const [open, setOpen] = useState(false);
     const [textHeader, SetTextHeader] = useState('')
     const [collapsed, setCollapsed] = useState(false);
     const { setToken } = useAuth();
+    const location = useLocation(); 
     const navigate = useNavigate();
+    useEffect(() => {
+        switch (location.pathname) {
+            case '/attendance':
+                setSelectedKeys(['1']);
+                SetTextHeader('Trang chủ');
+                break;
+            case '/register-day-longan':
+                setSelectedKeys(['8']);
+                SetTextHeader('Đặt nhãn');
+                break;
+            case '/register-remainning-longan':
+                setSelectedKeys(['15']);
+                SetTextHeader('Thu hồi');
+                break;
+            case '/salary':
+                setSelectedKeys(['16']);
+                SetTextHeader('Trả lương');
+                break;
+            default:
+                setSelectedKeys(['1']);
+                SetTextHeader('Trang chủ');
+                break;
+        }
+    }, [location.pathname]);
     const {
         token: { colorBgContainer, borderRadiusLG },
     } = theme.useToken();
@@ -53,13 +79,13 @@ export const ProtectedRoute = () => {
     const handleOpenChange = (newOpen) => {
         setOpen(newOpen);
     };
+    
     const content = (
         <div>
             <p onClick={() => handleLogout()}>Đăng xuất</p>
             <p>Thông tin cá nhân</p>
         </div>
     );
-
     // If authenticated, render the child routes
     return (
         <div >
@@ -69,6 +95,7 @@ export const ProtectedRoute = () => {
                     <Menu
                         theme="dark"
                         mode="inline"
+                        selectedKeys={selectedKeys}
                         defaultSelectedKeys={['1']}
                         items={items}
                     >
@@ -93,7 +120,7 @@ export const ProtectedRoute = () => {
                                     width: 64,
                                     height: 64,
                                 }}
-                            ></Button><span className='text-header'>{textHeader}Trang chủ</span>
+                            ></Button><span className='text-header'>{textHeader}</span>
                         </div>
                        <div style={{display:'flex',alignItems:'center'}}>
                        <NotificationComponent />

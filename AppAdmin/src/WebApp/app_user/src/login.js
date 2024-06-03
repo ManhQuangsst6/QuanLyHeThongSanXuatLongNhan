@@ -25,7 +25,7 @@ const Login = () => {
         LoginUser(user).then((res) => {
             console.log(res)
             setToken(res.data.value.token)
-            navigate("/", { replace: true });
+            navigate("/attendance", { replace: true });
         })
         }
     }

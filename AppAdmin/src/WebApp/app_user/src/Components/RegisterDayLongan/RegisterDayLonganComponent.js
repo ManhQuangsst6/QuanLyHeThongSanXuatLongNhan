@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Space, Button, Table, Input, Form, Row, Col, DatePicker, Flex } from 'antd';
+import { Space, Button, Table, Input, Form, Row, Col, DatePicker, Flex, InputNumber } from 'antd';
 import { LikeOutlined, DeleteOutlined, ExclamationCircleFilled, FormOutlined, PlusOutlined } from '@ant-design/icons';
 import { useNavigate } from 'react-router-dom';
 import { GetListEmployeePage } from '../../API/Employee/EmployeeAPI';
@@ -68,10 +68,7 @@ const RegisterDayLonganComponent = () => {
     
     const [form] = Form.useForm();
     const rules={
-        title:[{required: true ,message:'Tiêu đề không bỏ trống'} ],
-        startDate:[{required: true ,message:'Ngày không bỏ trống'} ],
-        expense:[{required: true ,message:'Chi tiêu không bỏ trống'} ],
-        employeeID:[{required: true ,message:'Tên nhân viên không bỏ trống'} ],
+        title:[{required: true ,message:'Tiêu đề không bỏ trống'} ]
          }
     const [totalPassengers, setTotalPassengers] = useState(1);
     const [loading, setLoading] = useState(false);
@@ -187,7 +184,7 @@ const RegisterDayLonganComponent = () => {
                 } else notifyError(res.data.message)
 
             }).catch(e => {
-                notifyError(e)
+                notifyError("Không bỏ trống số cân")
             })
         } 
     };
@@ -200,7 +197,7 @@ const RegisterDayLonganComponent = () => {
     const handleChange = (e) => {
         SetDataPush((dataPush) => ({
             ...dataPush,
-            [e.target.name]: e.target.value,
+            amount: e
         }));
     };
 
@@ -223,23 +220,28 @@ const RegisterDayLonganComponent = () => {
         SetDateSearch(date)
         fetchRecords(1, 10, nameSearch,date);
       };
-    const dataStatus=[{label:"Đợi kiểm tra", value:0}, {label:"Đang giao", value:1},
-    {label:"Đã nhận", value:2}, {label:"Hủy bỏ", value:3}
+    const dataStatus=[{label:"Đã lập", value:0}, {label:"Đang giao", value:1},
+    {label:"Đã nhận", value:2}, {label:"Hủy bỏ", value:3},{label:"Từ chối", value:4}
     ]
+    const ChangeFilter=(value)=>{
+        SetNameSearch(value)
+        SetIsRender(true)
+    }
     return (
 
         <div style={{ padding: 10 }}>
             <ToastContainer />
-            <div style={{ marginTop: "16px", }}>
+            <div >
 
                 <div style={{ display: 'flex', justifyContent: 'space-between' }}>
-                <div style={{display:'flex'}}> 
+                <div style={{display:'flex',alignItems:'center'}}> 
                     <h3 style={{marginRight:20, lineHeight:"55px"}}><FormOutlined style={{ strokeWidth: "30",color:'blue',stroke:'blue',fontSize:20,fontWeight:800, marginRight:8}}/>Danh sách đăng ký </h3>
                     <Select style={{
-                        width: 400,margin:27
+                        width: 200,margin:27
                     }}
                     allowClear
                     placeholder="Trạng thái"
+                   onChange={ChangeFilter}
               >
             {dataStatus.map(p => <Option value={p.value}>{p.label}</Option>)}
           </Select>
@@ -259,18 +261,14 @@ const RegisterDayLonganComponent = () => {
                                 <Row>
                                   
                                     <Col span={24}>
-                                        <Form.Item name="amount"  label="Số cân:" rules={rules.amount}>
-                                            <Input name="amount" rows={4} value={dataPush.amount} onChange={handleChange}></Input>
+                                        <Form.Item   label="Số cân:" rules={rules.amount}>
+                                            <InputNumber style={{width:'100%'}} value={dataPush.amount} onChange={handleChange}></InputNumber>
                                         </Form.Item>
                                     </Col>
                                 </Row>
                                
                             </Form>
                         </Modal>
-
-                        {/* <ProjectModelComponent ></ProjectModelComponent> */}
-                        {/* <Button type="primary" ghost style={{ marginRight: 16 }}>Thêm </Button> */}
-                        <Button danger>Xóa </Button>
                     </div>
                 </div>
 

@@ -42,6 +42,20 @@ namespace AppBackend.API.Controllers
 			}
 
 		}
+		[HttpGet]
+		public async Task<IActionResult> GetAllPageByUser(int pageNum, int pageSize, int? status, DateTimeOffset? dateTime)
+		{
+			try
+			{
+				var result = await _registerRemainningLonganService.GetAllPageUser(pageSize, pageNum, status, dateTime);
+				return Ok(result);
+			}
+			catch (Exception ex)
+			{
+				throw new Exception(ex.Message);
+			}
+
+		}
 		[HttpPost]
 		public async Task<IActionResult> Post(RegisterRemainningLonganDTO registerRemainningLonganDTO)
 		{

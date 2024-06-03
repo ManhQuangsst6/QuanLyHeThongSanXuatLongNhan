@@ -46,14 +46,27 @@ namespace AppBackend.API.Controllers
 			}
 
 		}
+		[HttpGet]
+		public async Task<IActionResult> GetListByEmployee(int pageNum, int pageSize, int? status, DateTimeOffset? dateTime)
+		{
+			try
+			{
+				var result = await _registerDayLonganService.GetAllPageByUser(pageSize, pageNum, status, dateTime);
+				return Ok(result);
+			}
+			catch (Exception ex)
+			{
+				throw new Exception(ex.Message);
+			}
+
+		}
 		[HttpPost, Authorize]
 		public async Task<IActionResult> Post(RegisterDayLonganDTO registerDayLonganDTO)
 		{
 			try
 			{
-				var notification = new NotificationDTO() { Content = " đã đăng kí lấy nhãn ", EmployeeRole = "User" };
+
 				var result = await _registerDayLonganService.Post(registerDayLonganDTO);
-				await _notificationService.Post(notification);
 				return Ok(result);
 			}
 			catch (Exception ex)

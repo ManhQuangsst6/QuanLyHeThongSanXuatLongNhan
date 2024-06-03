@@ -1,7 +1,7 @@
 import './style.scss'
-import { Navigate, Outlet, NavLink, useNavigate } from "react-router-dom";
+import { Navigate, Outlet, NavLink, useNavigate ,useLocation} from "react-router-dom";
 import { useAuth } from "../provider/authProvider";
-import React, { useState } from "react";
+import React, { useState,useEffect } from "react";
 import {
     MenuFoldOutlined,
     MenuUnfoldOutlined,
@@ -13,6 +13,7 @@ import {
     AppstoreOutlined, BellOutlined, SafetyCertificateOutlined
 } from '@ant-design/icons';
 import { Layout, Menu, Button, theme, Avatar, Popover, Badge } from 'antd';
+import NotificationComponent from '../Components/Notification/NotificationComponent';
 
 const { Header, Sider, Content } = Layout;
 
@@ -27,12 +28,23 @@ function getItem(label, key, icon, onClick,children) {
 }
 
 export const ProtectedRoute = () => {
+    const location = useLocation();
     const { token } = useAuth();
     const [open, setOpen] = useState(false);
     const [textHeader, SetTextHeader] = useState('');
     const [collapsed, setCollapsed] = useState(false);
     const { setToken } = useAuth();
     const navigate = useNavigate();
+    useEffect(() => {
+        if(token){
+            const currentItem = items.flatMap(item => item.children ? item.children : item)
+            .find(item => item.label.props.to === location.pathname);
+        if (currentItem) {
+            SetTextHeader(currentItem.onClick);
+        }
+        }
+        
+    }, [location]);
     const {
         token: { colorBgContainer, borderRadiusLG },
     } = theme.useToken();
@@ -55,23 +67,23 @@ export const ProtectedRoute = () => {
     const updateHeader = (text) => {
         SetTextHeader(text);
     };
-
+    
     const items = [
-        getItem(<NavLink to='/'>Home</NavLink>, '1', <HomeOutlined />, () => updateHeader('Trang chủ')),
+        getItem(<NavLink to='/'>Home</NavLink>, '/', <HomeOutlined />, () => updateHeader('Trang chủ')),
         getItem('Nhân viên', 'sub1', <UserOutlined />, null, [
-            getItem(<NavLink to='/employee/employee'>Nhân viên</NavLink>, '2', null, () => updateHeader('Nhân viên')),
-            getItem(<NavLink to='/employee/user'>Thợ thủ công</NavLink>, '3', null, () => updateHeader('Thợ thủ công')),
+            getItem(<NavLink to='/employee/employee'>Nhân viên</NavLink>, '/employee/employee', null, () => updateHeader('Nhân viên')),
+            getItem(<NavLink to='/employee/user'>Thợ thủ công</NavLink>, '/employee/user', null, () => updateHeader('Thợ thủ công')),
         ]),
-        getItem(<NavLink to='/attendance'>Chấm công</NavLink>, '4', <ReadOutlined />, () => updateHeader('Chấm công')),
-        getItem(<NavLink to='/register-day-longan'>Đặt nhãn </NavLink>, '8', <CarOutlined />, () => updateHeader('Đặt nhãn')),
-        getItem(<NavLink to='/register-remainning-longan'>Thu hồi</NavLink>, '15', <SafetyCertificateOutlined />, () => updateHeader('Thu hồi')),
-        getItem(<NavLink to='/shipment'>Quản lý lô hàng</NavLink>, '5', <AppstoreOutlined />, () => updateHeader('Quản lý lô hàng')),
-        getItem(<NavLink to='/PurchaseOrder'> Nhập nguyên liệu</NavLink>, '6', <AppstoreOutlined />, () => updateHeader('Nhập nguyên liệu')),
-        getItem(<NavLink to='/event'>Sự kiện</NavLink>, '7', <GiftOutlined />, () => updateHeader('Sự kiện')),
-        getItem(<NavLink to='/salary'>Trả lương</NavLink>, '16', <MoneyCollectOutlined />, () => updateHeader('Trả lương')),
+        getItem(<NavLink to='/attendance'>Chấm công</NavLink>, '/attendance', <ReadOutlined />, () => updateHeader('Chấm công')),
+        getItem(<NavLink to='/register-day-longan'>Đặt nhãn </NavLink>, '/register-day-longan', <CarOutlined />, () => updateHeader('Đặt nhãn')),
+        getItem(<NavLink to='/register-remainning-longan'>Thu hồi</NavLink>, '/register-remainning-longan', <SafetyCertificateOutlined />, () => updateHeader('Thu hồi')),
+        getItem(<NavLink to='/shipment'>Quản lý lô hàng</NavLink>, '/shipment', <AppstoreOutlined />, () => updateHeader('Quản lý lô hàng')),
+        getItem(<NavLink to='/PurchaseOrder'> Nhập nguyên liệu</NavLink>, '/PurchaseOrder', <AppstoreOutlined />, () => updateHeader('Nhập nguyên liệu')),
+        getItem(<NavLink to='/event'>Sự kiện</NavLink>, '/event', <GiftOutlined />, () => updateHeader('Sự kiện')),
+        getItem(<NavLink to='/salary'>Trả lương</NavLink>, '/salary', <MoneyCollectOutlined />, () => updateHeader('Trả lương')),
         getItem('Cài đặt', 'sub2', <SettingOutlined />, null, [
-            getItem(<NavLink to='/setting/ingredient'>Nguyên liệu</NavLink>, '9', null, () => updateHeader('Nguyên liệu')),
-            getItem(<NavLink to='/setting/category'>Loại nhãn</NavLink>, '10', null, () => updateHeader('Loại nhãn')),
+            getItem(<NavLink to='/setting/ingredient'>Nguyên liệu</NavLink>, '/setting/ingredient', null, () => updateHeader('Nguyên liệu')),
+            getItem(<NavLink to='/setting/category'>Loại nhãn</NavLink>, '/setting/category', null, () => updateHeader('Loại nhãn')),
         ]),
     ];
 
@@ -92,7 +104,11 @@ export const ProtectedRoute = () => {
                         theme="dark"
                         mode="inline"
                         defaultSelectedKeys={['1']}
-                        items={items}
+                        selectedKeys={[location.pathname]}
+                        items={items.map(item => ({
+                            ...item,
+                            onClick: item.children ? null : () => navigate(item.label.props.to)
+                        }))}
                     >
                     </Menu>
                 </Sider>
@@ -118,9 +134,7 @@ export const ProtectedRoute = () => {
                             ></Button><span className='text-header'>{textHeader}</span>
                         </div>
                         <div style={{ display: 'flex', alignItems: 'center' }}>
-                            <Badge count={5} >
-                                <BellOutlined style={{ fontSize: 30 }} />
-                            </Badge>
+                        <NotificationComponent />
                             <Popover
                                 content={content}
                                 trigger="click"

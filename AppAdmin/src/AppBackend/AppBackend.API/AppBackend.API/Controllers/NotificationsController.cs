@@ -50,6 +50,19 @@ namespace AppBackend.API.Controllers
 				throw new Exception(ex.Message);
 			}
 		}
+		[HttpGet]
+		public async Task<IActionResult> Read(string id)
+		{
+			try
+			{
+				var result = await _notificationService.Read(id);
+				return Ok(result);
+			}
+			catch (Exception ex)
+			{
+				throw new Exception(ex.Message);
+			}
+		}
 
 	}
 }

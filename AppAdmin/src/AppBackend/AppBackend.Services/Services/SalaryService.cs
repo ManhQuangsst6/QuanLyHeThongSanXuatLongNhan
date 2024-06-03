@@ -6,9 +6,11 @@ using AppBackend.Data.Context;
 using AppBackend.Data.Models;
 using AutoMapper;
 using AutoMapper.QueryableExtensions;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
+using System.Security.Claims;
 using static AppBackend.Data.Enums.EnumData;
 
 namespace AppBackend.Application.Services
@@ -19,14 +21,15 @@ namespace AppBackend.Application.Services
 		private readonly IMapper _mapper;
 		private readonly RoleManager<IdentityRole> _roleManager;
 		private readonly UserManager<IdentityUser> _userManager;
-
-		public SalaryService(DataContext dataContext, IMapper mapper,
+		private readonly IHttpContextAccessor _httpContextAccessor;
+		public SalaryService(DataContext dataContext, IMapper mapper, IHttpContextAccessor httpContextAccessor,
 			RoleManager<IdentityRole> role, UserManager<IdentityUser> userManager)
 		{
 			_dataContext = dataContext;
 			_mapper = mapper;
 			_roleManager = role;
 			_userManager = userManager;
+			_httpContextAccessor = httpContextAccessor;
 		}
 
 		public async Task CreateTableSalary(int quarterYear, int year, int price)
@@ -89,6 +92,20 @@ namespace AppBackend.Application.Services
 						join s in salary on e.Id equals s.EmployeeID
 						where (e.EmployeeCode == searchName || searchName.IsNullOrEmpty())
 						&& (s.Year == year || year == null) && (s.QuarterYear == quarterYear || quarterYear == null) && userIds.Contains(e.Id)
+						orderby s.Year descending, s.QuarterYear descending
+						select s;
+
+			var objs = await query.ProjectTo<SalaryDTO>(_mapper.ConfigurationProvider).PaginatedListAsync(pageNum, pageSize);
+			return new Response<PaginatedList<SalaryDTO>> { IsSuccess = true, Status = 200, Value = objs };
+		}
+		public async Task<Response<PaginatedList<SalaryDTO>>> GetAllClient(int pageSize, int pageNum, int? quarterYear, int? year)
+		{
+			var httpContext = _httpContextAccessor.HttpContext;
+			var userId = httpContext.User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+			var salary = _dataContext.Salaries.AsNoTracking();
+			var query = from s in salary
+						where s.EmployeeID == userId
+						&& (s.Year == year || year == null) && (s.QuarterYear == quarterYear || quarterYear == null)
 						orderby s.Year descending, s.QuarterYear descending
 						select s;
 

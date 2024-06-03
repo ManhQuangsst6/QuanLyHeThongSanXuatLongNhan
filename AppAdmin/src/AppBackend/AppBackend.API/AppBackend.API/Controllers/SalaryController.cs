@@ -43,6 +43,19 @@ namespace AppBackend.API.Controllers
 		}
 
 		[HttpGet]
+		public async Task<IActionResult> GetAllClient(int pageNum, int pageSize, int? quarterYear, int? year)
+		{
+			try
+			{
+				var result = await _salaryService.GetAllClient(pageSize, pageNum, quarterYear, year);
+				return Ok(result);
+			}
+			catch (Exception ex)
+			{
+				throw new Exception(ex.Message);
+			}
+		}
+		[HttpGet]
 		public async Task<IActionResult> GetListByPage(int pageNum, int pageSize, string? searchName, int? quarterYear, int? year)
 		{
 			try

@@ -4,12 +4,17 @@ using AppBackend.Application.Interface;
 using AppBackend.Application.ModelsDTO;
 using AppBackend.Data.Context;
 using AppBackend.Data.Models;
+using AppBackend.Data.Models.Email;
 using AutoMapper;
 using AutoMapper.QueryableExtensions;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using System.Security.Claims;
+using Twilio;
+using Twilio.Rest.Api.V2010.Account;
+using Twilio.Types;
 using static AppBackend.Data.Enums.EnumData;
 
 namespace AppBackend.Application.Services
@@ -19,11 +24,18 @@ namespace AppBackend.Application.Services
 		private readonly DataContext _dataContext;
 		private readonly IMapper _mapper;
 		private readonly IHttpContextAccessor _httpContextAccessor;
-		public WorkAttendanceService(DataContext dataContext, IMapper mapper, IHttpContextAccessor httpContextAccessor)
+		private readonly UserManager<IdentityUser> _userManager;
+		private readonly RoleManager<IdentityRole> _roleManager;
+		private readonly IEmailService _emailService;
+		public WorkAttendanceService(DataContext dataContext, IMapper mapper, RoleManager<IdentityRole> roleManager,
+			IHttpContextAccessor httpContextAccessor, UserManager<IdentityUser> userManager, IEmailService emailService)
 		{
 			_dataContext = dataContext;
 			_mapper = mapper;
 			_httpContextAccessor = httpContextAccessor;
+			_userManager = userManager;
+			_roleManager = roleManager;
+			_emailService = emailService;
 		}
 
 
@@ -147,6 +159,86 @@ namespace AppBackend.Application.Services
 			{
 				return new Response<string> { IsSuccess = false, Status = 404, Message = ex.Message };
 			}
+		}
+
+		public async Task SendMailToEmployee()
+		{
+			var users = await _userManager.GetUsersInRoleAsync("User");
+			var workDay = await _dataContext.WorkAttendances.Where(x => users.Select(a => a.Id).Contains(x.EmployeeID)).ToListAsync();
+			var employeeUsers = users.Select(u => new
+			{
+				u.Id,
+				u.UserName,
+				u.Email,
+				u.PhoneNumber,
+				workDay.FirstOrDefault(x => x.EmployeeID == u.Id).SumAmount
+			}).ToList();
+			foreach (var user in employeeUsers)
+			{
+				if (!user.Email.IsNullOrEmpty() && user.SumAmount != null && user.SumAmount > 0)
+					SendMail(user.Email, (int)user.SumAmount);
+				if (!user.PhoneNumber.IsNullOrEmpty() && user.SumAmount != null && user.SumAmount > 0)
+					if (user.PhoneNumber == "0357021457")
+						SendPhone(user.PhoneNumber, (int)user.SumAmount);
+			}
+		}
+		private async void SendMail(string email, int count)
+		{
+			var date = DateTime.Now.ToString("dd/MM/yyyy");
+
+			var html = @"
+<html lang=""en"">
+    <head>    
+        <meta content=""text/html; charset=utf-8"" http-equiv=""Content-Type"">
+        <title>
+            Upcoming topics
+        </title>
+        <style type=""text/css"">
+            HTML{background-color: #e8e8e8;}
+            .courses-table{font-size: 12px; padding: 3px; border-collapse: collapse; border-spacing: 0;}
+            .courses-table .description{color: #505050;}
+            .courses-table td{border: 1px solid #D1D1D1; background-color: #F3F3F3; padding: 0 10px;}
+            .courses-table th{border: 1px solid #424242; color: #FFFFFF;text-align: left; padding: 0 10px;}
+            .green{background-color: #6B9852;}
+        </style>
+    </head>
+    <body>
+        <table class=""courses-table"">
+            <thead>
+                <tr>
+                    <th class=""green"">Ngày</th>
+                    <th class=""green"">Số cân</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td class=""description"">" + date + @"</td>
+                    <td>" + count + @"</td>
+                </tr>
+               
+            </tbody>
+        </table>
+<div>Nếu có sai sót hãy xác nhận lại trước 11h đêm ngày  " + date + @"</div>
+    </body>
+</html>
+";
+			Message message = new Message(new string[] { email }, "Thông báo số cân ngày " + date, html);
+			await _emailService.SendEmail(message);
+		}
+		private async void SendPhone(string phoneNumber, int count)
+		{
+			var date = DateTime.Now.ToString("dd/MM/yyyy");
+			var accountSid = "";
+			var authToken = "";
+			TwilioClient.Init(accountSid, authToken);
+
+			var messageOptions = new CreateMessageOptions(
+			  new PhoneNumber("+84" + phoneNumber.Substring(1)));
+			messageOptions.From = new PhoneNumber("+13345186173");
+			messageOptions.Body = "Số cân nhãn đã làm ngày hôm nay(" + date + ") là : " + count;
+
+			var message = MessageResource.Create(messageOptions);
+			Console.WriteLine(message.Body);
 		}
 	}
 }

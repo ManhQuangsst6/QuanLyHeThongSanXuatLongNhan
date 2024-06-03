@@ -7,11 +7,11 @@ namespace AppBackend.Application.ModelsDTO
 	public class RegisterRemainningLonganDTO : IMapFrom<RegisterRemainningLongan>
 	{
 		public string Id { get; set; }
-		public string EmployeeID { get; set; }
+		public string? EmployeeID { get; set; }
 		public string? EmployeeCode { get; set; }
 		public string? EmployeeName { get; set; }
 		public int Amount { get; set; }
-		public int Ischeck { get; set; } = 0;
+		public int? Ischeck { get; set; } = 0;
 		public string? Status { get; set; }
 		public DateTimeOffset? Created { get; set; }
 		public void Mapping(Profile profile)

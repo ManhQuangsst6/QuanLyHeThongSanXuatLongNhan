@@ -9,6 +9,7 @@ namespace AppBackend.Application.Interface
 		Task<Response<string>> Put(RegisterDayLonganDTO registerDayLonganDTO);
 		Task<Response<string>> Remove(string id);
 		Task<Response<RegisterDayLonganDTO>> Get(string id);
+		Task<Response<PaginatedList<RegisterDayLonganDTO>>> GetAllPageByUser(int pageSize, int pageNum, int? status, DateTimeOffset? dateTime);
 		Task<Response<PaginatedList<RegisterDayLonganDTO>>> GetAllPage(int pageSize, int pageNum, string? searchName, DateTimeOffset? dateTime);
 	}
 }

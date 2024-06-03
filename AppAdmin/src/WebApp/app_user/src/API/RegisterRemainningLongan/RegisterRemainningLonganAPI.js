@@ -5,10 +5,10 @@ export const GetByID = (id) => {
 }
 
 export const GetListByPage = (paging) => {
-    let query = `${name}/GetListByPage?pageNum=${paging.pageNum}&pageSize=${paging.pageSize}
+    let query = `${name}/GetAllPageByUser?pageNum=${paging.pageNum}&pageSize=${paging.pageSize}
    `
-    if (paging.nameSearch !== null && paging.nameSearch !== "")
-        query += `&searchName=${paging.nameSearch}`
+    if (paging.nameSearch && paging.nameSearch !== ""||paging.nameSearch===0)
+        query += `&status=${paging.nameSearch}`
     if (paging.dateSearch !== null && paging.dateSearch !== "")
         query += `&dateTime=${paging.dateSearch}`
    

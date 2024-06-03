@@ -3,11 +3,9 @@ const name = '/Salary'
 export const GetByID = (id) => {
     return apiService.get(`${name}/GetByID?id=${id}`)
 }
-export const GetListByPage = (paging) => {
+export const GetAllClient = (paging) => {
     console.log(paging)
     let query = `${name}/GetListByPage?pageNum=${paging.pageNum}&pageSize=${paging.pageSize}`
-    if (paging.nameSearch !== null && paging.nameSearch !== "")
-        query += `&searchName=${paging.nameSearch}`
     if (paging.quarterYear !== null && paging.quarterYear !== "")
         query += `&quarterYear=${paging.quarterYear}`
     if (paging.year !== null && paging.year !== "")

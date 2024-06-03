@@ -39,7 +39,7 @@ namespace AppBackend.Application.Services
 			//			select new Notification() { Content = n.Content, Created = n.Created, CreatedBy = e.FullName };
 			var query = from n in notifications
 						orderby n.Created descending
-						select new Notification() { Id = n.Id, Content = n.Content, Created = n.Created, CreatedBy = n.CreatedBy };
+						select n;
 			var result = await query.ProjectTo<NotificationDTO>(_mapper.ConfigurationProvider).PaginatedListAsync(pageNum, pageSize);
 			return new Response<PaginatedList<NotificationDTO>> { IsSuccess = true, Status = 200, Value = result };
 
@@ -47,7 +47,7 @@ namespace AppBackend.Application.Services
 
 		public async Task<Response<int>> GetCount()
 		{
-			var num = await _dataContext.Notifications.Where(x => x.isRead == 0).OrderByDescending(x => x.Created).CountAsync();
+			var num = await _dataContext.Notifications.Where(x => x.IsRead == 0).OrderByDescending(x => x.Created).CountAsync();
 			return new Response<int> { IsSuccess = true, Status = 200, Value = (num != null && num > 0) ? num : 0 };
 		}
 
@@ -55,13 +55,17 @@ namespace AppBackend.Application.Services
 		{
 			try
 			{
+				var userID = _httpContextAccessor.HttpContext.User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+				var user = await _dataContext.Employees.FirstOrDefaultAsync(x => x.Id == userID);
 				notificationDTO.ID = Guid.NewGuid().ToString();
 				notificationDTO.Created = DateTime.Now;
-				notificationDTO.CreatedBy = _httpContextAccessor.HttpContext.User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+				notificationDTO.CreatedBy = user.EmployeeCode;
+				notificationDTO.IsRead = 0;
 				var notification = _mapper.Map<Notification>(notificationDTO);
-				notification.isRead = 0;
+				notification.IsRead = 0;
 				await _dataContext.Notifications.AddAsync(notification);
 				await _dataContext.SaveChangesAsync();
+				notificationDTO.Image = user.ImageLink;
 				await _hubContext.Clients.All.SendAsync("activity", notificationDTO);
 				return new Response<string> { IsSuccess = true, Status = 200, Value = notificationDTO.ID };
 			}
@@ -78,7 +82,7 @@ namespace AppBackend.Application.Services
 				var notification = await _dataContext.Notifications.FirstOrDefaultAsync(x => x.Id == id);
 				if (notification == null) return new Response<string> { IsSuccess = false, Status = 404, Value = "Not found notification!" };
 
-				notification.isRead = 1;
+				notification.IsRead = 1;
 				_dataContext.Notifications.Update(notification);
 				await _dataContext.SaveChangesAsync();
 				return new Response<string> { IsSuccess = true, Status = 200, Value = notification.Id };

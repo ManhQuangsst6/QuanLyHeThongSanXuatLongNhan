@@ -1,12 +1,12 @@
 // src/components/NotificationComponent.js
 import React, { useEffect, useState } from "react";
-//import { Badge, message } from "antd";
-//import { BellOutlined } from "@ant-design/icons";
+import { Badge, Avatar } from "antd";
+import { BellOutlined, UserOutlined } from "@ant-design/icons";
 import * as signalR from "@microsoft/signalr";
 import Dropdown from "react-bootstrap/Dropdown";
 import InfiniteScroll from "react-infinite-scroll-component";
 import "./styleNotification.scss";
-
+import { useNavigate } from "react-router-dom"; 
 import {
   GetCount,
   GetListByPage,
@@ -16,6 +16,7 @@ import "bootstrap/dist/js/bootstrap.bundle.min";
 import ConvertDate from "../../Common/Convert/ConvertDate";
 
 const NotificationComponent = () => {
+  const navigate = useNavigate();
   const [rootData, SetRootData] = useState([]);
   const [isRender, SetisRender] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
@@ -72,12 +73,20 @@ const NotificationComponent = () => {
       var data = res.data.value.items.map((item, index) => {
         return {
           label: (
-            <div style={{ width: 300 }}>
-              <div>
-                <strong>{item.createdBy}</strong>
-                {item.content}
+            <div style={{ width: 400, display: "flex" }}>
+              <Avatar
+                style={{ marginRight: 6 }}
+                src="https://d1hjkbq40fs2x4.cloudfront.net/2016-01-31/files/1045-2.jpg"
+                size="large"
+                icon={<UserOutlined />}
+              />
+              <div style={{ width: 250 }}>
+                <div>
+                  <strong>{item.createdBy} </strong>
+                  <span>{item.content}</span>
+                </div>
+                <div>{FormatDate(item.created)}</div>
               </div>
-              <div>{FormatDate(item.created)}</div>
             </div>
           ),
           key: item.id,
@@ -123,10 +132,20 @@ const NotificationComponent = () => {
       fetchData1();
     }
   };
+  const handleNotificationClick = () => {
+    navigate(`/salary`); // Điều hướng đến trang thông báo chi tiết
+  };
   return (
     <Dropdown>
-      <Dropdown.Toggle variant="success" id="dropdown-basic">
-        Dropdown Button
+      <Dropdown.Toggle
+        as="div"
+        variant="success"
+        id="dropdown-basic"
+        style={{ cursor: "pointer", display: "flex", alignItems: "center" }}
+      >
+        <Badge count={5}>
+          <BellOutlined style={{ fontSize: 24 }} />
+        </Badge>
       </Dropdown.Toggle>
       <Dropdown.Menu
         id="style-5"
@@ -138,8 +157,14 @@ const NotificationComponent = () => {
           hasMore={hasMore}
           loader={<p>Loading...</p>}
         >
-          {dataList.map((season) => (
-            <Dropdown.Item style={{ lineHeight: "30px" }}>
+          {dataList.map((season, index) => (
+            <Dropdown.Item
+              style={{
+                lineHeight: "30px",
+                backgroundColor: index % 2 === 0 ? "#f9f9f9" : "#ffffff",
+              }}
+              onClick={handleNotificationClick}
+            >
               {season.label}
             </Dropdown.Item>
           ))}

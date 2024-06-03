@@ -3,7 +3,7 @@ import { Space,Button, Table,InputNumber, Input, Form, Row, Col, DatePicker, Fle
 import { LikeOutlined, DeleteOutlined, FileExcelOutlined, FormOutlined, PlusOutlined } from '@ant-design/icons';
 import { useNavigate } from 'react-router-dom';
 import { GetListEmployeePage } from '../../API/Employee/EmployeeAPI';
-import { GetListByPage,Remove,Post, Update,GetAllExportExcel } from '../../API/Salary/SalaryAPI';
+import { GetAllClient,Remove,Post, Update,GetAllExportExcel } from '../../API/Salary/SalaryAPI';
 import { Modal, Image, Select } from 'antd';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
@@ -18,7 +18,6 @@ const {Option}=Select
 
 
 const SalaryComponent = () => {
-    const [nameSearch, SetNameSearch] = useState("")
     const columns = [
         {
             title: 'Quý',
@@ -101,12 +100,12 @@ const SalaryComponent = () => {
     const [year,SetYear]=useState(null)
     useEffect(() => {
         if (isRender === true)
-            fetchRecords(1, 10, nameSearch,quarterYear,year)
+            fetchRecords(1, 10,quarterYear,year)
         SetIsRender(false)
     }, [isRender])
-    const fetchRecords = (pageNum, pageSize, nameSearch,quarterYear,year) => {
+    const fetchRecords = (pageNum, pageSize,quarterYear,year) => {
         setLoading(true);
-        GetListByPage({ pageNum, pageSize, nameSearch,quarterYear,year })
+        GetAllClient({ pageNum, pageSize,quarterYear,year })
             .then((res) => {
                 let dataShow = res.data.value.items.map(item => {
                     return {
@@ -122,7 +121,6 @@ const SalaryComponent = () => {
                         statusString: item.statusString,
                     }
                 })
-                console.log(dataShow)
                 SetData(dataShow)
                 setTotalPassengers(res.data.value.totalCount);
                 setLoading(false);
@@ -215,10 +213,7 @@ const SalaryComponent = () => {
         }));
     };
 
-    const onSearch = (value, _e, info) => {
-        SetNameSearch(value);
-        SetIsRender(true)
-    }
+    
 
     const handleChangeEmployee = (value) => {
         SetDataPush({
@@ -230,15 +225,12 @@ const SalaryComponent = () => {
     
     const [dateSearch,SetDateSearch]=useState(null)
     const onChangeDateSearch = (date, dateString) => {
-        // console.log(date, dateString);
-        // SetDateSearch(date)
-        // fetchRecords(1, 10, nameSearch,date);
+       
       };
     const dataStatus=[{label:"Đợi kiểm tra", value:0}, {label:"Đang giao", value:1},
     {label:"Đã nhận", value:2}, {label:"Hủy bỏ", value:3}
     ]
     const ExportExcel=()=>{
-        
         GetAllExportExcel(quarterYear,year).then(res=>{
             const result=res.data.value.map(item=>{
                 return {
@@ -265,7 +257,6 @@ for (let C = range.s.c; C <= range.e.c; ++C) {
         
     }
     const onChangequarterYear=(value)=>{
-        console.log("dsgkv")
         SetQuarterYear(value);
         SetIsRender(true)
     }
@@ -294,9 +285,8 @@ for (let C = range.s.c; C <= range.e.c; ++C) {
                         </Button>
                         
 
-                        {/* <ProjectModelComponent ></ProjectModelComponent> */}
-                        {/* <Button type="primary" ghost style={{ marginRight: 16 }}>Thêm </Button> */}
-                        <Button type="primary" onClick={()=>ExportExcel()}  danger icon={<FileExcelOutlined />} >Xuất file </Button>
+                       
+                        {/* <Button type="primary" onClick={()=>ExportExcel()}  danger icon={<FileExcelOutlined />} >Xuất file </Button> */}
                     </div>
                 </div>
 
@@ -316,7 +306,7 @@ for (let C = range.s.c; C <= range.e.c; ++C) {
                     pagination={{
                         total:totalPassengers,
                         onChange: (page, pageSize) => {
-                            fetchRecords(page, pageSize, nameSearch,quarterYear,year);
+                            fetchRecords(page, pageSize,quarterYear,year);
                         }
                     }}
                 >
