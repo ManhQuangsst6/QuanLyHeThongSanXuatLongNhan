@@ -29,11 +29,11 @@ namespace AppBackend.API.Controllers
 		}
 
 		[HttpGet]
-		public async Task<IActionResult> GetListByPage(int pageNum, int pageSize, string? searchName)
+		public async Task<IActionResult> GetListByPage(int pageNum, int pageSize, string? searchName, DateTimeOffset? date)
 		{
 			try
 			{
-				var result = await _purchaseOrderService.GetAllPage(pageSize, pageNum, searchName);
+				var result = await _purchaseOrderService.GetAllPage(pageSize, pageNum, searchName, date);
 				return Ok(result);
 			}
 			catch (Exception ex)

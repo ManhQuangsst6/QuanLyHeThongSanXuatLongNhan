@@ -72,20 +72,22 @@ const RegisterDayLonganComponent = () => {
       width: "5%",
       render: (_, record) => (
         <Space size="middle">
-          <a
-            onClick={() =>
-              Update({
-                id: record.key,
-                employeeID: record.employeeID,
-                isCheck: 1,
-              }).then((res) => {
-                SetIsRender(true);
-                notify("Xác nhận");
-              })
-            }
-          >
-            <LikeOutlined />
-          </a>
+          {record.ischeck === 0 && (
+            <a
+              onClick={() =>
+                Update({
+                  id: record.key,
+                  employeeID: record.employeeID,
+                  isCheck: 1,
+                }).then((res) => {
+                  SetIsRender(true);
+                  notify("Xác nhận");
+                })
+              }
+            >
+              <LikeOutlined />
+            </a>
+          )}
           <a
             onClick={() =>
               Update({
@@ -94,7 +96,7 @@ const RegisterDayLonganComponent = () => {
                 isCheck: 3,
               }).then((res) => {
                 SetIsRender(true);
-                notify("Hủy");
+                notify("Từ chối ");
               })
             }
           >
@@ -143,7 +145,7 @@ const RegisterDayLonganComponent = () => {
           employeeCode: item.employeeCode,
           employeeName: item.employeeName,
           amount: item.amount,
-          isCheck: item.isCheck,
+          ischeck: item.ischeck,
           created: ConvertDate(item.created),
           status: item.status,
         };
@@ -264,17 +266,18 @@ const RegisterDayLonganComponent = () => {
     { label: "Đang giao", value: 1 },
     { label: "Đã nhận", value: 2 },
     { label: "Hủy bỏ", value: 3 },
+    { label: "Từ chối", value: 4 },
   ];
   return (
-    <div style={{ padding: 10 }}>
+    <div>
       <ToastContainer />
-      <div style={{ marginTop: "16px" }}>
+      <div>
         <div style={{ display: "flex", justifyContent: "space-between" }}>
           <div style={{ display: "flex" }}>
-            <h3 style={{ marginRight: 20, lineHeight: "55px" }}>
+            <h3 style={{ marginRight: 20 }}>
               <FormOutlined
                 style={{
-                  strokeWidth: "30",
+                  strokeWidth: "100",
                   color: "blue",
                   stroke: "blue",
                   fontSize: 20,
@@ -287,7 +290,6 @@ const RegisterDayLonganComponent = () => {
             <Select
               style={{
                 width: 400,
-                margin: 27,
               }}
               allowClear
               placeholder="Trạng thái"
@@ -299,10 +301,10 @@ const RegisterDayLonganComponent = () => {
           </div>
           <DatePicker
             placeholder="Chọn ngày"
-            style={{ height: 34, margin: 27 }}
+            style={{ height: 34 }}
             onChange={onChangeDateSearch}
           />
-          <div style={{ display: "flex", alignItems: "center" }}>
+          {/* <div style={{ display: "flex", alignItems: "center" }}>
             <Button
               type="primary"
               onClick={() => showModal("ADD")}
@@ -338,13 +340,12 @@ const RegisterDayLonganComponent = () => {
               </Form>
             </Modal>
 
-            {/* <ProjectModelComponent ></ProjectModelComponent> */}
-            {/* <Button type="primary" ghost style={{ marginRight: 16 }}>Thêm </Button> */}
+           
             <Button danger>Xóa </Button>
-          </div>
+          </div> */}
         </div>
 
-        <div>
+        {/* <div>
           <span
             style={{
               marginLeft: 8,
@@ -352,7 +353,7 @@ const RegisterDayLonganComponent = () => {
           >
             {hasSelected ? `Selected ${selectedRowKeys.length} items` : ""}
           </span>
-        </div>
+        </div> */}
         <Table
           rowSelection={rowSelection}
           columns={columns}

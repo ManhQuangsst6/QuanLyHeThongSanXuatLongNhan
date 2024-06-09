@@ -238,15 +238,15 @@ const UserComponent = () => {
     });
   };
   return (
-    <div style={{ padding: 10 }}>
+    <div>
       <ToastContainer />
-      <div style={{ marginTop: "16px" }}>
+      <div>
         <div style={{ display: "flex", justifyContent: "space-between" }}>
           <div style={{ display: "flex" }}>
             <h3 style={{ marginRight: 20 }}>
               <FormOutlined
                 style={{
-                  strokeWidth: "30",
+                  strokeWidth: "100",
                   color: "blue",
                   stroke: "blue",
                   fontSize: 20,

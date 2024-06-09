@@ -90,7 +90,7 @@ namespace AppBackend.Application.Services
 			var salary = _dataContext.Salaries.AsNoTracking();
 			var query = from e in employee
 						join s in salary on e.Id equals s.EmployeeID
-						where (e.EmployeeCode == searchName || searchName.IsNullOrEmpty())
+						where (searchName.IsNullOrEmpty() || e.EmployeeCode.Contains(searchName))
 						&& (s.Year == year || year == null) && (s.QuarterYear == quarterYear || quarterYear == null) && userIds.Contains(e.Id)
 						orderby s.Year descending, s.QuarterYear descending
 						select s;

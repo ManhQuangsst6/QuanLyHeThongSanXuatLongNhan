@@ -27,7 +27,7 @@ namespace AppBackend.Application.Services
 			return new Response<PurchaseOrderDTO>() { IsSuccess = true, Status = 200, Value = _mapper.Map<PurchaseOrderDTO>(result) };
 		}
 
-		public async Task<Response<PaginatedList<PurchaseOrderDTO>>> GetAllPage(int pageSize, int pageNum, string? searchName)
+		public async Task<Response<PaginatedList<PurchaseOrderDTO>>> GetAllPage(int pageSize, int pageNum, string? searchName, DateTimeOffset? date)
 		{
 			var purchaseOrders = _dataContext.PurchaseOrders.AsNoTracking();
 			var employee = _dataContext.Employees.AsNoTracking();
@@ -36,6 +36,7 @@ namespace AppBackend.Application.Services
 						join e in employee on p.EmployeeID equals e.Id
 						join i in ingredient on p.IngredientID equals i.Id
 						where (p.IngredientID == searchName || searchName.IsNullOrEmpty()) && p.IsDelete == (int)EnumData.StatusIsDelete.Doing
+						&& (p.OrderDate == date || date == null)
 						orderby p.OrderDate
 						select p;
 

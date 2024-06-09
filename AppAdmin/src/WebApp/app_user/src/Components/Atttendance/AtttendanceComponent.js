@@ -232,9 +232,9 @@ const AttendanceComponent = () => {
     return { list: resultString, sum: sum };
   };
   return (
-    <div style={{ padding: 10 }}>
+    <div>
       <ToastContainer />
-      <div style={{ marginTop: "16px" }}>
+      <div>
         <div
           style={{
             display: "flex",
@@ -242,10 +242,10 @@ const AttendanceComponent = () => {
             flexWrap: "wrap",
           }}
         >
-          <h3 style={{ margin: 0, lineHeight: "55px" }}>
+          <h3 style={{ margin: 0 }}>
             <FormOutlined
               style={{
-                strokeWidth: "30",
+                strokeWidth: "100",
                 color: "blue",
                 stroke: "blue",
                 fontSize: 20,
@@ -257,7 +257,7 @@ const AttendanceComponent = () => {
           </h3>
           <DatePicker
             placeholder="Từ"
-            style={{ height: 34, margin: 10 }}
+            style={{ height: 34 }}
             onChange={onChangeDateSearch}
           />
         </div>

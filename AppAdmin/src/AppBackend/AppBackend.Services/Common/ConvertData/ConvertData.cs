@@ -14,7 +14,8 @@
 			if (stutus == 2) return "Đã nhận";
 			if (stutus == 1) return "Đang giao";
 			if (stutus == 0) return "Đã lập";
-			if (stutus == 3) return "Hủy bỏ";
+			if (stutus == 3) return "Từ chối";
+			if (stutus == 4) return "Hủy bỏ";
 			return "Ngoại lệ";
 		}
 		public static string ConvertStatusSalary(int? stutus)

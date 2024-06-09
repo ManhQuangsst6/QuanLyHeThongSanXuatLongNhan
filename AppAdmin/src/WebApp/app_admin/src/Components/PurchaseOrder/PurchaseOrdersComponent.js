@@ -16,6 +16,7 @@ import {
   ExclamationCircleFilled,
   EyeOutlined,
   FormOutlined,
+  PlusOutlined,
 } from "@ant-design/icons";
 import { useNavigate } from "react-router-dom";
 import { GetListAll } from "../../API/Ingredient/ingredient";
@@ -348,10 +349,10 @@ const PurchaseOrderComponent = () => {
       <div>
         <div style={{ display: "flex", justifyContent: "space-between" }}>
           <div style={{ display: "flex" }}>
-            <h3 style={{ marginRight: 20, lineHeight: "55px" }}>
+            <h3 style={{ marginRight: 20 }}>
               <FormOutlined
                 style={{
-                  strokeWidth: "30",
+                  strokeWidth: "100",
                   color: "blue",
                   stroke: "blue",
                   fontSize: 20,
@@ -364,7 +365,6 @@ const PurchaseOrderComponent = () => {
             <Select
               style={{
                 width: 400,
-                margin: 27,
               }}
               allowClear
               placeholder="Chọn nguyên liệu"
@@ -388,7 +388,7 @@ const PurchaseOrderComponent = () => {
           <div style={{ display: "flex", alignItems: "center" }}>
             <Button
               type="primary"
-              ghost
+              icon={<PlusOutlined />}
               onClick={() => showModal("ADD")}
               style={{ marginRight: 16 }}
             >

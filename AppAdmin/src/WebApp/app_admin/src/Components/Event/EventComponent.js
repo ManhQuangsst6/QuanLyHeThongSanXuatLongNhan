@@ -86,7 +86,7 @@ const EventComponent = () => {
   const [form] = Form.useForm();
   const rules = {
     title: [{ required: true, message: "Tiêu đề không bỏ trống" }],
-    startDate: [{ required: true, message: "Ngày không bỏ trống" }],
+    dateStart: [{ required: true, message: "Ngày không bỏ trống" }],
     expense: [{ required: true, message: "Chi tiêu không bỏ trống" }],
     employeeID: [{ required: true, message: "Tên nhân viên không bỏ trống" }],
   };
@@ -169,7 +169,7 @@ const EventComponent = () => {
   const [dataPush, SetDataPush] = useState({
     id: "",
     title: "",
-    startDate: "",
+    dateStart: "",
     expense: null,
     employeeID: "",
     description: "",
@@ -214,12 +214,12 @@ const EventComponent = () => {
         SetDataPush({
           ...dataPush,
           ...res.data.value,
-          startDate: dayjs(res.data.value.startDate),
+          dateStart: dayjs(res.data.value.dateStart),
         });
         form.setFieldValue("title", res.data.value.title);
         form.setFieldValue("employeeID", res.data.value.employeeID);
         form.setFieldValue("expense", res.data.value.expense);
-        form.setFieldValue("startDate", dayjs(res.data.value.startDate));
+        form.setFieldValue("dateStart", dayjs(res.data.value.dateStart));
       });
     }
   };
@@ -228,7 +228,7 @@ const EventComponent = () => {
     SetDataPush({
       id: "",
       title: "",
-      startDate: "",
+      dateStart: "",
       expense: null,
       employeeID: "",
       description: "",
@@ -294,19 +294,19 @@ const EventComponent = () => {
     console.log(date);
     SetDataPush({
       ...dataPush,
-      startDate: date,
+      dateStart: date,
     });
   };
   return (
-    <div style={{ padding: 10 }}>
+    <div>
       <ToastContainer />
-      <div style={{ marginTop: "16px" }}>
+      <div>
         <div style={{ display: "flex", justifyContent: "space-between" }}>
           <div style={{ display: "flex" }}>
             <h3 style={{ marginRight: 20 }}>
               <FormOutlined
                 style={{
-                  strokeWidth: "30",
+                  strokeWidth: "100",
                   color: "blue",
                   stroke: "blue",
                   fontSize: 20,
@@ -392,12 +392,12 @@ const EventComponent = () => {
                   <Col span={1}></Col>
                   <Col span={11}>
                     <Form.Item
-                      name="startDate"
+                      name="dateStart"
                       label="Ngày nhập:"
-                      rules={rules.startDate}
+                      rules={rules.dateStart}
                     >
                       <DatePicker
-                        value={dataPush.startDate}
+                        value={dataPush.dateStart}
                         style={{ width: "100%" }}
                         onChange={onChangeDatePicker}
                       ></DatePicker>
