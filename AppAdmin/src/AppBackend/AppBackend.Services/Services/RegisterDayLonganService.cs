@@ -41,7 +41,6 @@ namespace AppBackend.Application.Services
 		{
 			var employees = _dataContext.Employees.AsNoTracking();
 			if (currentDate == null) currentDate = DateTimeOffset.Now;
-			currentDate = currentDate.Value.AddHours(7);
 			var registerDayLongans = _dataContext.RegisterDayLongans.AsNoTracking();
 			var query = from e in employees
 						join r in registerDayLongans on e.Id equals r.EmployeeID
@@ -70,7 +69,6 @@ namespace AppBackend.Application.Services
 			var userId = httpContext.User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
 			var employees = _dataContext.Employees.AsNoTracking();
 			if (currentDate == null) currentDate = DateTimeOffset.Now;
-			currentDate = currentDate.Value.AddHours(7);
 			var registerDayLongans = _dataContext.RegisterDayLongans.AsNoTracking();
 			var query = from e in employees
 						join r in registerDayLongans on e.Id equals r.EmployeeID
@@ -119,6 +117,8 @@ namespace AppBackend.Application.Services
 		{
 			try
 			{
+				var httpContext = _httpContextAccessor.HttpContext;
+				var userId = httpContext.User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
 				var registerDayLongan = await _dataContext.RegisterDayLongans.FirstOrDefaultAsync(x => x.Id == registerDayLonganDTO.Id);
 				if (registerDayLongan == null) return new Response<string> { IsSuccess = false, Status = 404, Value = "Not found registerDayLongan!" };
 				registerDayLongan.Ischeck = (int)registerDayLonganDTO.Ischeck;
@@ -126,11 +126,20 @@ namespace AppBackend.Application.Services
 				if (registerDayLongan.Ischeck == 2)
 				{
 					var attendance = await _dataContext.WorkAttendances
-						.FirstOrDefaultAsync(x => x.Created.Value.Date == DateTime.Now.Date);
-					if (attendance.ListAmount == "") attendance.ListAmount = registerDayLongan.Amount.ToString();
+						.FirstOrDefaultAsync(x => x.Created.Value.Date == DateTime.Now.Date && x.EmployeeID == userId);
+					if (attendance.ListAmount.IsNullOrEmpty())
+					{
+						attendance.ListAmount = registerDayLongan.Amount.ToString();
+						attendance.SumAmount = registerDayLongan.Amount;
+
+					}
 					else
+					{
 						attendance.ListAmount = attendance.ListAmount + "," + registerDayLongan.Amount.ToString();
-					attendance.SumAmount = attendance.SumAmount + registerDayLongan.Amount;
+						attendance.SumAmount = attendance.SumAmount + registerDayLongan.Amount;
+					}
+
+					_dataContext.WorkAttendances.Update(attendance);
 				}
 				var status = registerDayLonganDTO.Ischeck;
 				var message = "";

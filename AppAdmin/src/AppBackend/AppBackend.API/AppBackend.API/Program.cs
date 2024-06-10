@@ -109,7 +109,8 @@ app.UseHangfireServer();
 app.UseHangfireDashboard();
 app.MapGet("/", () => "Hangfire is running!");
 #pragma warning disable CS0618 // Type or member is obsolete
-RecurringJob.AddOrUpdate<WorkAttendanceService>(x => x.Post(), "0 4 * * *", TimeZoneInfo.Local);
+RecurringJob.AddOrUpdate<WorkAttendanceService>(x => x.Post(), "16 1 * * *", TimeZoneInfo.Local);
+RecurringJob.AddOrUpdate<WorkAttendanceService>(x => x.ComfirmAuto(), "41 1 * * *", TimeZoneInfo.Local);
 RecurringJob.AddOrUpdate<WorkAttendanceService>(x => x.Remove(), "0 23 * * *", TimeZoneInfo.Local);
 RecurringJob.AddOrUpdate<WorkAttendanceService>(x => x.SendMailToEmployee(), "10 2 * * *", TimeZoneInfo.Local);
 #pragma warning restore CS0618 // Type or member is obsolete

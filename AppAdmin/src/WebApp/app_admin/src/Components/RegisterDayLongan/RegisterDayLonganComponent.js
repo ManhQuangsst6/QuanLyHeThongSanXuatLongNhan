@@ -85,7 +85,7 @@ const RegisterDayLonganComponent = () => {
                 })
               }
             >
-              <LikeOutlined />
+              <LikeOutlined style={{ color: "blue" }} />
             </a>
           )}
           <a
@@ -100,7 +100,7 @@ const RegisterDayLonganComponent = () => {
               })
             }
           >
-            <DeleteOutlined />
+            <DeleteOutlined style={{ color: "blue" }} />
           </a>
         </Space>
       ),

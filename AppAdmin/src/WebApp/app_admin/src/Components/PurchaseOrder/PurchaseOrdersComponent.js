@@ -9,7 +9,9 @@ import {
   Col,
   DatePicker,
   Flex,
+  Upload,
 } from "antd";
+import ImgCrop from "antd-img-crop";
 import {
   EditOutlined,
   DeleteOutlined,
@@ -94,13 +96,13 @@ const PurchaseOrderComponent = () => {
       render: (_, record) => (
         <Space size="middle">
           <a>
-            <EyeOutlined />
+            <EyeOutlined style={{ color: "blue" }} />
           </a>
           <a onClick={() => showModal("EDIT", record)}>
-            <EditOutlined />
+            <EditOutlined style={{ color: "blue" }} />
           </a>
           <a onClick={() => DeletePurcharse(record.key)}>
-            <DeleteOutlined />
+            <DeleteOutlined style={{ color: "blue" }} />
           </a>
         </Space>
       ),
@@ -343,6 +345,24 @@ const PurchaseOrderComponent = () => {
     SetNameSearch(value);
     SetIsRender(true);
   };
+  const [fileList, setFileList] = useState([]);
+  const onChange = ({ fileList: newFileList }) => {
+    setFileList(newFileList);
+  };
+  const onPreview = async (file) => {
+    let src = file.url;
+    if (!src) {
+      src = await new Promise((resolve) => {
+        const reader = new FileReader();
+        reader.readAsDataURL(file.originFileObj);
+        reader.onload = () => resolve(reader.result);
+      });
+    }
+    const image = new Image();
+    image.src = src;
+    const imgWindow = window.open(src);
+    imgWindow?.document.write(image.outerHTML);
+  };
   return (
     <div>
       <ToastContainer />
@@ -495,7 +515,19 @@ const PurchaseOrderComponent = () => {
                   </Col>
                 </Row>
                 <Row>
-                  <Col span={18}></Col>
+                  <Col span={18}>
+                    <ImgCrop rotationSlider>
+                      <Upload
+                        action="https://660d2bd96ddfa2943b33731c.mockapi.io/api/upload"
+                        listType="picture-card"
+                        fileList={fileList}
+                        onChange={onChange}
+                        onPreview={onPreview}
+                      >
+                        {fileList.length < 2 && "+ Upload"}
+                      </Upload>
+                    </ImgCrop>
+                  </Col>
                   <Col span={6}>
                     <Form.Item label="Tổng tiền:" style={{ fontWeight: 700 }}>
                       {dataPush.amount > 0 && dataPush.price > 0 && (

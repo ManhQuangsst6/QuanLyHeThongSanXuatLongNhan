@@ -66,10 +66,10 @@ const CategoryComponent = () => {
       render: (_, record) => (
         <Space size="middle">
           <a onClick={() => showModal("EDIT", record)}>
-            <EditOutlined />
+            <EditOutlined style={{ color: "blue" }} />
           </a>
           <a onClick={() => DeleteCategory(record.key, record.name)}>
-            <DeleteOutlined />
+            <DeleteOutlined style={{ color: "blue" }} />
           </a>
         </Space>
       ),

@@ -72,10 +72,10 @@ const UserComponent = () => {
       render: (_, record) => (
         <Space size="middle">
           <a>
-            <EyeOutlined />
+            <EyeOutlined style={{ color: "blue" }} />
           </a>
           <a onClick={() => DeleteAProject(record.key, record.EmployeeCode)}>
-            <DeleteOutlined />
+            <DeleteOutlined style={{ color: "blue" }} />
           </a>
         </Space>
       ),
@@ -366,6 +366,7 @@ const UserComponent = () => {
           columns={columns}
           dataSource={data}
           pagination={{
+            total: 13,
             pageSize: 10,
             onChange: (page, pageSize) => {
               fetchRecords(page, pageSize, nameSearch);

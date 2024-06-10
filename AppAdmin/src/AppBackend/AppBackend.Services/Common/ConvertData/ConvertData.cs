@@ -18,6 +18,13 @@
 			if (stutus == 4) return "Hủy bỏ";
 			return "Ngoại lệ";
 		}
+		public static string ConvertStatusRegisterRemainLongan(int? stutus)
+		{
+			if (stutus == 1) return "Đã trả";
+			if (stutus == 0) return "Đã lập";
+			if (stutus == 2) return "Hủy bỏ";
+			return "Ngoại lệ";
+		}
 		public static string ConvertStatusSalary(int? stutus)
 		{
 			if (stutus == 0) return "Thanh toán";

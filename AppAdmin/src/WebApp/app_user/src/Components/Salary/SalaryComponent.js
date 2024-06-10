@@ -94,7 +94,7 @@ const SalaryComponent = () => {
               })
             }
           >
-            <LikeOutlined />
+            <LikeOutlined style={{ color: "blue" }} />
           </a>
           <a
             onClick={() =>
@@ -108,7 +108,7 @@ const SalaryComponent = () => {
               })
             }
           >
-            <DeleteOutlined />
+            <DeleteOutlined style={{ color: "blue" }} />
           </a>
         </Space>
       ),

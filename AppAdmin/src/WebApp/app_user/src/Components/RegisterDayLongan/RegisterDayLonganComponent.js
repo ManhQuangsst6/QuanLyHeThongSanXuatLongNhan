@@ -78,14 +78,14 @@ const RegisterDayLonganComponent = () => {
               Update({
                 id: record.key,
                 employeeID: record.employeeID,
-                isCheck: 1,
+                isCheck: 2,
               }).then((res) => {
                 SetIsRender(true);
                 notify("Xác nhận");
               })
             }
           >
-            <LikeOutlined />
+            <LikeOutlined style={{ color: "blue" }} />
           </a>
           <a
             onClick={() =>
@@ -99,7 +99,7 @@ const RegisterDayLonganComponent = () => {
               })
             }
           >
-            <DeleteOutlined />
+            <DeleteOutlined style={{ color: "blue" }} />
           </a>
         </Space>
       ),

@@ -253,7 +253,7 @@ const AttendanceComponent = () => {
                 marginRight: 8,
               }}
             />
-            Bảng công{" "}
+            Bảng công
           </h3>
           <DatePicker
             placeholder="Từ"

@@ -70,38 +70,39 @@ const RegisterRemainningLonganComponent = () => {
       title: "Tùy chọn",
       dataIndex: "action",
       width: "5%",
-      render: (_, record) => (
-        <Space size="middle">
-          <a
-            onClick={() =>
-              Update({
-                id: record.key,
-                employeeID: record.employeeID,
-                isCheck: 2,
-              }).then((res) => {
-                SetIsRender(true);
-                notify("Xác nhận");
-              })
-            }
-          >
-            <LikeOutlined />
-          </a>
-          <a
-            onClick={() =>
-              Update({
-                id: record.key,
-                employeeID: record.employeeID,
-                isCheck: 3,
-              }).then((res) => {
-                SetIsRender(true);
-                notify("Hủy");
-              })
-            }
-          >
-            <DeleteOutlined />
-          </a>
-        </Space>
-      ),
+      render: (_, record) =>
+        record.isCheck === 0 && (
+          <Space size="middle">
+            <a
+              onClick={() =>
+                Update({
+                  id: record.key,
+                  employeeID: record.employeeID,
+                  isCheck: 1,
+                }).then((res) => {
+                  SetIsRender(true);
+                  notify("Xác nhận");
+                })
+              }
+            >
+              <LikeOutlined style={{ color: "blue" }} />
+            </a>
+            <a
+              onClick={() =>
+                Update({
+                  id: record.key,
+                  employeeID: record.employeeID,
+                  isCheck: 2,
+                }).then((res) => {
+                  SetIsRender(true);
+                  notify("Hủy");
+                })
+              }
+            >
+              <DeleteOutlined style={{ color: "blue" }} />
+            </a>
+          </Space>
+        ),
     },
   ];
 
@@ -140,7 +141,7 @@ const RegisterRemainningLonganComponent = () => {
           employeeCode: item.employeeCode,
           employeeName: item.employeeName,
           amount: item.amount,
-          isCheck: item.isCheck,
+          isCheck: item.ischeck,
           created: ConvertDate(item.created),
           status: item.status,
         };
@@ -245,9 +246,8 @@ const RegisterRemainningLonganComponent = () => {
   };
   const dataStatus = [
     { label: "Đã lập", value: 0 },
-    { label: "Đang đến", value: 1 },
-    { label: "Đã trả", value: 2 },
-    { label: "Hủy bỏ", value: 3 },
+    { label: "Đã trả", value: 1 },
+    { label: "Hủy bỏ", value: 2 },
   ];
   const handleChangeFilter = (value) => {
     SetNameSearch(value);

@@ -38,7 +38,7 @@ namespace AppBackend.Application.Services
 
 		public async Task<Response<PaginatedList<RegisterRemainningLonganDTO>>> GetAllPage(int pageSize, int pageNum, string? searchName, DateTimeOffset? currentDate)
 		{
-			if (currentDate == null) currentDate = DateTimeOffset.Now.AddHours(7);
+			if (currentDate == null) currentDate = DateTimeOffset.Now;
 			var employees = _dataContext.Employees.AsNoTracking();
 			var registerDayLongans = _dataContext.RegisterRemainningLongans.AsNoTracking();
 			var query = from e in employees
@@ -56,7 +56,7 @@ namespace AppBackend.Application.Services
 							Amount = r.Amount,
 							Ischeck = r.Ischeck,
 							Created = r.Created,
-							Status = ConvertData.ConvertStatusRegisterLongan(r.Ischeck)
+							Status = ConvertData.ConvertStatusRegisterRemainLongan(r.Ischeck)
 						};
 
 			var result = await query.PaginatedListAsync(pageNum, pageSize);
@@ -66,7 +66,7 @@ namespace AppBackend.Application.Services
 		{
 			var httpContext = _httpContextAccessor.HttpContext;
 			var userId = httpContext.User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
-			if (currentDate == null) currentDate = DateTimeOffset.Now.AddHours(7);
+			if (currentDate == null) currentDate = DateTimeOffset.Now;
 			var employees = _dataContext.Employees.AsNoTracking();
 			var registerDayLongans = _dataContext.RegisterRemainningLongans.AsNoTracking();
 			var query = from e in employees
@@ -84,7 +84,7 @@ namespace AppBackend.Application.Services
 							Amount = r.Amount,
 							Ischeck = r.Ischeck,
 							Created = r.Created,
-							Status = ConvertData.ConvertStatusRegisterLongan(r.Ischeck)
+							Status = ConvertData.ConvertStatusRegisterRemainLongan(r.Ischeck)
 						};
 
 			var result = await query.PaginatedListAsync(pageNum, pageSize);

@@ -83,7 +83,7 @@ const RegisterRemainningLonganComponent = () => {
               })
             }
           >
-            <LikeOutlined />
+            <LikeOutlined style={{ color: "blue" }} />
           </a>
           <a
             onClick={() =>
@@ -97,7 +97,7 @@ const RegisterRemainningLonganComponent = () => {
               })
             }
           >
-            <DeleteOutlined />
+            <DeleteOutlined style={{ color: "blue" }} />
           </a>
         </Space>
       ),

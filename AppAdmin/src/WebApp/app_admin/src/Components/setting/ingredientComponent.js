@@ -50,13 +50,13 @@ const IngredientComponent = () => {
       render: (_, record) => (
         <Space size="middle">
           <a>
-            <EyeOutlined />
+            <EyeOutlined style={{ color: "blue" }} />
           </a>
           <a onClick={() => showModal("EDIT", record)}>
-            <EditOutlined />
+            <EditOutlined style={{ color: "blue" }} />
           </a>
           <a onClick={() => DeleteIngredient(record.key, record.Name)}>
-            <DeleteOutlined />
+            <DeleteOutlined style={{ color: "blue" }} />
           </a>
         </Space>
       ),

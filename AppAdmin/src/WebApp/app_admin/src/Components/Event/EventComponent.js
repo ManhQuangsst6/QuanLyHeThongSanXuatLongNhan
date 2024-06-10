@@ -71,13 +71,13 @@ const EventComponent = () => {
       render: (_, record) => (
         <Space size="middle">
           <a>
-            <EyeOutlined />
+            <EyeOutlined style={{ color: "blue" }} />
           </a>
           <a onClick={() => showModal("EDIT", record)}>
-            <EditOutlined />
+            <EditOutlined style={{ color: "blue" }} />
           </a>
           <a onClick={() => DeletePurcharse(record.key)}>
-            <DeleteOutlined />
+            <DeleteOutlined style={{ color: "blue" }} />
           </a>
         </Space>
       ),

@@ -55,6 +55,25 @@ namespace AppBackend.Application.Services
 				return new Response<string> { IsSuccess = false, Status = 404, Message = ex.Message };
 			}
 		}
+		public async Task<Response<string>> ComfirmAuto()
+		{
+			try
+			{
+				var workAttendances = await _dataContext.WorkAttendances.Where(x => x.Created.Value.Date == DateTimeOffset.Now.Date).ToListAsync();
+				if (workAttendances == null) return new Response<string> { IsSuccess = false, Status = 404, Value = "Not found workAttendance!" };
+				foreach (var workAttendance in workAttendances)
+				{
+					workAttendance.ComfirmAmount = (int)ComfirmWorkAmount.Success;
+					_dataContext.WorkAttendances.Update(workAttendance);
+				}
+				await _dataContext.SaveChangesAsync();
+				return new Response<string> { IsSuccess = true, Status = 200, Value = workAttendances[0].Id };
+			}
+			catch (Exception ex)
+			{
+				return new Response<string> { IsSuccess = false, Status = 404, Message = ex.Message };
+			}
+		}
 
 		public async Task<Response<WorkAttendanceDTO>> Get(string id)
 		{
@@ -69,7 +88,7 @@ namespace AppBackend.Application.Services
 			var userId = httpContext.User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
 			var employees = _dataContext.Employees.AsNoTracking();
 			var workAttendances = _dataContext.WorkAttendances.AsNoTracking();
-			var currentDate = dateTime.HasValue ? dateTime.Value.AddHours(7) : DateTimeOffset.Now;
+			var currentDate = dateTime.HasValue ? dateTime.Value : DateTimeOffset.Now;
 			var query = from e in employees
 						join w in workAttendances on e.Id equals w.EmployeeID
 						where (w.Created.Value.Year == currentDate.Year && w.Created.Value.Month == currentDate.Month &&
@@ -163,24 +182,32 @@ namespace AppBackend.Application.Services
 
 		public async Task SendMailToEmployee()
 		{
-			var users = await _userManager.GetUsersInRoleAsync("User");
-			var workDay = await _dataContext.WorkAttendances.Where(x => users.Select(a => a.Id).Contains(x.EmployeeID)).ToListAsync();
-			var employeeUsers = users.Select(u => new
+			try
 			{
-				u.Id,
-				u.UserName,
-				u.Email,
-				u.PhoneNumber,
-				workDay.FirstOrDefault(x => x.EmployeeID == u.Id).SumAmount
-			}).ToList();
-			foreach (var user in employeeUsers)
-			{
-				if (!user.Email.IsNullOrEmpty() && user.SumAmount != null && user.SumAmount > 0)
-					SendMail(user.Email, (int)user.SumAmount);
-				if (!user.PhoneNumber.IsNullOrEmpty() && user.SumAmount != null && user.SumAmount > 0)
-					if (user.PhoneNumber == "0357021457")
-						SendPhone(user.PhoneNumber, (int)user.SumAmount);
+				var users = await _userManager.GetUsersInRoleAsync("User");
+				var workDay = await _dataContext.WorkAttendances.Where(x => users.Select(a => a.Id).Contains(x.EmployeeID)).ToListAsync();
+				var employeeUsers = users.Select(u => new
+				{
+					u.Id,
+					u.UserName,
+					u.Email,
+					u.PhoneNumber,
+					workDay.FirstOrDefault(x => x.EmployeeID == u.Id).SumAmount
+				}).ToList();
+				foreach (var user in employeeUsers)
+				{
+					if (!user.Email.IsNullOrEmpty() && user.SumAmount != null && user.SumAmount > 0)
+						SendMail(user.Email, (int)user.SumAmount);
+					if (!user.PhoneNumber.IsNullOrEmpty() && user.SumAmount != null && user.SumAmount > 0)
+						if (user.PhoneNumber == "0357021457")
+							SendPhone(user.PhoneNumber, (int)user.SumAmount);
+				}
 			}
+			catch (Exception ex)
+			{
+				throw new Exception(ex.Message);
+			}
+
 		}
 		private async void SendMail(string email, int count)
 		{

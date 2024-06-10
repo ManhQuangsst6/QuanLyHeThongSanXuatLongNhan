@@ -12,6 +12,8 @@ import { Modal } from "antd";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import "./style.scss";
+import ConvertDate from "../../Common/Convert/ConvertDate";
+
 const { Search } = Input;
 const { confirm } = Modal;
 const { RangePicker } = DatePicker;
@@ -22,6 +24,11 @@ const AttendanceComponent = () => {
   const dateFormat = "YYYY/MM/DD HH:mm:ss";
   const [nameSearch, SetNameSearch] = useState("");
   const columns = [
+    {
+      title: "Ngày",
+      dataIndex: "Created",
+      width: "10%",
+    },
     {
       title: "Mã nhân viên",
       dataIndex: "EmployeeCode",
@@ -51,7 +58,7 @@ const AttendanceComponent = () => {
     {
       title: "Tổng",
       dataIndex: "SumAmount",
-      width: "20%",
+      width: "10%",
     },
     {
       title: "Tùy chọn",
@@ -61,7 +68,7 @@ const AttendanceComponent = () => {
         <Space size="middle">
           <a style={{ fontSize: 20 }} onClick={() => UpdateAmount(record)}>
             {" "}
-            <PlusCircleOutlined />
+            <PlusCircleOutlined style={{ color: "blue" }} />
           </a>
         </Space>
       ),
@@ -126,6 +133,7 @@ const AttendanceComponent = () => {
           ListAmount: item.listAmount,
           CurrentAmount: null,
           SumAmount: item.sumAmount,
+          Created: ConvertDate(item.created),
         };
       });
       SetData(dataShow);

@@ -26,6 +26,7 @@ import {
   Post,
   Update,
   GetAllExportExcel,
+  CreateTableSalary,
 } from "../../API/Salary/SalaryAPI";
 import { Modal, Image, Select } from "antd";
 import { ToastContainer, toast } from "react-toastify";
@@ -95,7 +96,7 @@ const SalaryComponent = () => {
               })
             }
           >
-            <LikeOutlined />
+            <LikeOutlined style={{ color: "blue" }} />
           </a>
           <a
             onClick={() =>
@@ -109,7 +110,7 @@ const SalaryComponent = () => {
               })
             }
           >
-            <DeleteOutlined />
+            <DeleteOutlined style={{ color: "blue" }} />
           </a>
         </Space>
       ),
@@ -118,10 +119,9 @@ const SalaryComponent = () => {
 
   const [form] = Form.useForm();
   const rules = {
-    title: [{ required: true, message: "Tiêu đề không bỏ trống" }],
-    startDate: [{ required: true, message: "Ngày không bỏ trống" }],
-    expense: [{ required: true, message: "Chi tiêu không bỏ trống" }],
-    employeeID: [{ required: true, message: "Tên nhân viên không bỏ trống" }],
+    quarterYear: [{ required: true, message: "Quý không bỏ trống" }],
+    year: [{ required: true, message: "Năm không bỏ trống" }],
+    price: [{ required: true, message: "tiền không bỏ trống" }],
   };
   const [totalPassengers, setTotalPassengers] = useState(1);
   const [loading, setLoading] = useState(false);
@@ -172,7 +172,7 @@ const SalaryComponent = () => {
     );
   };
 
-  const [textTitle, SetTextTilte] = useState("");
+  const [textTitle, SetTextTilte] = useState("Tạo bảng lương");
   const [state, SetState] = useState("ADD");
   const [dataPush, SetDataPush] = useState({
     id: "",
@@ -212,26 +212,21 @@ const SalaryComponent = () => {
 
   const showModal = () => {
     setIsModalOpen(true);
-    SetTextTilte("Đăng kí số cân");
     ClearForm();
   };
 
   const ClearForm = () => {
     SetDataPush({
-      id: "",
-      title: "",
-      startDate: "",
-      expense: null,
-      employeeID: "",
-      description: "",
+      quarterYear: null,
+      price: null,
+      year: null,
     });
   };
 
   const handleOk = () => {
     setIsModalOpen(false);
     if (state === "ADD") {
-      console.log(dataPush);
-      Post(dataPush)
+      CreateTableSalary(dataPush)
         .then((res) => {
           if (res.data.isSuccess === true) {
             SetIsRender(true);
@@ -269,7 +264,24 @@ const SalaryComponent = () => {
       employeeID: value,
     });
   };
-
+  const handleQuarterYear = (e) => {
+    SetDataPush((dataPush) => ({
+      ...dataPush,
+      quarterYear: e,
+    }));
+  };
+  const handleYear = (e) => {
+    SetDataPush((dataPush) => ({
+      ...dataPush,
+      year: e,
+    }));
+  };
+  const handlePrice = (e) => {
+    SetDataPush((dataPush) => ({
+      ...dataPush,
+      price: e,
+    }));
+  };
   const [dateSearch, SetDateSearch] = useState(null);
   const onChangeDateSearch = (date, dateString) => {
     // console.log(date, dateString);
@@ -357,12 +369,64 @@ const SalaryComponent = () => {
               type="primary"
               style={{ marginRight: 16 }}
               icon={<PlusOutlined />}
+              onClick={() => showModal("ADD")}
             >
               Thêm
             </Button>
 
-            {/* <ProjectModelComponent ></ProjectModelComponent> */}
-            {/* <Button type="primary" ghost style={{ marginRight: 16 }}>Thêm </Button> */}
+            <Modal
+              title={textTitle}
+              open={isModalOpen}
+              onOk={form.submit}
+              onCancel={handleCancel}
+            >
+              <Form layout="horizontal" form={form} onFinish={handleOk}>
+                <Row>
+                  <Col span={24}>
+                    <Form.Item
+                      name="quarterYear"
+                      label="Quý"
+                      rules={rules.quarterYear}
+                    >
+                      <InputNumber
+                        name="wholesalePrice"
+                        style={{ width: "100%" }}
+                        value={dataPush.quarterYear}
+                        onChange={handleQuarterYear}
+                      />
+                    </Form.Item>
+                  </Col>
+                </Row>
+                <Row>
+                  <Col span={24}>
+                    <Form.Item name="year" label="Năm: " rules={rules.year}>
+                      <InputNumber
+                        name="wholesalePrice"
+                        style={{ width: "100%" }}
+                        value={dataPush.year}
+                        onChange={handleYear}
+                      />
+                    </Form.Item>
+                  </Col>
+                </Row>
+                <Row>
+                  <Col span={24}>
+                    <Form.Item
+                      name="price"
+                      label="Giá một cân: "
+                      rules={rules.price}
+                    >
+                      <InputNumber
+                        name="price"
+                        style={{ width: "100%" }}
+                        value={dataPush.price}
+                        onChange={handlePrice}
+                      />
+                    </Form.Item>
+                  </Col>
+                </Row>
+              </Form>
+            </Modal>
             <Button
               type="primary"
               onClick={() => ExportExcel()}

@@ -72,10 +72,10 @@ const EmployeeeComponent = () => {
       render: (_, record) => (
         <Space size="middle">
           <a>
-            <EyeOutlined />
+            <EyeOutlined style={{ color: "blue" }} />
           </a>
           <a onClick={() => DeleteAProject(record.key, record.name)}>
-            <DeleteOutlined />
+            <DeleteOutlined style={{ color: "blue" }} />
           </a>
         </Space>
       ),
