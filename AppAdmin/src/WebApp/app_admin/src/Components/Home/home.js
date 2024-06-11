@@ -1,12 +1,53 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { Card, Col, Row } from "antd";
 import { Line, Doughnut } from "react-chartjs-2";
 import { Chart, CategoryScale, ArcElement, registerables } from "chart.js";
-
+import {
+  GetCountEmployye,
+  GetCountShipment,
+  GetCountLogan,
+  GetLonganCommon,
+  GetLoganByCategory,
+} from "../../API/Home/homeAPI";
+import Item from "antd/es/list/Item";
 function Home() {
   Chart.register(CategoryScale);
   Chart.register(ArcElement);
   Chart.register(...registerables);
+  const [countEmployee, SetCountEmployee] = useState(null);
+  const [countShipment, SetCountShipment] = useState(null);
+  const [countLongan, SetCountLongan] = useState(null);
+  const [longanDatasYear, SetlonganDatasYear] = useState([]);
+  const [longanDatas, SetlonganDatas] = useState([]);
+  useEffect(() => {
+    GetCountEmployye().then((res) => {
+      SetCountEmployee(res.data);
+    });
+    GetCountShipment().then((res) => {
+      SetCountShipment(res.data);
+    });
+    GetCountLogan().then((res) => {
+      SetCountLongan(res.data);
+    });
+    GetLonganCommon().then((res) => {
+      SetlonganDatasYear(res.data);
+    });
+    GetLoganByCategory().then((res) => {
+      SetlonganDatas(res.data);
+    });
+  }, []);
+  const colors = [
+    "#3e95cd",
+    "#8e5ea2",
+    "#3cba9f",
+    "#e8c3b9",
+    "#c45850",
+    "#ff6384",
+    "#36a2eb",
+    "#cc65fe",
+    "#ffce56",
+    "#4bc0c0",
+  ];
   return (
     <div>
       <Row
@@ -23,7 +64,9 @@ function Home() {
           >
             <div style={{ float: "right" }}>
               <div style={{}}>
-                <div style={{ fontSize: 30, float: "right" }}>50</div>
+                <div style={{ fontSize: 30, float: "right" }}>
+                  {countEmployee}
+                </div>
               </div>
               <div style={{ clear: "both" }}></div>
               <div style={{}}>Nhân viên</div>
@@ -42,7 +85,9 @@ function Home() {
           >
             <div style={{ float: "right" }}>
               <div style={{}}>
-                <div style={{ fontSize: 30, float: "right" }}>122</div>
+                <div style={{ fontSize: 30, float: "right" }}>
+                  {countShipment}
+                </div>
               </div>
               <div style={{ clear: "both" }}></div>
               <div style={{}}>Lô hàng</div>
@@ -61,7 +106,9 @@ function Home() {
           >
             <div style={{ float: "right" }}>
               <div style={{}}>
-                <div style={{ fontSize: 30, float: "right" }}>12450</div>
+                <div style={{ fontSize: 30, float: "right" }}>
+                  {countLongan}
+                </div>
               </div>
               <div style={{ clear: "both" }}></div>
               <div style={{}}>Sản phẩm(kg)</div>
@@ -94,12 +141,29 @@ function Home() {
           <Doughnut
             style={{}}
             data={{
-              labels: ["Loai 1", "Loai 2", "Loai 3"],
+              labels:
+                longanDatas.length > 0
+                  ? longanDatas.map((e) => e.categoryName)
+                  : [],
               datasets: [
                 {
-                  label: "Population (millions)",
-                  backgroundColor: ["#3e95cd", "#8e5ea2", "#3cba9f"],
-                  data: [2478, 5267, 734],
+                  label: "kg",
+                  backgroundColor: [
+                    "#3e95cd",
+                    "#8e5ea2",
+                    "#3cba9f",
+                    "#e8c3b9",
+                    "#c45850",
+                    "#ff6384",
+                    "#36a2eb",
+                    "#cc65fe",
+                    "#ffce56",
+                    "#4bc0c0",
+                  ],
+                  data:
+                    longanDatas.length > 0
+                      ? longanDatas.map((e) => e.totalAmount)
+                      : [],
                 },
               ],
             }}
@@ -113,15 +177,16 @@ function Home() {
           <Line
             style={{ bottom: 44, position: "absolute" }}
             data={{
-              labels: [2021, 2022, 2023, 2024],
-              datasets: [
-                {
-                  data: [86, 114, 106, 106],
-                  label: "Loai 1",
-                  borderColor: "#3e95cd",
+              labels:
+                longanDatasYear.length > 0 ? longanDatasYear[0].listYear : [],
+              datasets: longanDatasYear.map((e, index) => {
+                return {
+                  data: e.listTotalAmount,
+                  label: e.categoryName,
+                  borderColor: colors[index % colors.length],
                   fill: false,
-                },
-              ],
+                };
+              }),
             }}
           />
           <div

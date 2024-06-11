@@ -29,16 +29,18 @@ function getItem(label, key, icon, onClick,children) {
 
 export const ProtectedRoute = () => {
     const location = useLocation();
-    const { token } = useAuth();
+    const { token,role  } = useAuth();
     const [open, setOpen] = useState(false);
     const [textHeader, SetTextHeader] = useState('');
     const [collapsed, setCollapsed] = useState(false);
     const { setToken } = useAuth();
+    const [filteredItems,SetfilteredItems]=useState([])
     const navigate = useNavigate();
     useEffect(() => {
         if(token){
             const currentItem = items.flatMap(item => item.children ? item.children : item)
             .find(item => item.label.props.to === location.pathname);
+            SetfilteredItems( role === 'Manager' ? items : items.filter(item => item.key !== '/'));
         if (currentItem) {
             SetTextHeader(currentItem.onClick);
         }
@@ -48,10 +50,9 @@ export const ProtectedRoute = () => {
     const {
         token: { colorBgContainer, borderRadiusLG },
     } = theme.useToken();
-
+    
     // Check if the user is authenticated
     if (!token) {
-        // If not authenticated, redirect to the login page
         return <Navigate to="/login" />;
     }
 
@@ -105,7 +106,7 @@ export const ProtectedRoute = () => {
                         mode="inline"
                         defaultSelectedKeys={['1']}
                         selectedKeys={[location.pathname]}
-                        items={items.map(item => ({
+                        items={filteredItems.map(item => ({
                             ...item,
                             onClick: item.children ? null : () => navigate(item.label.props.to)
                         }))}

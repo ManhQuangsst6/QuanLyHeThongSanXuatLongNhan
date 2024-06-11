@@ -17,18 +17,18 @@ import RegisterRemainningLonganComponent from "../Components/RegisterRemainningL
 import SalaryComponent from "../Components/Salary/SalaryComponent";
 import Home from "../Components/Home/home";
 const Routes = () => {
-    const { token } = useAuth();
+    const { token,role  } = useAuth();
 
     // Define routes accessible only to authenticated users
     const routesForAuthenticatedOnly = [
         {
             path: "/",
-            element: <ProtectedRoute />, // Wrap the component in ProtectedRoute
+            element: <ProtectedRoute />, 
             children: [
-                {
+                role === 'Manager' ? {
                     path: "/",
                     element: <Home></Home>,
-                },
+                } : {},
                 {
                     path: "/employee/employee",
                     element: <EmployeeComponent></EmployeeComponent>,
@@ -77,26 +77,20 @@ const Routes = () => {
         },
     ];
 
-    // Define routes accessible only to non-authenticated users
     const routesForNotAuthenticatedOnly = [
-        // {
-        //   path: "/",
-        //   element: <div>Home Page</div>,
-        // },
+       
         {
             path: "/login",
             element: <Login></Login>,
         },
     ];
 
-    // Combine and conditionally include routes based on authentication status
     const router = createBrowserRouter([
 
         ...(!token ? routesForNotAuthenticatedOnly : []),
         ...routesForAuthenticatedOnly,
     ]);
 
-    // Provide the router configuration using RouterProvider
     return (<div>
         <RouterProvider router={router} >
         </RouterProvider>
