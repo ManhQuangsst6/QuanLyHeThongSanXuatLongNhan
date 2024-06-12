@@ -8,7 +8,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace AppBackend.Data.Migrations
 {
     /// <inheritdoc />
-    public partial class init3 : Migration
+    public partial class init : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -107,6 +107,26 @@ namespace AppBackend.Data.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_No", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Notifications",
+                columns: table => new
+                {
+                    Id = table.Column<string>(type: "nvarchar(450)", nullable: false),
+                    EmployeeReceive = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    EmployeeRole = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    Content = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Link = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    IsRead = table.Column<int>(type: "int", nullable: true),
+                    Created = table.Column<DateTimeOffset>(type: "datetimeoffset", nullable: true),
+                    CreatedBy = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    LastModified = table.Column<DateTimeOffset>(type: "datetimeoffset", nullable: true),
+                    LastModifiedBy = table.Column<string>(type: "nvarchar(max)", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Notifications", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
@@ -261,33 +281,6 @@ namespace AppBackend.Data.Migrations
                     table.ForeignKey(
                         name: "FK_Events_Employees_EmployeeID",
                         column: x => x.EmployeeID,
-                        principalTable: "Employees",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "Notifications",
-                columns: table => new
-                {
-                    Id = table.Column<string>(type: "nvarchar(450)", nullable: false),
-                    EmployeeReceive = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    EmployeeRole = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    Content = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    link = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    isRead = table.Column<int>(type: "int", nullable: true),
-                    EmployeeId = table.Column<string>(type: "nvarchar(450)", nullable: false),
-                    Created = table.Column<DateTimeOffset>(type: "datetimeoffset", nullable: true),
-                    CreatedBy = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    LastModified = table.Column<DateTimeOffset>(type: "datetimeoffset", nullable: true),
-                    LastModifiedBy = table.Column<string>(type: "nvarchar(max)", nullable: true)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Notifications", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_Notifications_Employees_EmployeeId",
-                        column: x => x.EmployeeId,
                         principalTable: "Employees",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
@@ -525,9 +518,9 @@ namespace AppBackend.Data.Migrations
                 columns: new[] { "Id", "ConcurrencyStamp", "Name", "NormalizedName" },
                 values: new object[,]
                 {
-                    { "31205e0e-cc78-4f21-979e-02afd81ee401", "2", "Employee", "Employee" },
-                    { "46459509-3dbf-454b-90ec-274e4afcc1a9", "1", "User", "User" },
-                    { "6e75fe0c-81f3-48f9-aaf7-ad57ca3d4bdc", "3", "Manager", "Manager" }
+                    { "3019dda6-9cb1-46b5-aba4-4a9c388f8d45", "3", "Manager", "Manager" },
+                    { "436a2d5c-9dd3-4d90-bc10-1716ffbb89df", "1", "User", "User" },
+                    { "49105343-5356-4a9a-9943-15eda16f7f4b", "2", "Employee", "Employee" }
                 });
 
             migrationBuilder.CreateIndex(
@@ -578,11 +571,6 @@ namespace AppBackend.Data.Migrations
                 name: "IX_Events_EmployeeID",
                 table: "Events",
                 column: "EmployeeID");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_Notifications_EmployeeId",
-                table: "Notifications",
-                column: "EmployeeId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Order_Shipments_ShipmentID",

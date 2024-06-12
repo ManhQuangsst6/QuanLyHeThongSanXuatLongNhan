@@ -1,5 +1,6 @@
 ﻿using AppBackend.Application.Interface;
 using AppBackend.Application.ModelsDTO;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace AppBackend.API.Controllers
@@ -29,6 +30,7 @@ namespace AppBackend.API.Controllers
 
 		}
 		[HttpGet]
+		[Authorize(Roles = "Employee,Manager")]
 		public async Task<IActionResult> GetListByPage(int pageNum, int pageSize, string? searchName, DateTimeOffset? dateTime)
 		{
 			try
@@ -42,6 +44,7 @@ namespace AppBackend.API.Controllers
 			}
 		}
 		[HttpPost]
+		[Authorize(Roles = "Employee,Manager")]
 		public async Task<IActionResult> Post()
 		{
 			try
@@ -56,6 +59,7 @@ namespace AppBackend.API.Controllers
 
 		}
 		[HttpPut]
+		[Authorize(Roles = "Employee,Manager")]
 		public async Task<IActionResult> Update(WorkAttendanceDTO workAttendanceDTO)
 		{
 			try
@@ -70,6 +74,7 @@ namespace AppBackend.API.Controllers
 
 		}
 		[HttpDelete]
+		[Authorize(Roles = "Employee,Manager")]
 		public async Task<IActionResult> Remove()
 		{
 			try
@@ -82,7 +87,7 @@ namespace AppBackend.API.Controllers
 				throw new Exception(ex.Message);
 			}
 		}
-		[HttpGet]
+		[HttpGet, Authorize]
 		public async Task<IActionResult> ComfirmByEmployee(string id)
 		{
 			try

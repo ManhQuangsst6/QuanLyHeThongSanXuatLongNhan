@@ -33,6 +33,7 @@ namespace AppBackend.API.Controllers
 		}
 
 		[HttpGet]
+		[Authorize(Roles = "Employee,Manager")]
 		public async Task<IActionResult> GetListByPage(int pageNum, int pageSize, string? searchName, DateTimeOffset? dateTime)
 		{
 			try
@@ -47,6 +48,7 @@ namespace AppBackend.API.Controllers
 
 		}
 		[HttpGet]
+		[Authorize(Roles = "User")]
 		public async Task<IActionResult> GetListByEmployee(int pageNum, int pageSize, int? status, DateTimeOffset? dateTime)
 		{
 			try
@@ -60,12 +62,12 @@ namespace AppBackend.API.Controllers
 			}
 
 		}
-		[HttpPost, Authorize]
+		[HttpPost]
+		[Authorize(Roles = "User")]
 		public async Task<IActionResult> Post(RegisterDayLonganDTO registerDayLonganDTO)
 		{
 			try
 			{
-
 				var result = await _registerDayLonganService.Post(registerDayLonganDTO);
 				return Ok(result);
 			}
@@ -75,7 +77,7 @@ namespace AppBackend.API.Controllers
 			}
 
 		}
-		[HttpPut]
+		[HttpPut, Authorize]
 		public async Task<IActionResult> Update(RegisterDayLonganDTO registerDayLonganDTO)
 		{
 			try
@@ -89,7 +91,8 @@ namespace AppBackend.API.Controllers
 			}
 
 		}
-		[HttpDelete]
+		[HttpDelete, Authorize]
+
 		public async Task<IActionResult> Remove(string id)
 		{
 			try

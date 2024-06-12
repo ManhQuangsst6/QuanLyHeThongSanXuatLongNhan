@@ -2,6 +2,7 @@
 using AppBackend.Application.Common.Interface;
 using AppBackend.Data.Models.LogIn;
 using AppBackend.Data.Models.SignUp;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace AppBackend.API.Controllers
@@ -22,6 +23,7 @@ namespace AppBackend.API.Controllers
 			return Ok(a);
 		}
 		[HttpPost]
+		[Authorize(Roles = "Employee,Manager")]
 		public async Task<IActionResult> RegisterUser([FromBody] RegisterUser registerUser)
 		{
 			try

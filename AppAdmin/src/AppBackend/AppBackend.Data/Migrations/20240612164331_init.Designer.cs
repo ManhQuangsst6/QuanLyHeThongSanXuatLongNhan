@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace AppBackend.Data.Migrations
 {
     [DbContext(typeof(DataContext))]
-    [Migration("20240518111132_init3")]
-    partial class init3
+    [Migration("20240612164331_init")]
+    partial class init
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -225,15 +225,14 @@ namespace AppBackend.Data.Migrations
                     b.Property<string>("CreatedBy")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("EmployeeId")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(450)");
-
                     b.Property<string>("EmployeeReceive")
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("EmployeeRole")
                         .HasColumnType("nvarchar(max)");
+
+                    b.Property<int?>("IsRead")
+                        .HasColumnType("int");
 
                     b.Property<DateTimeOffset?>("LastModified")
                         .HasColumnType("datetimeoffset");
@@ -241,15 +240,10 @@ namespace AppBackend.Data.Migrations
                     b.Property<string>("LastModifiedBy")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int?>("isRead")
-                        .HasColumnType("int");
-
-                    b.Property<string>("link")
+                    b.Property<string>("Link")
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("EmployeeId");
 
                     b.ToTable("Notifications");
                 });
@@ -621,21 +615,21 @@ namespace AppBackend.Data.Migrations
                     b.HasData(
                         new
                         {
-                            Id = "46459509-3dbf-454b-90ec-274e4afcc1a9",
+                            Id = "436a2d5c-9dd3-4d90-bc10-1716ffbb89df",
                             ConcurrencyStamp = "1",
                             Name = "User",
                             NormalizedName = "User"
                         },
                         new
                         {
-                            Id = "31205e0e-cc78-4f21-979e-02afd81ee401",
+                            Id = "49105343-5356-4a9a-9943-15eda16f7f4b",
                             ConcurrencyStamp = "2",
                             Name = "Employee",
                             NormalizedName = "Employee"
                         },
                         new
                         {
-                            Id = "6e75fe0c-81f3-48f9-aaf7-ad57ca3d4bdc",
+                            Id = "3019dda6-9cb1-46b5-aba4-4a9c388f8d45",
                             ConcurrencyStamp = "3",
                             Name = "Manager",
                             NormalizedName = "Manager"
@@ -829,17 +823,6 @@ namespace AppBackend.Data.Migrations
                     b.HasOne("AppBackend.Data.Models.Employee", "Employee")
                         .WithMany("Event")
                         .HasForeignKey("EmployeeID")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Employee");
-                });
-
-            modelBuilder.Entity("AppBackend.Data.Models.Notification", b =>
-                {
-                    b.HasOne("AppBackend.Data.Models.Employee", "Employee")
-                        .WithMany()
-                        .HasForeignKey("EmployeeId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 

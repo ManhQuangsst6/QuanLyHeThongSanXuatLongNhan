@@ -7,7 +7,7 @@ namespace AppBackend.API.Controllers
 {
 	[Route("api/[controller]/[action]")]
 	[ApiController]
-	[Authorize]
+	[Authorize(Roles = "Employee,Manager")]
 	public class CategoryController : ControllerBase
 	{
 		private readonly ICategoryService _categoryService;
@@ -29,7 +29,7 @@ namespace AppBackend.API.Controllers
 			}
 
 		}
-		[HttpGet, Authorize(Roles = "Employee")]
+		[HttpGet]
 		public async Task<IActionResult> GetListAll()
 		{
 			try

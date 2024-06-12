@@ -1,11 +1,13 @@
 ﻿using AppBackend.Application.Interface;
 using AppBackend.Application.ModelsDTO;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace AppBackend.API.Controllers
 {
 	[Route("api/[controller]")]
 	[ApiController]
+	[Authorize(Roles = "Employee,Manager")]
 	public class OrderController : ControllerBase
 	{
 		private readonly IOrderService _orderService;

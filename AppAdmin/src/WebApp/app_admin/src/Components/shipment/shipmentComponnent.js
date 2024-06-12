@@ -153,7 +153,7 @@ const ShipmentComponent = () => {
         };
       });
       SetData(dataShow);
-      setTotalPassengers(res.data.value.totalPages);
+      setTotalPassengers(res.data.value.totalCount);
       setLoading(false);
     });
   };
@@ -467,6 +467,9 @@ const ShipmentComponent = () => {
           </span>
         </div>
         <Table
+          rowClassName={(record, index) =>
+            index % 2 === 0 ? "table-row-light" : "table-row-dark"
+          }
           rowSelection={rowSelection}
           columns={columns}
           dataSource={data}

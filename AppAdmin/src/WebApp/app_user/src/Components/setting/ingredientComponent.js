@@ -301,6 +301,9 @@ const IngredientComponent = () => {
 
         <div></div>
         <Table
+          rowClassName={(record, index) =>
+            index % 2 === 0 ? "table-row-light" : "table-row-dark"
+          }
           columns={columns}
           dataSource={data}
           pagination={{

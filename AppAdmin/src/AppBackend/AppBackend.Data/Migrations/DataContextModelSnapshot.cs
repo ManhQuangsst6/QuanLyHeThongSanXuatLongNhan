@@ -612,21 +612,21 @@ namespace AppBackend.Data.Migrations
                     b.HasData(
                         new
                         {
-                            Id = "70c6f42c-18c4-48fe-81e3-2663fa0f12ec",
+                            Id = "436a2d5c-9dd3-4d90-bc10-1716ffbb89df",
                             ConcurrencyStamp = "1",
                             Name = "User",
                             NormalizedName = "User"
                         },
                         new
                         {
-                            Id = "b3af20c0-108c-423b-b1b7-a5455f64e472",
+                            Id = "49105343-5356-4a9a-9943-15eda16f7f4b",
                             ConcurrencyStamp = "2",
                             Name = "Employee",
                             NormalizedName = "Employee"
                         },
                         new
                         {
-                            Id = "bbbe8c6a-d8fe-4c2e-8015-fca9f4cd4a06",
+                            Id = "3019dda6-9cb1-46b5-aba4-4a9c388f8d45",
                             ConcurrencyStamp = "3",
                             Name = "Manager",
                             NormalizedName = "Manager"

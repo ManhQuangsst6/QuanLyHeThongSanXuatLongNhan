@@ -1,5 +1,6 @@
 ﻿using AppBackend.Application.Interface;
 using AppBackend.Application.ModelsDTO;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace AppBackend.API.Controllers
@@ -25,10 +26,10 @@ namespace AppBackend.API.Controllers
 			{
 				throw new Exception(ex.Message);
 			}
-
 		}
 
 		[HttpGet]
+		[Authorize(Roles = "Employee,Manager")]
 		public async Task<IActionResult> GetListByPage(int pageNum, int pageSize, string? searchName, DateTimeOffset? dateTime)
 		{
 			try
@@ -43,6 +44,7 @@ namespace AppBackend.API.Controllers
 
 		}
 		[HttpGet]
+		[Authorize(Roles = "User")]
 		public async Task<IActionResult> GetAllPageByUser(int pageNum, int pageSize, int? status, DateTimeOffset? dateTime)
 		{
 			try
@@ -57,6 +59,7 @@ namespace AppBackend.API.Controllers
 
 		}
 		[HttpPost]
+		[Authorize(Roles = "User")]
 		public async Task<IActionResult> Post(RegisterRemainningLonganDTO registerRemainningLonganDTO)
 		{
 			try
@@ -70,7 +73,7 @@ namespace AppBackend.API.Controllers
 			}
 
 		}
-		[HttpPut]
+		[HttpPut, Authorize]
 		public async Task<IActionResult> Update(RegisterRemainningLonganDTO registerRemainningLonganDTO)
 		{
 			try
@@ -84,7 +87,7 @@ namespace AppBackend.API.Controllers
 			}
 
 		}
-		[HttpDelete]
+		[HttpDelete, Authorize]
 		public async Task<IActionResult> Remove(string id)
 		{
 			try

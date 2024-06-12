@@ -11,7 +11,6 @@ import { GetListByPage, Update } from "../../API/Attendance/AttendanceAPI";
 import { Modal } from "antd";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import "./style.scss";
 import ConvertDate from "../../Common/Convert/ConvertDate";
 
 const { Search } = Input;
@@ -137,7 +136,7 @@ const AttendanceComponent = () => {
         };
       });
       SetData(dataShow);
-      setTotalPassengers(res.data.value.totalPages);
+      setTotalPassengers(res.data.value.totalCount);
       setLoading(false);
     });
   };

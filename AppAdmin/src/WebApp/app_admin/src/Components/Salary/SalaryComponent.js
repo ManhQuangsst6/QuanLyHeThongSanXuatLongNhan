@@ -83,36 +83,37 @@ const SalaryComponent = () => {
       dataIndex: "action",
       width: "5%",
       render: (_, record) => (
-        <Space size="middle">
-          <a
-            onClick={() =>
-              Update({
-                id: record.key,
-                employeeID: record.employeeID,
-                isCheck: 1,
-              }).then((res) => {
-                SetIsRender(true);
-                notify("Xác nhận");
-              })
-            }
-          >
-            <LikeOutlined style={{ color: "blue" }} />
-          </a>
-          <a
-            onClick={() =>
-              Update({
-                id: record.key,
-                employeeID: record.employeeID,
-                isCheck: 3,
-              }).then((res) => {
-                SetIsRender(true);
-                notify("Hủy");
-              })
-            }
-          >
-            <DeleteOutlined style={{ color: "blue" }} />
-          </a>
-        </Space>
+        <div></div>
+        // <Space size="middle">
+        //   <a
+        //     onClick={() =>
+        //       Update({
+        //         id: record.key,
+        //         employeeID: record.employeeID,
+        //         isCheck: 1,
+        //       }).then((res) => {
+        //         SetIsRender(true);
+        //         notify("Xác nhận");
+        //       })
+        //     }
+        //   >
+        //     <LikeOutlined style={{ color: "blue" }} />
+        //   </a>
+        //   <a
+        //     onClick={() =>
+        //       Update({
+        //         id: record.key,
+        //         employeeID: record.employeeID,
+        //         isCheck: 3,
+        //       }).then((res) => {
+        //         SetIsRender(true);
+        //         notify("Hủy");
+        //       })
+        //     }
+        //   >
+        //     <DeleteOutlined style={{ color: "blue" }} />
+        //   </a>
+        // </Space>
       ),
     },
   ];
@@ -448,6 +449,9 @@ const SalaryComponent = () => {
           </span>
         </div>
         <Table
+          rowClassName={(record, index) =>
+            index % 2 === 0 ? "table-row-light" : "table-row-dark"
+          }
           rowSelection={rowSelection}
           columns={columns}
           dataSource={data}

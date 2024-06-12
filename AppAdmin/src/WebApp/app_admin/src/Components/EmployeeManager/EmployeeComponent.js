@@ -343,6 +343,9 @@ const EmployeeeComponent = () => {
           ></span>
         </div>
         <Table
+          rowClassName={(record, index) =>
+            index % 2 === 0 ? "table-row-light" : "table-row-dark"
+          }
           rowSelection={rowSelection}
           columns={columns}
           dataSource={data}

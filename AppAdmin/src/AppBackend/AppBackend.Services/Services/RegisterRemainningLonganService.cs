@@ -128,7 +128,7 @@ namespace AppBackend.Application.Services
 				else if (status == 2) message = "Đã trả nhãn cho nhân viên";
 				else if (status == 3) message = "Đã hủy đăng kí trả nhãn";
 				var notification = new NotificationDTO() { Content = message };
-				await _notificationService.Post(notification);
+				//await _notificationService.Post(notification);
 				await _dataContext.SaveChangesAsync();
 				return new Response<string> { IsSuccess = true, Status = 200, Value = registerRemainningLongan.Id };
 			}

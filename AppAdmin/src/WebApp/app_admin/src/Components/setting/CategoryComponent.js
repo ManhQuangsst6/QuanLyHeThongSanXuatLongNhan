@@ -346,7 +346,13 @@ const CategoryComponent = () => {
             </Modal>
           </div>
         </div>
-        <Table columns={columns} dataSource={data}></Table>
+        <Table
+          rowClassName={(record, index) =>
+            index % 2 === 0 ? "table-row-light" : "table-row-dark"
+          }
+          columns={columns}
+          dataSource={data}
+        ></Table>
       </div>
     </div>
   );

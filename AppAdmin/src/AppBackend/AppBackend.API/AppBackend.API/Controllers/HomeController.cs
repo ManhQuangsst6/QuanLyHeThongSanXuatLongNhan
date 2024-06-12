@@ -1,5 +1,6 @@
 ﻿using AppBackend.Data.Context;
 using AutoMapper;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
@@ -7,6 +8,7 @@ namespace AppBackend.API.Controllers
 {
 	[Route("api/[controller]/[action]")]
 	[ApiController]
+	[Authorize(Roles = "Manager")]
 	public class HomeController : ControllerBase
 	{
 		private readonly DataContext _dataContext;

@@ -1,5 +1,6 @@
 ﻿using AppBackend.Application.Interface;
 using AppBackend.Application.ModelsDTO;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace AppBackend.API.Controllers
@@ -29,6 +30,7 @@ namespace AppBackend.API.Controllers
 		}
 
 		[HttpGet]
+		[Authorize(Roles = "User")]
 		public async Task<IActionResult> GetListByEmployeePage(int pageNum, int pageSize, string? searchName)
 		{
 			try
@@ -42,7 +44,7 @@ namespace AppBackend.API.Controllers
 			}
 		}
 
-		[HttpGet]
+		[HttpGet, Authorize]
 		public async Task<IActionResult> GetAllClient(int pageNum, int pageSize, int? quarterYear, int? year)
 		{
 			try
@@ -56,6 +58,7 @@ namespace AppBackend.API.Controllers
 			}
 		}
 		[HttpGet]
+		[Authorize(Roles = "Employee,Manager")]
 		public async Task<IActionResult> GetListByPage(int pageNum, int pageSize, string? searchName, int? quarterYear, int? year)
 		{
 			try
@@ -69,6 +72,8 @@ namespace AppBackend.API.Controllers
 			}
 		}
 		[HttpGet]
+		[Authorize(Roles = "Employee,Manager")]
+
 		public async Task<IActionResult> GetAllExportExcel(int? quarterYear, int? year)
 		{
 			try
@@ -83,6 +88,7 @@ namespace AppBackend.API.Controllers
 		}
 
 		[HttpGet]
+		[Authorize(Roles = "Employee,Manager")]
 		public async Task<IActionResult> GetTableSalary(int pageNum = 1, int pageSize = 10, int? quarterYear = 1, int? year = 1)
 		{
 			try
@@ -96,6 +102,7 @@ namespace AppBackend.API.Controllers
 			}
 		}
 		[HttpGet]
+		[Authorize(Roles = "Employee,Manager")]
 		public async Task<IActionResult> CreateTableSalary(int price, int quarterYear, int year)
 		{
 			try
@@ -122,7 +129,7 @@ namespace AppBackend.API.Controllers
 			}
 
 		}
-		[HttpPut]
+		[HttpPut, Authorize]
 		public async Task<IActionResult> Update(SalaryDTO salaryDTO)
 		{
 			try
